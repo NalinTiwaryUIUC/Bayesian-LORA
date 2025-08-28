@@ -1,6 +1,45 @@
 seed: 123
-data: {name: cifar10, root: ./data, batch_size: 128, num_workers: 4, augment: true}
-model: {name: resnet18_cifar, num_classes: 10}
-train: {epochs: 1, lr: 0.1, weight_decay: 5e-4}
-sampler: {name: sgld, step_size: 1e-3, burn_in: 0, thin: 1, noise_scale: 1.0, num_samples: 50}
-out: {dir: runs/exp1}
+
+data:
+  name: cifar10
+  root: ./data
+  batch_size: 128
+  num_workers: 4
+  augment: true
+
+model:
+  name: resnet18_cifar
+  num_classes: 10
+
+train:
+  # optional finetune before sampling (0 to skip)
+  epochs: 0
+  lr: 0.1
+  weight_decay: 5e-4
+
+sampler:
+  # one of: sgld, asgld, sam-sgld, sam-sgld-r1
+  name: sgld
+  step_size: 1.0e-3
+  tau: 1.0
+  burn_in: 0
+  thin: 200
+  num_samples: 20
+  prior_prec: 0.0
+
+  # cosine schedule (optional)
+  cosine_eps: false
+  t_max: 0
+
+  # ASGLD-only (ignored otherwise)
+  beta1: 0.9
+  beta2: 0.999
+  a: 1.0
+  lambd: 1.0e-8
+
+  # SAM-only (ignored otherwise)
+  rho: 0.05
+  sigma_dir: 0.0
+
+out:
+  dir: runs/c10_r18_sgld
