@@ -14,6 +14,11 @@ The cluster is having issues with `pip install -e .` due to:
 - **Set** `PYTHONPATH` explicitly
 - **Added** pip upgrade step
 
+### **2. __init__.py Fixed**
+- **Replaced** direct imports with lazy imports
+- **Added** error handling for missing modules
+- **Prevented** circular import issues
+
 ### **2. New Installation Flow**
 ```bash
 # Old (problematic):
@@ -23,6 +28,15 @@ pip3 install -e .
 pip3 install --upgrade pip
 pip3 install -r requirements_lora.txt
 export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+```
+
+### **3. New Import Test**
+```bash
+# Simple import test (recommended first):
+python3 debug/simple_import_test.py
+
+# Full import test (if simple test passes):
+python3 debug/test_import.py
 ```
 
 ## **🔧 Manual Fix on Cluster**

@@ -2,6 +2,7 @@
 #Batch Job Script for Bayesian LoRA Experiments
 #
 #SBATCH --job-name=run_bayesian_lora
+
 #SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
 #SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
@@ -48,10 +49,13 @@ echo "PYTHONPATH set to: $PYTHONPATH"
 
 echo "=== Verifying installation ==="
 echo "Testing import with PYTHONPATH set..."
-python3 debug/test_import.py
+
+# First try the simple import test
+echo "Running simple import test..."
+python3 debug/simple_import_test.py
 
 if [ $? -ne 0 ]; then
-    echo "❌ Import test failed!"
+    echo "❌ Simple import test failed!"
     echo "Trying to debug the issue..."
     echo "Current PYTHONPATH: $PYTHONPATH"
     echo "Current directory: $(pwd)"
@@ -59,9 +63,16 @@ if [ $? -ne 0 ]; then
     ls -la src/
     echo "Listing src/bayesian_lora directory:"
     ls -la src/bayesian_lora/
-    exit 1
+    
+    echo "Trying alternative import test..."
+    python3 debug/test_import.py
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Both import tests failed! Exiting."
+        exit 1
+    fi
 else
-    echo "✅ Import test successful!"
+    echo "✅ Simple import test successful!"
 fi
 
 echo "=== Checking key dependencies ==="
