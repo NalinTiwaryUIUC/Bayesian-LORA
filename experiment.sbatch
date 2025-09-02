@@ -1,7 +1,8 @@
 #!/bin/bash
 #Sample Batch Job Script for Bayesian LoRA Experiments
 #
-#SBATCH --time=00:10:00                    # Job run time (hh:mm:ss) - 10 minutes
+#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hourse
+#SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
 #SBATCH --gres=gpu:1                       # Number of GPUs
