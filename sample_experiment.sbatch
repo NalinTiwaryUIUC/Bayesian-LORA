@@ -31,8 +31,20 @@ echo "=== Setting up environment ==="
 source .venv/bin/activate
 
 echo "=== Installing dependencies ==="
-make install
-make install-lora
+echo "Installing package in editable mode..."
+pip3 install -e .
+echo "Installing basic requirements..."
+pip3 install -r requirements.txt
+echo "Installing LoRA requirements..."
+pip3 install -r requirements_lora.txt
+
+echo "=== Verifying installation ==="
+python3 test_import.py
+
+echo "=== Checking key dependencies ==="
+python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
+python3 -c "import transformers; print(f'✓ Transformers version: {transformers.__version__}')"
+python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
 
 # Run your experiment using Make commands
 # Example: Running SST-2 BERT SGLD experiment
