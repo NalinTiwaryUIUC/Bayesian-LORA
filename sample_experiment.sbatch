@@ -25,19 +25,27 @@ pwd
 echo "=== Python Version ==="
 python3 --version
 
-# Activate virtual environment if you have one (uncomment if needed)
-# source /path/to/your/venv/bin/activate
+# Activate virtual environment and install dependencies
+echo "=== Setting up environment ==="
+source .venv/bin/activate
 
-# Run your experiment
-# Example: Running CIFAR-10 ResNet18 experiment with SGLD
-echo "=== Starting CIFAR-10 ResNet18 SGLD Experiment ==="
-python3 scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
+echo "=== Installing dependencies ==="
+make install
+make install-lora
+
+# Run your experiment using Make commands
+# Example: Running SST-2 BERT SGLD experiment
+echo "=== Starting SST-2 BERT SGLD Experiment ==="
+make experiment-sst2-bert-sgld
 
 # Alternative examples you can uncomment and use:
-# echo "=== Starting SST-2 BERT SGLD Experiment ==="
-# python3 scripts/train.py --config configs/experiment_sst2_bert_sgld.yaml
+# echo "=== Starting SST-2 RoBERTa SAM-SGLD Experiment ==="
+# make experiment-sst2-roberta-sam-sgld
 
-# echo "=== Starting CIFAR-100 Wide ResNet SGLD Experiment ==="
-# python3 scripts/train.py --config configs/cifar100_wrn2810_sgld.yaml
+# echo "=== Starting MRPC DistilBERT ASGLD Experiment ==="
+# make experiment-mrpc-distilbert-asgld
+
+# echo "=== Starting IMDB BERT SAM-SGLD-R1 Experiment ==="
+# make experiment-imdb-bert-sam-sgld-r1
 
 echo "=== Experiment Completed ==="
