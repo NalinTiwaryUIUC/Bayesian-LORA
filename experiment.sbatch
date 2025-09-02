@@ -1,7 +1,7 @@
 #!/bin/bash
 #Sample Batch Job Script for Bayesian LoRA Experiments
 #
-#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hourse
+#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
 #SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
@@ -13,8 +13,8 @@
 #SBATCH --output=nalint2_lora_log_%j       # output file name with job ID
 #
 
-# Load any necessary modules (uncomment if needed)
-# module load python/3.9
+# Load any necessary modules
+module load python/3.9
 # module load cuda/11.8
 
 # Check GPU and memory of node

@@ -335,7 +335,7 @@ This setup is perfect for:
 
 ## 🚨 **Requirements**
 
-- Python 3.8+
+- Python 3.9+
 - PyTorch 2.0+
 - Transformers 4.30+
 - PEFT 0.4+
