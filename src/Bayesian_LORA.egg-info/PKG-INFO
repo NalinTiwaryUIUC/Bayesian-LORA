@@ -1,4 +1,7 @@
 Metadata-Version: 2.4
 Name: Bayesian-LORA
 Version: 0.1.0
+Author: Bayesian LoRA Team
 Requires-Python: >=3.10
+Dynamic: author
+Dynamic: requires-python

@@ -32,14 +32,22 @@ source .venv/bin/activate
 
 echo "=== Installing dependencies ==="
 echo "Installing package in editable mode..."
-pip3 install -e .
-echo "Installing basic requirements..."
-pip3 install -r requirements.txt
+pip3 install -e . || {
+    echo "Editable install failed, trying regular install..."
+    pip3 install .
+}
 echo "Installing LoRA requirements..."
 pip3 install -r requirements_lora.txt
 
 echo "=== Verifying installation ==="
 python3 test_import.py
+
+# If import fails, try adding src to Python path
+if [ $? -ne 0 ]; then
+    echo "Import failed, trying alternative approach..."
+    export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+    python3 test_import.py
+fi
 
 echo "=== Checking key dependencies ==="
 python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
