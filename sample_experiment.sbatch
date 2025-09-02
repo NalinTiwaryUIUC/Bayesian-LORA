@@ -1,3 +1,4 @@
+#!/bin/bash
 #Sample Batch Job Script for Bayesian LoRA Experiments
 #
 #SBATCH --time=00:10:00                    # Job run time (hh:mm:ss) - 10 minutes
