@@ -46,19 +46,22 @@ pip3 install -e . || {
 }
 
 echo "=== Verifying installation ==="
-python3 test_import.py
+python3 debug/test_import.py
 
 # If import fails, try adding src to Python path
 if [ $? -ne 0 ]; then
     echo "Import failed, trying alternative approach..."
     export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
-    python3 test_import.py
+    python3 debug/test_import.py
 fi
 
 echo "=== Checking key dependencies ==="
 python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
 python3 -c "import transformers; print(f'✓ Transformers version: {transformers.__version__}')"
 python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
+
+echo "=== Running quick debug check ==="
+python3 debug/cluster_troubleshooting.py
 
 # Run your experiment using Make commands
 # Example: Running SST-2 BERT SGLD experiment
