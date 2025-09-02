@@ -25,12 +25,12 @@ sampler:
   num_samples: 20
   prior_prec: 1e-4
   
-  # Cosine annealing
-  cosine_eps: true
-  t_max: 10000
+  # Cosine annealing (not yet implemented)
+  # cosine_eps: true
+  # t_max: 10000
 
-# Evaluation during sampling (optional)
-eval_during_sampling: false
+# Evaluation during sampling (not yet implemented)
+# eval_during_sampling: false
 
 out:
   dir: runs/experiment_sst2_bert_sgld

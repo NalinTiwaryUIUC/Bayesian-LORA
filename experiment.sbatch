@@ -1,6 +1,7 @@
 #!/bin/bash
-#Sample Batch Job Script for Bayesian LoRA Experiments
+#Batch Job Script for Bayesian LoRA Experiments
 #
+#SBATCH --job-name=run_bayesian_lora
 #SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
 #SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
@@ -13,9 +14,12 @@
 #SBATCH --output=nalint2_lora_log_%j       # output file name with job ID
 #
 
-# Load any necessary modules
-module load python/3.9
+# Load any necessary modules (uncomment if needed)
+# module load python/3.9
 # module load cuda/11.8
+
+# Set environment variables to avoid tokenizer warnings
+export TOKENIZERS_PARALLELISM=false
 
 # Check GPU and memory of node
 echo "=== GPU Information ==="
@@ -35,10 +39,11 @@ echo "=== Installing dependencies ==="
 echo "Installing package in editable mode..."
 pip3 install -e . || {
     echo "Editable install failed, trying regular install..."
-    pip3 install .
+    pip3 install . || {
+        echo "Package install failed, installing dependencies directly..."
+        pip3 install -r requirements_lora.txt
+    }
 }
-echo "Installing LoRA requirements..."
-pip3 install -r requirements_lora.txt
 
 echo "=== Verifying installation ==="
 python3 test_import.py

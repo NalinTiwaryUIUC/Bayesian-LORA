@@ -50,8 +50,14 @@ class HuggingFaceLoRAModel(nn.Module):
     
     def _freeze_base_model(self):
         """Freeze all base model parameters, keeping only LoRA parameters trainable."""
+        # Freeze base model parameters
         for name, param in self.base_model.named_parameters():
             param.requires_grad = False
+        
+        # Ensure LoRA parameters remain trainable
+        for name, param in self.peft_model.named_parameters():
+            if 'lora' in name.lower():
+                param.requires_grad = True
     
     def _print_parameter_info(self):
         """Print information about trainable vs. frozen parameters."""
@@ -85,31 +91,34 @@ class BERTLoRAModel(HuggingFaceLoRAModel):
     """BERT model with LoRA adaptation."""
     
     def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        super().__init__("bert-base-uncased", num_labels, lora_config)
-        
-        # BERT-specific LoRA target modules
+        # Set BERT-specific LoRA target modules before calling parent
         if lora_config.get('target_modules') is None:
-            self.lora_config.target_modules = ["query", "value"]
+            lora_config = lora_config.copy()
+            lora_config['target_modules'] = ["query", "value"]
+        
+        super().__init__("bert-base-uncased", num_labels, lora_config)
 
 class RoBERTaLoRAModel(HuggingFaceLoRAModel):
     """RoBERTa model with LoRA adaptation."""
     
     def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        super().__init__("roberta-base", num_labels, lora_config)
-        
-        # RoBERTa-specific LoRA target modules
+        # Set RoBERTa-specific LoRA target modules before calling parent
         if lora_config.get('target_modules') is None:
-            self.lora_config.target_modules = ["query", "value"]
+            lora_config = lora_config.copy()
+            lora_config['target_modules'] = ["query", "value"]
+        
+        super().__init__("roberta-base", num_labels, lora_config)
 
 class DistilBERTLoRAModel(HuggingFaceLoRAModel):
     """DistilBERT model with LoRA adaptation."""
     
     def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        super().__init__("distilbert-base-uncased", num_labels, lora_config)
-        
-        # DistilBERT-specific LoRA target modules
+        # Set DistilBERT-specific LoRA target modules before calling parent
         if lora_config.get('target_modules') is None:
-            self.lora_config.target_modules = ["q_lin", "v_lin"]
+            lora_config = lora_config.copy()
+            lora_config['target_modules'] = ["q_lin", "v_lin"]
+        
+        super().__init__("distilbert-base-uncased", num_labels, lora_config)
 
 def build_huggingface_lora_model(model_config: Dict[str, Any]) -> HuggingFaceLoRAModel:
     """
