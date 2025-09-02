@@ -124,11 +124,12 @@ sbatch experiment.sbatch
 
 | Issue | Solution |
 |-------|----------|
-| **Import errors** | `pip3 install -e .` or `export PYTHONPATH` |
+| **Import errors** | ✅ **FIXED** - Use `export PYTHONPATH` + direct dependency install |
 | **CUDA not found** | Check `nvidia-smi` and GPU allocation |
 | **Memory issues** | Reduce batch size in config |
 | **Path problems** | Use absolute paths or `$(pwd)` |
 | **Module loading** | Comment out `module load` lines |
+| **Pip version conflicts** | ✅ **FIXED** - Added pip upgrade step |
 
 ---
 

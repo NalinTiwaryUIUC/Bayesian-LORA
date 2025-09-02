@@ -35,24 +35,33 @@ python3 --version
 echo "=== Setting up environment ==="
 source .venv/bin/activate
 
+echo "=== Upgrading pip to fix version issues ==="
+python3 -m pip install --upgrade pip
+
 echo "=== Installing dependencies ==="
-echo "Installing package in editable mode..."
-pip3 install -e . || {
-    echo "Editable install failed, trying regular install..."
-    pip3 install . || {
-        echo "Package install failed, installing dependencies directly..."
-        pip3 install -r requirements_lora.txt
-    }
-}
+echo "Installing dependencies directly (skipping problematic package install)..."
+pip3 install -r requirements_lora.txt
+
+echo "=== Setting up Python path for imports ==="
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+echo "PYTHONPATH set to: $PYTHONPATH"
 
 echo "=== Verifying installation ==="
+echo "Testing import with PYTHONPATH set..."
 python3 debug/test_import.py
 
-# If import fails, try adding src to Python path
 if [ $? -ne 0 ]; then
-    echo "Import failed, trying alternative approach..."
-    export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
-    python3 debug/test_import.py
+    echo "❌ Import test failed!"
+    echo "Trying to debug the issue..."
+    echo "Current PYTHONPATH: $PYTHONPATH"
+    echo "Current directory: $(pwd)"
+    echo "Listing src directory:"
+    ls -la src/
+    echo "Listing src/bayesian_lora directory:"
+    ls -la src/bayesian_lora/
+    exit 1
+else
+    echo "✅ Import test successful!"
 fi
 
 echo "=== Checking key dependencies ==="
