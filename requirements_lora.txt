@@ -1,0 +1,19 @@
+# Core dependencies
+torch>=2.0.0
+torchvision
+numpy
+tqdm
+pyyaml
+scikit-learn
+matplotlib
+
+# HuggingFace ecosystem
+transformers>=4.30.0
+datasets>=2.12.0
+tokenizers>=0.13.0
+peft>=0.4.0
+
+# Additional utilities
+accelerate>=0.20.0
+sentencepiece
+protobuf

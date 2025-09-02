@@ -14,27 +14,27 @@ This repository provides:
 
 ### 1. Install
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
-pip install -r requirements.txt
+pip3 install -e .
+pip3 install -r requirements.txt
 ```
 
 ### 2. Run Training & Sampling
 Example: ResNet-18 + CIFAR-10 + SGLD
 ```bash
-python scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
+python3 scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
 ```
 
 ### 3. Evaluate
 Single sample:
 ```bash
-python scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --single
+python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --single
 ```
 
 Ensemble (first K samples):
 ```bash
-python scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --k 20
+python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --k 20
 ```
 
 ## Configuration
