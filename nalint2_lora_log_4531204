@@ -1,0 +1,572 @@
+=== GPU Information ===
+Tue Sep  2 23:39:29 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A10                     Off |   00000000:C7:00.0 Off |                    0 |
+|  0%   33C    P8             16W /  150W |       0MiB /  23028MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Memory Information ===
+               total        used        free      shared  buff/cache   available
+Mem:           503Gi        37Gi       416Gi        16Gi        69Gi       466Gi
+Swap:             0B          0B          0B
+=== Current Directory ===
+/u/nalint2/scratch/Bayesian-LORA
+=== Python Version ===
+Python 3.9.18
+=== Setting up environment ===
+=== Upgrading pip to fix version issues ===
+Requirement already satisfied: pip in ./.venv/lib/python3.9/site-packages (25.2)
+=== Installing dependencies ===
+Installing package in editable mode (proper way)...
+Obtaining file:///scratch/nalint2/Bayesian-LORA
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.8.0)
+Requirement already satisfied: torchvision in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.23.0)
+Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.0.2)
+Requirement already satisfied: tqdm in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.67.1)
+Requirement already satisfied: pyyaml in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.0.2)
+Requirement already satisfied: scikit-learn in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.6.1)
+Requirement already satisfied: matplotlib in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (3.9.4)
+Requirement already satisfied: transformers>=4.30.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.56.0)
+Requirement already satisfied: datasets>=2.12.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.0.0)
+Requirement already satisfied: tokenizers>=0.13.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.22.0)
+Requirement already satisfied: peft>=0.4.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.17.1)
+Requirement already satisfied: accelerate>=0.20.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.10.1)
+Requirement already satisfied: sentencepiece in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.2.1)
+Requirement already satisfied: protobuf in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.32.0)
+Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (25.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (7.0.0)
+Requirement already satisfied: huggingface_hub>=0.21.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.34.4)
+Requirement already satisfied: safetensors>=0.4.3 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.6.2)
+Requirement already satisfied: filelock in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.19.1)
+Requirement already satisfied: pyarrow>=15.0.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (21.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.8)
+Requirement already satisfied: pandas in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.3.2)
+Requirement already satisfied: requests>=2.32.2 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.32.5)
+Requirement already satisfied: xxhash in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.70.16)
+Requirement already satisfied: fsspec<=2025.3.0,>=2023.1.0 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.3.0)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.12.15)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (5.0.1)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (25.3.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.7.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (6.6.4)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.2)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.20.1)
+Requirement already satisfied: typing-extensions>=4.1.0 in ./.venv/lib/python3.9/site-packages (from multidict<7.0,>=4.5->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (4.15.0)
+Requirement already satisfied: idna>=2.0 in ./.venv/lib/python3.9/site-packages (from yarl<2.0,>=1.17.0->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.10)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in ./.venv/lib/python3.9/site-packages (from huggingface_hub>=0.21.0->accelerate>=0.20.0->Bayesian-LORA==0.1.0) (1.1.9)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.4.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.8.3)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.14.0)
+Requirement already satisfied: networkx in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.2.1)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (2.27.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.13.1.3)
+Requirement already satisfied: triton==3.4.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.4.0)
+Requirement already satisfied: setuptools>=40.8.0 in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (53.0.0)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (8.7.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy>=1.13.3->torch>=2.0.0->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: regex!=2019.12.17 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->Bayesian-LORA==0.1.0) (2025.9.1)
+Requirement already satisfied: zipp>=3.20 in ./.venv/lib/python3.9/site-packages (from importlib-metadata->triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.23.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.0.2)
+Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (4.59.2)
+Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.4.7)
+Requirement already satisfied: pillow>=8 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (11.3.0)
+Requirement already satisfied: pyparsing>=2.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (2.9.0.post0)
+Requirement already satisfied: importlib-resources>=3.2.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (6.5.2)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib->Bayesian-LORA==0.1.0) (1.17.0)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: scipy>=1.6.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (1.13.1)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (1.5.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (3.6.0)
+Building wheels for collected packages: Bayesian-LORA
+  Building editable for Bayesian-LORA (pyproject.toml): started
+  Building editable for Bayesian-LORA (pyproject.toml): finished with status 'done'
+  Created wheel for Bayesian-LORA: filename=bayesian_lora-0.1.0-0.editable-py3-none-any.whl size=1470 sha256=2fa71acbc0710ad74675d9ab774db4513a4bd323798875372578f4caad401390
+  Stored in directory: /tmp/pip-ephem-wheel-cache-7op67ki8/wheels/e6/8c/54/9ced548b41650fdd37110b7a4079fec5aecbe008507cf13c8d
+Successfully built Bayesian-LORA
+Installing collected packages: Bayesian-LORA
+  Attempting uninstall: Bayesian-LORA
+    Found existing installation: Bayesian-LORA 0.1.0
+    Uninstalling Bayesian-LORA-0.1.0:
+      Successfully uninstalled Bayesian-LORA-0.1.0
+Successfully installed Bayesian-LORA-0.1.0
+=== Verifying pip installation ===
+Name: Bayesian-LORA
+Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
+Home-page: 
+Author: Bayesian LoRA Team
+Author-email: 
+License: 
+Location: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+Editable project location: /scratch/nalint2/Bayesian-LORA
+Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, scikit-learn, sentencepiece, tokenizers, torch, torchvision, tqdm, transformers
+Required-by: 
+=== Verifying installation ===
+Testing package installation status...
+Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py", line 10, in <module>
+    from .data.glue_datasets import create_dataloaders, get_dataset_metadata
+ModuleNotFoundError: No module named 'bayesian_lora.data'
+❌ Direct import failed. Let's debug...
+Current PYTHONPATH: 
+Current directory: /u/nalint2/scratch/Bayesian-LORA
+=== Running emergency debug tests ===
+Running emergency cluster debug (works even when package is broken)...
+🚨 EMERGENCY CLUSTER DEBUG SCRIPT
+This script works even when bayesian_lora package is broken!
+
+
+============================================================
+🔍 Basic Environment Check
+============================================================
+Python version: 3.9.18 (main, Jun 27 2025, 00:00:00) 
+[GCC 11.4.1 20231218 (Red Hat 11.4.1-4)]
+Python executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/python3
+Python path: ['/scratch/nalint2/Bayesian-LORA/debug', '/usr/lib64/python39.zip', '/usr/lib64/python3.9', '/usr/lib64/python3.9/lib-dynload', '/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages', '/scratch/nalint2/Bayesian-LORA/src', '/scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages']
+Working directory: /scratch/nalint2/Bayesian-LORA
+Current user: nalint2
+Home directory: /u/nalint2
+✅ Virtual environment: /scratch/nalint2/Bayesian-LORA/.venv
+
+============================================================
+🔍 File Structure Check
+============================================================
+Current directory: /scratch/nalint2/Bayesian-LORA
+✅ src directory found: /scratch/nalint2/Bayesian-LORA/src
+📁 src contents: ['bayesian_lora', 'Bayesian_LORA.egg-info']
+✅ bayesian_lora directory found: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora
+📄 __init__.py files found: 5
+   - __init__.py
+   - eval/__init__.py
+   - utils/__init__.py
+   - models/__init__.py
+   - samplers/__init__.py
+✅ Appears to be in Bayesian-LORA project directory
+
+============================================================
+🔍 Pip and Package Status
+============================================================
+
+📋 Checking pip version
+Command: pip3 --version
+✅ Success: pip 25.2 from /scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/pip (python 3.9)
+
+📋 Checking bayesian-lora package status
+Command: pip3 show bayesian-lora
+✅ Success: Name: Bayesian-LORA
+Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
+Home-page: 
+Author: Bayesian LoRA Team
+Author-email: 
+License: 
+Location: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+Editable project location: /scratch/nalint2/Bayesian-LORA
+Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, scikit-learn, sentencepiece, tokenizers, torch, torchvision, tqdm, transformers
+Required-by:
+
+📋 Checking for Bayesian packages in pip list
+Command: pip3 list | grep -i bayesian
+✅ Success: Bayesian-LORA            0.1.0       /scratch/nalint2/Bayesian-LORA
+
+📦 Testing package installation capability...
+✅ pip3 install --dry-run works (can install packages)
+
+============================================================
+🔍 Basic Python Import Check
+============================================================
+✅ PyTorch: 2.8.0+cu128
+✅ Transformers: 4.56.0
+✅ PEFT: 0.17.1
+✅ Datasets: 4.0.0
+✅ PyYAML: 6.0.2
+✅ tqdm: 4.67.1
+✅ NumPy: 2.0.2
+✅ scikit-learn: 1.6.1
+
+============================================================
+🔍 Editable Install Issue Analysis
+============================================================
+✅ setup.py found: /scratch/nalint2/Bayesian-LORA/setup.py
+📄 setup.py permissions: 600
+✅ pyproject.toml found: /scratch/nalint2/Bayesian-LORA/pyproject.toml
+✅ src directory exists: /scratch/nalint2/Bayesian-LORA/src
+✅ src directory is writable
+✅ In virtual environment: /scratch/nalint2/Bayesian-LORA/.venv
+✅ Virtual environment is writable
+
+============================================================
+🔍 Suggested Fixes
+============================================================
+🔧 Based on the analysis, here are potential fixes:
+
+1. **If src directory is not writable:**
+   - Check file permissions: ls -la src/
+   - Fix permissions: chmod -R 755 src/
+
+2. **If virtual environment is not writable:**
+   - Recreate virtual environment: python3 -m venv .venv
+   - Activate: source .venv/bin/activate
+
+3. **If pip install -e . fails:**
+   - Try: pip3 install --user -e .
+   - Or: pip3 install --force-reinstall -e .
+
+4. **If submodules can't be imported:**
+   - Check __init__.py files exist in all subdirectories
+   - Verify Python path includes src directory
+
+5. **Alternative installation methods:**
+   - pip3 install . (non-editable)
+   - pip3 install -r requirements_lora.txt + export PYTHONPATH
+
+6. **Check cluster-specific issues:**
+   - Module loading: module list
+   - Python version: python3 --version
+   - Environment variables: env | grep PYTHON
+
+============================================================
+🔍 Debug Summary
+============================================================
+✅ Emergency debugging complete!
+📋 Check the output above for issues and suggested fixes.
+🔧 The most common issues are:
+   - File permissions on src/ directory
+   - Virtual environment not writable
+   - Python path not including src/
+   - Missing __init__.py files
+=== Running import path analysis ===
+Testing different import paths to identify the issue...
+🔍 IMPORT PATH TESTING SCRIPT
+This script will help identify why submodule imports are failing.
+
+============================================================
+🔍 Current Python Path Analysis
+============================================================
+Current working directory: /scratch/nalint2/Bayesian-LORA
+
+Python path entries:
+  0: /scratch/nalint2/Bayesian-LORA/debug
+  1: /usr/lib64/python39.zip
+  2: /usr/lib64/python3.9
+  3: /usr/lib64/python3.9/lib-dynload
+  4: /scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages
+  5: /scratch/nalint2/Bayesian-LORA/src
+  6: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+
+✅ src directory found in Python path at index 5
+✅ bayesian_lora directory exists: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora
+
+============================================================
+🔍 File Structure Analysis
+============================================================
+Current directory: /scratch/nalint2/Bayesian-LORA
+src directory: /scratch/nalint2/Bayesian-LORA/src
+bayesian_lora directory: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora
+
+Directory existence:
+  src: ✅
+  bayesian_lora: ✅
+
+src contents:
+  📁 bayesian_lora/
+  📁 Bayesian_LORA.egg-info/
+
+bayesian_lora contents:
+  📁 __pycache__/
+    ❌ __init__.py missing
+  📁 eval/
+    ✅ __init__.py exists
+  📁 utils/
+    ✅ __init__.py exists
+  📁 models/
+    ✅ __init__.py exists
+  📄 __init__.py
+  📁 samplers/
+    ✅ __init__.py exists
+
+============================================================
+🔍 Pip Installation Analysis
+============================================================
+✅ pip show bayesian-lora output:
+Name: Bayesian-LORA
+Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
+Home-page: 
+Author: Bayesian LoRA Team
+Author-email: 
+License: 
+Location: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+Editable project location: /scratch/nalint2/Bayesian-LORA
+Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, scikit-learn, sentencepiece, tokenizers, torch, torchvision, tqdm, transformers
+Required-by: 
+
+
+✅ pip list | grep -i bayesian output:
+
+Usage:   
+  pip3 <command> [options]
+
+Commands:
+  install                     Install packages.
+  lock                        Generate a lock file.
+  download                    Download packages.
+  uninstall                   Uninstall packages.
+  freeze                      Output installed packages in requirements format.
+  inspect                     Inspect the python environment.
+  list                        List installed packages.
+  show                        Show information about installed packages.
+  check                       Verify installed packages have compatible dependencies.
+  config                      Manage local and global configuration.
+  search                      Search PyPI for packages.
+  cache                       Inspect and manage pip's wheel cache.
+  index                       Inspect information available from package indexes.
+  wheel                       Build wheels from your requirements.
+  hash                        Compute hashes of package archives.
+  completion                  A helper command used for command completion.
+  debug                       Show information useful for debugging.
+  help                        Show help for commands.
+
+General Options:
+  -h, --help                  Show help.
+  --debug                     Let unhandled exceptions propagate outside the
+                              main subroutine, instead of logging them to
+                              stderr.
+  --isolated                  Run pip in an isolated mode, ignoring
+                              environment variables and user configuration.
+  --require-virtualenv        Allow pip to only run in a virtual environment;
+                              exit with an error otherwise.
+  --python <python>           Run pip with the specified Python interpreter.
+  -v, --verbose               Give more output. Option is additive, and can be
+                              used up to 3 times.
+  -V, --version               Show version and exit.
+  -q, --quiet                 Give less output. Option is additive, and can be
+                              used up to 3 times (corresponding to WARNING,
+                              ERROR, and CRITICAL logging levels).
+  --log <path>                Path to a verbose appending log.
+  --no-input                  Disable prompting for input.
+  --keyring-provider <keyring_provider>
+                              Enable the credential lookup via the keyring
+                              library if user input is allowed. Specify which
+                              mechanism to use [auto, disabled, import,
+                              subprocess]. (default: auto)
+  --proxy <proxy>             Specify a proxy in the form
+                              scheme://[user:passwd@]proxy.server:port.
+  --retries <retries>         Maximum attempts to establish a new HTTP
+                              connection. (default: 5)
+  --timeout <sec>             Set the socket timeout (default 15 seconds).
+  --exists-action <action>    Default action when a path already exists:
+                              (s)witch, (i)gnore, (w)ipe, (b)ackup, (a)bort.
+  --trusted-host <hostname>   Mark this host or host:port pair as trusted,
+                              even though it does not have valid or any HTTPS.
+  --cert <path>               Path to PEM-encoded CA certificate bundle. If
+                              provided, overrides the default. See 'SSL
+                              Certificate Verification' in pip documentation
+                              for more information.
+  --client-cert <path>        Path to SSL client certificate, a single file
+                              containing the private key and the certificate
+                              in PEM format.
+  --cache-dir <dir>           Store the cache data in <dir>.
+  --no-cache-dir              Disable the cache.
+  --disable-pip-version-check
+                              Don't periodically check PyPI to determine
+                              whether a new version of pip is available for
+                              download. Implied with --no-index.
+  --no-color                  Suppress colored output.
+  --use-feature <feature>     Enable new functionality, that may be backward
+                              incompatible.
+  --use-deprecated <feature>  Enable deprecated functionality, that will be
+                              removed in the future.
+  --resume-retries <resume_retries>
+                              Maximum attempts to resume or restart an
+                              incomplete download. (default: 5)
+
+
+============================================================
+🔍 Testing Different Import Approaches
+============================================================
+1. Testing direct import...
+   ❌ Direct import failed: No module named 'bayesian_lora.data'
+
+2. Testing import with explicit path...
+   ❌ Path-manipulated import failed: No module named 'bayesian_lora.data'
+
+3. Testing import from specific location...
+   Added /scratch/nalint2/Bayesian-LORA/src/bayesian_lora to Python path
+   ❌ Specific location import failed: No module named 'bayesian_lora.data'
+
+============================================================
+🔍 Testing Submodule Imports
+============================================================
+
+--- Testing: Original path ---
+   ❌ Basic import failed: No module named 'bayesian_lora.data'
+
+--- Testing: src in path ---
+   ❌ Basic import failed: No module named 'bayesian_lora.data'
+
+--- Testing: bayesian_lora in path ---
+   ❌ Basic import failed: No module named 'bayesian_lora.data'
+
+--- Testing: Both paths ---
+   ❌ Basic import failed: No module named 'bayesian_lora.data'
+
+============================================================
+🔍 Test Summary
+============================================================
+✅ Import path testing complete!
+📋 Check the output above to identify the path issue.
+🔧 The most likely issues are:
+   - Python path not including src directory
+   - Missing __init__.py files in subdirectories
+   - Package installed to wrong location
+=== Checking key dependencies ===
+✓ PyTorch version: 2.8.0+cu128
+✓ Transformers version: 4.56.0
+✓ PEFT version: 0.17.1
+=== Running quick debug check ===
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Traceback (most recent call last):
+  File "/scratch/nalint2/Bayesian-LORA/debug/cluster_troubleshooting.py", line 116, in test_model_creation
+    from bayesian_lora.utils.lora_params import get_lora_parameters
+  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py", line 10, in <module>
+    from .data.glue_datasets import create_dataloaders, get_dataset_metadata
+ModuleNotFoundError: No module named 'bayesian_lora.data'
+Traceback (most recent call last):
+  File "/scratch/nalint2/Bayesian-LORA/debug/cluster_troubleshooting.py", line 137, in test_data_loading
+    from bayesian_lora.data.glue_datasets import create_dataloaders
+  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py", line 10, in <module>
+    from .data.glue_datasets import create_dataloaders, get_dataset_metadata
+ModuleNotFoundError: No module named 'bayesian_lora.data'
+🔧 Cluster Troubleshooting for Bayesian LoRA
+
+=== Cluster Environment Check ===
+
+Python version: 3.9.18 (main, Jun 27 2025, 00:00:00) 
+[GCC 11.4.1 20231218 (Red Hat 11.4.1-4)]
+Python executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/python3
+Working directory: /scratch/nalint2/Bayesian-LORA
+
+Environment variables:
+  - PYTHONPATH: Not set
+  - TOKENIZERS_PARALLELISM: false
+
+PyTorch version: 2.8.0+cu128
+CUDA available: True
+CUDA version: 12.8
+GPU count: 1
+Current GPU: 0
+GPU name: NVIDIA A10
+✓ Environment check passed
+
+
+=== Import Check ===
+
+✓ PyTorch: 2.8.0+cu128
+✓ Transformers: 4.56.0
+✓ PEFT: 0.17.1
+✓ Datasets: 4.0.0
+✓ PyYAML: 6.0.2
+✓ tqdm: 4.67.1
+✓ NumPy: 2.0.2
+✓ scikit-learn: 1.6.1
+✓ Imports check passed
+
+
+=== Bayesian LoRA Module Check ===
+
+❌ bayesian_lora module import failed: No module named 'bayesian_lora.data'
+❌ Bayesian LoRA Module check failed
+
+
+=== Model Creation Test ===
+
+Creating model...
+Model: bert-base-uncased
+Total parameters: 109,632,772
+Trainable (LoRA) parameters: 147,456
+Frozen (base) parameters: 109,485,316
+LoRA ratio: 0.13%
+✓ Model created: BERTLoRAModel
+❌ Model creation failed: No module named 'bayesian_lora.data'
+❌ Model Creation check failed
+
+
+=== Data Loading Test ===
+
+❌ Data loading failed: No module named 'bayesian_lora.data'
+❌ Data Loading check failed
+
+=== Troubleshooting Results ===
+Passed: 2/5
+⚠️  Some checks failed. Check the output above for issues.
+
+Common solutions:
+1. Activate virtual environment: source .venv/bin/activate
+2. Install package: pip3 install -e .
+3. Install requirements: pip3 install -r requirements_lora.txt
+4. Check PYTHONPATH: export PYTHONPATH=${PYTHONPATH}:$(pwd)/src
+=== Attempting to fix import path issue ===
+Current PYTHONPATH: 
+Adding src directory to Python path...
+Updated PYTHONPATH: :/u/nalint2/scratch/Bayesian-LORA/src
+=== Testing if path fix worked ===
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+AttributeError: module 'sys' has no attribute 'getcwd'
+Python path includes src: True
+=== Starting SST-2 BERT SGLD Experiment ===
+python3 scripts/train_lora_hf.py --config configs/experiment_sst2_bert_sgld.yaml
+Traceback (most recent call last):
+  File "/scratch/nalint2/Bayesian-LORA/scripts/train_lora_hf.py", line 14, in <module>
+    from bayesian_lora.models.hf_lora import build_huggingface_lora_model
+  File "/u/nalint2/scratch/Bayesian-LORA/src/bayesian_lora/__init__.py", line 10, in <module>
+    from .data.glue_datasets import create_dataloaders, get_dataset_metadata
+ModuleNotFoundError: No module named 'bayesian_lora.data'
+make: *** [Makefile:27: experiment-sst2-bert-sgld] Error 1
+=== Experiment Completed ===

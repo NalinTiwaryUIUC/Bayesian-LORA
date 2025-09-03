@@ -1,7 +1,21 @@
 Metadata-Version: 2.4
 Name: Bayesian-LORA
 Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
 Author: Bayesian LoRA Team
-Requires-Python: >=3.10
-Dynamic: author
+Requires-Python: >=3.9
+Requires-Dist: torch>=2.0.0
+Requires-Dist: torchvision
+Requires-Dist: numpy
+Requires-Dist: tqdm
+Requires-Dist: pyyaml
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: transformers>=4.30.0
+Requires-Dist: datasets>=2.12.0
+Requires-Dist: tokenizers>=0.13.0
+Requires-Dist: peft>=0.4.0
+Requires-Dist: accelerate>=0.20.0
+Requires-Dist: sentencepiece
+Requires-Dist: protobuf
 Dynamic: requires-python
