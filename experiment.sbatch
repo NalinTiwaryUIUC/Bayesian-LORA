@@ -60,20 +60,21 @@ pip3 show bayesian-lora || {
     ls -la . 2>/dev/null || echo "❌ Cannot access current directory"
     
     echo "=== Running emergency debug analysis ==="
-python3 debug/debug_suite.py --quick
+    python3 debug/debug_suite.py --quick
     
-    echo "=== Trying alternative approaches ==="
-    echo "Attempting pip install . (non-editable)..."
-    pip3 install . || {
-        echo "❌ pip install . also failed. Installing dependencies only..."
-        pip3 install -r requirements_lora.txt
-        
-        echo "=== Setting PYTHONPATH as fallback ==="
-        export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
-        echo "PYTHONPATH set to: $PYTHONPATH"
-        
-        echo "=== Testing fallback import ==="
-        python3 -c "
+    if [ $? -ne 0 ]; then
+        echo "❌ Emergency debug failed! Trying alternative approaches..."
+        echo "Attempting pip install . (non-editable)..."
+        pip3 install . || {
+            echo "❌ pip install . also failed. Installing dependencies only..."
+            pip3 install -r requirements_lora.txt
+            
+            echo "=== Setting PYTHONPATH as fallback ==="
+            export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+            echo "PYTHONPATH set to: $PYTHONPATH"
+            
+            echo "=== Testing fallback import ==="
+            python3 -c "
 import sys
 sys.path.insert(0, '$(pwd)/src')
 try:
@@ -83,7 +84,8 @@ except Exception as e:
     print(f'❌ Fallback import failed: {e}')
     print('This indicates a deeper issue with the package structure.')
 "
-    }
+        }
+    fi
 }
 
 echo "=== Verifying installation ==="
@@ -97,7 +99,20 @@ print(f'Version: {bayesian_lora.__version__}')
 print(f'Author: {bayesian_lora.__author__}')
 " && {
     echo "✅ Package properly installed! Testing submodules..."
-    python3 debug/debug_suite.py --quick
+    echo "=== Running comprehensive debug check ==="
+    python3 debug/debug_suite.py
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Debug suite failed! This indicates a critical issue."
+        echo "=== Manual debugging required ==="
+        echo "Please check the debug output above and manually fix the issues."
+        echo "Common fixes:"
+        echo "  - Check file permissions: ls -la src/"
+        echo "  - Fix permissions: chmod -R 755 src/"
+        echo "  - Recreate venv: python3 -m venv .venv"
+        echo "  - Try alternative install: pip3 install --user -e ."
+        exit 1
+    fi
 } || {
     echo "❌ Direct import failed. Let's debug..."
     echo "Current PYTHONPATH: $PYTHONPATH"
@@ -125,8 +140,7 @@ python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
 python3 -c "import transformers; print(f'✓ Transformers version: {transformers.__version__}')"
 python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
 
-echo "=== Running final verification ==="
-python3 debug/debug_suite.py --quick
+echo "=== Final verification complete ==="
 
 # Try to fix the import path issue before running the experiment
 echo "=== Attempting to fix import path issue ==="
