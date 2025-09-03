@@ -2,7 +2,10 @@ __pycache__/
 *.pyc
 .venv/
 .ipynb_checkpoints/
+# Dataset data (not source code)
 data/
+# But allow source code data modules
+!src/bayesian_lora/data/
 runs/
 outputs/
 checkpoints/
