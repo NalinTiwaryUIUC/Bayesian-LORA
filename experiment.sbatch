@@ -53,8 +53,14 @@ pip3 show bayesian-lora || {
     echo "Current directory: $(pwd)"
     echo "Virtual environment: $VIRTUAL_ENV"
     
-    echo "=== Running deep debug analysis ==="
-    python3 debug/deep_debug.py
+    echo "=== File permissions check ==="
+    echo "Checking src directory permissions..."
+    ls -la src/ 2>/dev/null || echo "❌ Cannot access src directory"
+    echo "Checking current directory permissions..."
+    ls -la . 2>/dev/null || echo "❌ Cannot access current directory"
+    
+    echo "=== Running emergency debug analysis ==="
+    python3 debug/emergency_cluster_debug.py
     
     echo "=== Trying alternative approaches ==="
     echo "Attempting pip install . (non-editable)..."
@@ -65,6 +71,18 @@ pip3 show bayesian-lora || {
         echo "=== Setting PYTHONPATH as fallback ==="
         export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
         echo "PYTHONPATH set to: $PYTHONPATH"
+        
+        echo "=== Testing fallback import ==="
+        python3 -c "
+import sys
+sys.path.insert(0, '$(pwd)/src')
+try:
+    import bayesian_lora
+    print('✅ Fallback import successful!')
+except Exception as e:
+    print(f'❌ Fallback import failed: {e}')
+    print('This indicates a deeper issue with the package structure.')
+"
     }
 }
 
@@ -85,12 +103,19 @@ print(f'Author: {bayesian_lora.__author__}')
     echo "Current PYTHONPATH: $PYTHONPATH"
     echo "Current directory: $(pwd)"
     
-    echo "=== Running debug tests ==="
-    echo "Running installation test..."
-    python3 debug/test_installation.py
+    echo "=== Running emergency debug tests ==="
+    echo "Running emergency cluster debug (works even when package is broken)..."
+    python3 debug/emergency_cluster_debug.py
     
     if [ $? -ne 0 ]; then
-        echo "❌ Installation test failed! Exiting."
+        echo "❌ Emergency debug failed! This is a critical issue."
+        echo "=== Manual debugging required ==="
+        echo "Please check the output above and manually fix the issues."
+        echo "Common fixes:"
+        echo "  - Check file permissions: ls -la src/"
+        echo "  - Fix permissions: chmod -R 755 src/"
+        echo "  - Recreate venv: python3 -m venv .venv"
+        echo "  - Try alternative install: pip3 install --user -e ."
         exit 1
     fi
 }
