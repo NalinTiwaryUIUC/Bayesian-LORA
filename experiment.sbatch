@@ -2,7 +2,7 @@
 #Batch Job Script for LoRA Experiment Only
 #
 #SBATCH --job-name=bayesian_lora_experiment
-#SBATCH --time=5:00:00                    # Job run time (hh:mm:ss) - 5 hours for LoRA only
+#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours for LoRA only
 #SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
