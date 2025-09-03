@@ -86,5 +86,20 @@ out:
    Adjust `step_size`, `burn_in`, `thin`, and (for SAM variants) perturbation radius to trade off mixing vs. bias.
 
 
+## Debugging
+
+### **Quick Health Check:**
+```bash
+python3 debug/debug_suite.py --quick
+```
+
+### **Full System Validation:**
+```bash
+python3 debug/debug_suite.py
+```
+
+### **Comprehensive Guide:**
+See `debug/DEBUG_GUIDE.md` for detailed debugging information, common issues, and solutions.
+
 ## TODO
 - Implement LORA experiments with transformers

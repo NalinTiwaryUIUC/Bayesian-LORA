@@ -60,7 +60,7 @@ pip3 show bayesian-lora || {
     ls -la . 2>/dev/null || echo "❌ Cannot access current directory"
     
     echo "=== Running emergency debug analysis ==="
-    python3 debug/emergency_cluster_debug.py
+python3 debug/debug_suite.py --quick
     
     echo "=== Trying alternative approaches ==="
     echo "Attempting pip install . (non-editable)..."
@@ -97,37 +97,25 @@ print(f'Version: {bayesian_lora.__version__}')
 print(f'Author: {bayesian_lora.__author__}')
 " && {
     echo "✅ Package properly installed! Testing submodules..."
-    python3 debug/test_installation.py
+    python3 debug/debug_suite.py --quick
 } || {
     echo "❌ Direct import failed. Let's debug..."
     echo "Current PYTHONPATH: $PYTHONPATH"
     echo "Current directory: $(pwd)"
     
-    echo "=== Running emergency debug tests ==="
-    echo "Running emergency cluster debug (works even when package is broken)..."
-    python3 debug/emergency_cluster_debug.py
+    echo "=== Running comprehensive debug check ==="
+    echo "Running consolidated debug suite..."
+    python3 debug/debug_suite.py
     
     if [ $? -ne 0 ]; then
-        echo "❌ Emergency debug failed! This is a critical issue."
+        echo "❌ Debug suite failed! This indicates a critical issue."
         echo "=== Manual debugging required ==="
-        echo "Please check the output above and manually fix the issues."
+        echo "Please check the debug output above and manually fix the issues."
         echo "Common fixes:"
         echo "  - Check file permissions: ls -la src/"
         echo "  - Fix permissions: chmod -R 755 src/"
         echo "  - Recreate venv: python3 -m venv .venv"
         echo "  - Try alternative install: pip3 install --user -e ."
-        exit 1
-    fi
-    
-    echo "=== Running import path analysis ==="
-    echo "Testing different import paths to identify the issue..."
-    python3 debug/test_import_paths.py
-    
-    if [ $? -ne 0 ]; then
-        echo "❌ Import path testing failed! This indicates a deeper issue."
-        echo "=== Critical debugging required ==="
-        echo "The import path testing script itself failed."
-        echo "This suggests a fundamental Python environment problem."
         exit 1
     fi
 }
@@ -137,8 +125,8 @@ python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
 python3 -c "import transformers; print(f'✓ Transformers version: {transformers.__version__}')"
 python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
 
-echo "=== Running quick debug check ==="
-python3 debug/cluster_troubleshooting.py
+echo "=== Running final verification ==="
+python3 debug/debug_suite.py --quick
 
 # Try to fix the import path issue before running the experiment
 echo "=== Attempting to fix import path issue ==="
