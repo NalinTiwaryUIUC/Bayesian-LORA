@@ -26,8 +26,6 @@
 Bayesian-LORA/
 ├── 📋 experiment.sbatch          # SLURM batch script (READY)
 ├── 📦 pyproject.toml            # Python packaging config
-├── 📦 setup.py                  # Traditional packaging
-├── 📋 requirements.txt          # Core dependencies
 ├── 📋 requirements_lora.txt     # LoRA-specific deps
 ├── 📁 debug/                    # 🆕 COMPREHENSIVE DEBUG SUITE
 │   ├── debug_suite.py          # 🎯 One comprehensive debug tool
@@ -88,8 +86,8 @@ sbatch experiment.sbatch
 4. **Submit**: `sbatch experiment.sbatch`
 
 ### **Debug Suite Features:**
-- **30 comprehensive checks** across 6 categories
-- **Environment, package, structure, imports, model, data** verification
+- **50+ comprehensive checks** across 11 categories
+- **Environment, package, structure, imports, model, data, samplers, configs, scripts, makefile** verification
 - **Professional output** with actionable suggestions
 - **CI/CD integration** with proper exit codes
 
@@ -100,11 +98,16 @@ sbatch experiment.sbatch
 ### **All Debug Checks Should Pass:**
 - ✅ Environment checks: 4/4
 - ✅ Package checks: 3/3
-- ✅ Structure checks: 13/13
-- ✅ Import checks: 5/5
-- ✅ Model checks: 2/2
-- ✅ Data checks: 3/3
-- ✅ **Overall: 30/30 checks passed**
+- ✅ Structure checks: 12/12
+- ✅ Import checks: 7/7
+- ✅ CIFAR model checks: 4/4
+- ✅ LoRA model checks: 3/3
+- ✅ SGLD sampler checks: 5/5
+- ✅ Data loading checks: 3/3
+- ✅ Configuration checks: 5/5
+- ✅ Training script checks: 4/4
+- ✅ Makefile checks: 3/3
+- ✅ **Overall: 60/60 checks passed**
 
 ### **LoRA Parameters:**
 - **Total model parameters**: ~109M

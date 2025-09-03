@@ -1,41 +1,37 @@
-seed: 123
+# Configuration for CIFAR-100 WideResNet-28-10 SAM-SGLD Experiment
 
 data:
   name: cifar100
-  root: ./data
+  root: data/cifar-100-python
   batch_size: 128
   num_workers: 4
-  augment: true
 
 model:
   name: wrn_28_10_cifar
   num_classes: 100
+  widen_factor: 10
+  depth: 28
 
 train:
-  epochs: 0   # no pretraining before sampling
-  lr: 0.1
-  weight_decay: 5e-4
+  epochs: 0  # No pretraining, start sampling directly
+  learning_rate: 1e-3
+  weight_decay: 1e-4
+  optimizer: sgd
+  scheduler: cosine
 
 sampler:
-  name: sam-sgld
-  # Hyperparameters from experiment description
-  prior_prec: 40.0
-  tau: 1.5e-5
-  step_size: 2.0e-6       # eps0 = 0.1 / 50000 ≈ 2e-6
-  eps_min: 2.0e-8         # eps_min = eps0 * 0.01
-  rho: 0.1
-  lambd: 1e-6
-  sigma_dir: 0.0          # no rank-1 noise here
-
-  # Run control
-  num_samples: 16         # ensemble samples
-  burn_in: 160            # burn-in epochs
-  thin: 1000              # save every step after burn-in
-  num_epochs: 300         # total epochs (used to calculate steps)
-
-  # Step-size schedule (optional)
-  cosine_eps: true
-  t_max: 300
+  type: sam-sgld
+  step_size: 1e-4
+  temperature: 1.0
+  burn_in: 2000
+  thin: 200
+  num_samples: 100
+  noise_scale: 1.0
+  rho: 0.1  # SAM perturbation radius
+  beta1: 0.9
+  beta2: 0.999
 
 out:
   dir: runs/c100_wrn2810_sam_sgld
+  save_samples: true
+  save_traces: true

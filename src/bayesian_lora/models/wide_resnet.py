@@ -83,5 +83,6 @@ class WideResNet(nn.Module):
     def forward(self, x):
         return self.f(x)
 
-def WRN_28_10_CIFAR(num_classes=10):
-    return WideResNet(depth=28, width_factor=10, dropout=0.3, in_channels=3, labels=num_classes)
+def WideResNetCIFAR(depth: int = 28, widen_factor: int = 10, num_classes: int = 10, dropout: float = 0.3):
+    """Constructor that matches the training script parameter names."""
+    return WideResNet(depth=depth, width_factor=widen_factor, dropout=dropout, in_channels=3, labels=num_classes)

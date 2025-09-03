@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-setup.py
-src/Bayesian_LORA.egg-info/PKG-INFO
-src/Bayesian_LORA.egg-info/SOURCES.txt
-src/Bayesian_LORA.egg-info/dependency_links.txt
-src/Bayesian_LORA.egg-info/requires.txt
-src/Bayesian_LORA.egg-info/top_level.txt
-src/bayesian_lora/__init__.py

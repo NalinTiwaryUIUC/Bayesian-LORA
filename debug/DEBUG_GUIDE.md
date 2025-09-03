@@ -1,6 +1,6 @@
-# 🐛 Bayesian LoRA Debug Guide
+# 🐛 Bayesian LoRA Comprehensive Debug Guide
 
-**The Complete Guide to Debugging Bayesian LoRA Projects**
+**The Complete Guide to Debugging and Testing Bayesian LoRA Projects**
 
 ---
 
@@ -22,7 +22,7 @@ python3 debug/debug_suite.py --verbose
 
 ## 📋 What the Debug Suite Checks
 
-The debug suite performs **30 comprehensive checks** across 6 categories:
+The debug suite performs **50+ comprehensive checks** across 11 categories:
 
 ### **1. Environment Checks (4 checks)**
 - ✅ Python version compatibility (3.9+)
@@ -40,22 +40,55 @@ The debug suite performs **30 comprehensive checks** across 6 categories:
 - ✅ All `__init__.py` files present
 - ✅ Configuration files available
 - ✅ Source code structure intact
+- ✅ Scripts and runs directories
 
-### **4. Module Imports (5 checks)**
+### **4. Module Imports (7 checks)**
 - ✅ Basic package import
-- ✅ Data module imports
-- ✅ Models module imports
+- ✅ Data module imports (CIFAR + GLUE)
+- ✅ Models module imports (CIFAR + LoRA)
 - ✅ Samplers module imports
 - ✅ Utils module imports
 
-### **5. Model Creation (2 checks)**
-- ✅ HuggingFace LoRA model creation
-- ✅ LoRA parameter counting and verification
+### **5. CIFAR Models (4 checks)**
+- ✅ ResNet-18 CIFAR model creation
+- ✅ WideResNet-28-10 CIFAR model creation
+- ✅ ResNet forward pass functionality
+- ✅ WideResNet forward pass functionality
 
-### **6. Data Loading (3 checks)**
-- ✅ Dataset metadata loading
-- ✅ Dataloader creation
-- ✅ Sample data processing
+### **6. LoRA Models (3 checks)**
+- ✅ LoRA model creation with RoBERTa
+- ✅ LoRA parameter counting and verification
+- ✅ LoRA forward pass functionality
+
+### **7. SGLD Samplers (5 checks)**
+- ✅ SGLD sampler creation
+- ✅ ASGLD sampler creation
+- ✅ SAM-SGLD sampler creation
+- ✅ SAM-SGLD Rank-1 sampler creation
+- ✅ SGLD step functionality
+
+### **8. Data Loading (3 checks)**
+- ✅ CIFAR-10 dataset loading
+- ✅ GLUE MRPC dataset loading
+- ✅ Data sample format validation
+
+### **9. Configuration Files (5 checks)**
+- ✅ CIFAR-10 ResNet-18 SGLD config
+- ✅ CIFAR-100 WideResNet-28-10 SGLD config
+- ✅ CIFAR-100 WideResNet-28-10 SAM-SGLD config
+- ✅ CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1 config
+- ✅ MRPC RoBERTa LoRA SGLD config
+
+### **10. Training Scripts (4 checks)**
+- ✅ CIFAR training script (`train.py`)
+- ✅ CIFAR evaluation script (`eval.py`)
+- ✅ LoRA training script (`train_mrpc_lora.py`)
+- ✅ LoRA evaluation script (`eval_mrpc_lora.py`)
+
+### **11. Makefile Targets (3 checks)**
+- ✅ Makefile existence
+- ✅ Make help target functionality
+- ✅ Make clean target functionality
 
 ---
 
@@ -70,51 +103,107 @@ pip3 install -e .
 pip3 install -e . --force-reinstall
 ```
 
-### **Issue 2: "No module named 'bayesian_lora.data'"**
+### **Issue 2: CIFAR Model Creation Fails**
 ```bash
-# Check if __init__.py file exists and has content
-ls -la src/bayesian_lora/data/__init__.py
-cat src/bayesian_lora/data/__init__.py
+# Check if torchvision is installed
+pip3 install torchvision
 
-# If empty/missing, check git tracking
-git status src/bayesian_lora/data/
-```
-
-### **Issue 3: LoRA Parameters = 0**
-```bash
-# Check model configuration
+# Test model creation manually
 python3 -c "
-from bayesian_lora.models.hf_lora import build_huggingface_lora_model
-model = build_huggingface_lora_model({
-    'name': 'bert-base-uncased',
-    'num_labels': 2,
-    'lora': {'r': 16, 'alpha': 32, 'dropout': 0.1}
-})
-from bayesian_lora.utils.lora_params import count_lora_parameters
-print(f'LoRA parameters: {count_lora_parameters(model):,}')
+from bayesian_lora.models.resnet_cifar import ResNetCIFAR
+model = ResNetCIFAR(depth=18, num_classes=10)
+print('✅ ResNet created successfully')
 "
 ```
 
-### **Issue 4: CUDA Not Available**
+### **Issue 3: LoRA Model Creation Fails**
 ```bash
-# Check PyTorch CUDA support
-python3 -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+# Check if transformers and peft are installed
+pip3 install transformers peft
 
-# Check CUDA version compatibility
-nvidia-smi
-python3 -c "import torch; print(f'PyTorch CUDA: {torch.version.cuda}')"
+# Test LoRA model creation manually
+python3 -c "
+from bayesian_lora.models.hf_lora import LoRAModel
+from transformers import AutoModelForSequenceClassification
+base_model = AutoModelForSequenceClassification.from_pretrained('roberta-base', num_labels=2)
+lora_model = LoRAModel(base_model, r=8, alpha=16.0)
+print('✅ LoRA model created successfully')
+"
 ```
 
-### **Issue 5: Package Not Found in Pip**
+### **Issue 4: SGLD Sampler Creation Fails**
 ```bash
-# Check installation status
-pip3 show bayesian-lora
+# Check if samplers can be imported
+python3 -c "
+from bayesian_lora.samplers.sgld import SGLDSampler
+import torch
+test_model = torch.nn.Linear(10, 2)
+sampler = SGLDSampler(test_model, temperature=1.0, step_size=1e-4)
+print('✅ SGLD sampler created successfully')
+"
+```
 
-# Check if in editable mode
-pip3 show bayesian-lora | grep "Editable project location"
+### **Issue 5: Data Loading Fails**
+```bash
+# For CIFAR data issues
+python3 -c "
+from bayesian_lora.data.cifar import get_cifar_dataset
+train_ds, test_ds = get_cifar_dataset('cifar10', 'data/cifar-10-batches-py')
+print(f'✅ CIFAR data loaded: {len(train_ds)} train, {len(test_ds)} test')
+"
 
-# Reinstall if needed
-pip3 install -e . --force-reinstall
+# For GLUE data issues
+python3 -c "
+from bayesian_lora.data.glue_datasets import MRPCDataset
+from transformers import AutoTokenizer
+tokenizer = AutoTokenizer.from_pretrained('roberta-base')
+dataset = MRPCDataset(split='train', tokenizer=tokenizer, max_length=128)
+print(f'✅ MRPC data loaded: {len(dataset)} samples')
+"
+```
+
+### **Issue 6: Configuration Files Not Found**
+```bash
+# Check if configs directory exists
+ls -la configs/
+
+# Check if specific config files exist
+ls -la configs/*.yaml
+
+# Verify YAML syntax
+python3 -c "
+import yaml
+with open('configs/cifar10_resnet18_sgld.yaml', 'r') as f:
+    config = yaml.safe_load(f)
+print('✅ Config file loaded successfully')
+"
+```
+
+### **Issue 7: Training Scripts Fail to Import**
+```bash
+# Check if scripts can be imported
+python3 -c "
+import scripts.train
+import scripts.eval
+import scripts.train_mrpc_lora
+import scripts.eval_mrpc_lora
+print('✅ All training scripts imported successfully')
+"
+```
+
+### **Issue 8: Makefile Targets Don't Work**
+```bash
+# Check if Makefile exists
+ls -la Makefile
+
+# Test make help
+make help
+
+# Test make clean
+make clean
+
+# Check if make is available
+which make
 ```
 
 ---
@@ -123,6 +212,9 @@ pip3 install -e . --force-reinstall
 
 ### **Local Development:**
 ```bash
+# Before starting work
+python3 debug/debug_suite.py --quick
+
 # Before committing code
 python3 debug/debug_suite.py --quick
 
@@ -152,32 +244,59 @@ python3 debug/debug_suite.py --quick || exit 1
 python3 debug/debug_suite.py
 ```
 
+### **Experiment Preparation:**
+```bash
+# Before running CIFAR experiments
+python3 debug/debug_suite.py --quick
+
+# Before running LoRA experiments
+python3 debug/debug_suite.py --quick
+
+# Before running all experiments
+python3 debug/debug_suite.py
+```
+
 ---
 
 ## 📊 Understanding Debug Output
 
 ### **Sample Output:**
 ```
-============================================================
-🔍 BAYESIAN LORA DEBUG REPORT
-============================================================
+======================================================================
+🔍 BAYESIAN LORA COMPREHENSIVE DEBUG REPORT
+======================================================================
 
 📋 ENVIRONMENT CHECKS:
-----------------------------------------
-✅ PASS python_version
-❌ FAIL cuda_available
-✅ PASS correct_directory
-❌ FAIL venv_active
+--------------------------------------------------
+✅ PASS Python Version
+✅ PASS Cuda Available
+✅ PASS Correct Directory
+❌ FAIL Venv Active
 
-📋 PACKAGE CHECKS:
-----------------------------------------
-✅ PASS package_imported
-✅ PASS pip_installed
-❌ FAIL editable_install
+📋 CIFAR MODELS CHECKS:
+--------------------------------------------------
+✅ PASS Resnet Created
+✅ PASS Wideresnet Created
+✅ PASS Resnet Forward
+✅ PASS Wideresnet Forward
 
-📊 SUMMARY: 27/30 checks passed
-⚠️  Some checks failed. Check the details above.
-============================================================
+📋 LORA MODELS CHECKS:
+--------------------------------------------------
+✅ PASS Lora Model Created
+✅ PASS Lora Parameters
+✅ PASS Lora Forward
+
+📋 SGLD SAMPLERS CHECKS:
+--------------------------------------------------
+✅ PASS Sgld Sampler Created
+✅ PASS Asgld Sampler Created
+✅ PASS Sam Sgld Sampler Created
+✅ PASS Sam Sgld R1 Sampler Created
+✅ PASS Sgld Step Works
+
+📊 SUMMARY: 45/50 checks passed
+✅ MOST CHECKS PASSED! Minor issues detected but environment is functional.
+======================================================================
 
 🔧 SUGGESTED FIXES:
   🔧 Activate virtual environment: source .venv/bin/activate
@@ -214,8 +333,9 @@ python3 --version
 
 ### **If All Checks Pass:**
 🎉 **Your environment is ready!** You can proceed with:
-- Running experiments
-- Training models
+- Running CIFAR experiments with all SGLD variants
+- Running LoRA experiments with MRPC dataset
+- Using all training and evaluation scripts
 - Deploying to clusters
 - Contributing code
 
@@ -235,18 +355,29 @@ Bayesian-LORA/
 │       │   └── cifar.py         # CIFAR datasets
 │       ├── models/
 │       │   ├── __init__.py      # Models module
-│       │   └── hf_lora.py       # HuggingFace LoRA models
+│       │   ├── hf_lora.py       # HuggingFace LoRA models
+│       │   ├── resnet_cifar.py  # CIFAR ResNet models
+│       │   └── wide_resnet.py   # CIFAR WideResNet models
 │       ├── samplers/
 │       │   ├── __init__.py      # Samplers module
-│       │   └── sgld.py          # SGLD sampler
+│       │   └── sgld.py          # SGLD samplers (all variants)
 │       └── utils/
 │           ├── __init__.py      # Utils module
 │           └── lora_params.py   # LoRA parameter utilities
-├── configs/                      # Configuration files
-├── scripts/                      # Training scripts
+├── configs/                      # All experiment configurations
+├── scripts/                      # All training/evaluation scripts
 ├── pyproject.toml               # Project configuration
-└── setup.py                     # Package setup
+├── setup.py                     # Package setup
+├── Makefile                     # Build automation
+└── requirements_lora.txt        # Dependencies
 ```
+
+### **Experiment Types Supported:**
+- **CIFAR-10 ResNet-18 SGLD**
+- **CIFAR-100 WideResNet-28-10 SGLD**
+- **CIFAR-100 WideResNet-28-10 SAM-SGLD**
+- **CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1**
+- **MRPC RoBERTa LoRA SGLD**
 
 ---
 
@@ -280,6 +411,24 @@ echo $?
 
 # Parse results programmatically
 python3 debug/debug_suite.py | grep "SUMMARY"
+
+# Use in CI/CD pipelines
+python3 debug/debug_suite.py || (echo "Debug checks failed" && exit 1)
+```
+
+### **Performance Testing:**
+```bash
+# Test model creation performance
+time python3 -c "
+from bayesian_lora.models.resnet_cifar import ResNetCIFAR
+model = ResNetCIFAR(depth=18, num_classes=10)
+"
+
+# Test data loading performance
+time python3 -c "
+from bayesian_lora.data.cifar import get_cifar_dataset
+train_ds, test_ds = get_cifar_dataset('cifar10', 'data/cifar-10-batches-py')
+"
 ```
 
 ---
@@ -291,11 +440,13 @@ python3 debug/debug_suite.py | grep "SUMMARY"
 - **Requirements**: `../requirements_lora.txt`
 - **Configuration**: `../configs/`
 - **Training Scripts**: `../scripts/`
+- **Makefile**: `../Makefile`
 
 ### **External Resources:**
 - **PyTorch Documentation**: https://pytorch.org/docs/
 - **HuggingFace Transformers**: https://huggingface.co/docs/transformers/
 - **PEFT Documentation**: https://huggingface.co/docs/peft/
+- **TorchVision Documentation**: https://pytorch.org/vision/stable/
 
 ---
 
@@ -323,6 +474,11 @@ python3 debug/debug_suite.py | grep "SUMMARY"
 3. **Before pushing**: `python3 debug/debug_suite.py`
 4. **When troubleshooting**: `python3 debug/debug_suite.py --verbose`
 
+### **Experiment Workflow:**
+1. **Before CIFAR experiments**: `python3 debug/debug_suite.py --quick`
+2. **Before LoRA experiments**: `python3 debug/debug_suite.py --quick`
+3. **Before all experiments**: `python3 debug/debug_suite.py --quick`
+
 ### **Cluster Workflow:**
 1. **After setup**: `python3 debug/debug_suite.py --quick`
 2. **Before experiments**: `python3 debug/debug_suite.py --quick`
@@ -343,15 +499,19 @@ python3 debug/debug_suite.py | grep "SUMMARY"
 - **🔧 Actionable Results**: Clear fixes for common issues
 - **📚 Comprehensive Documentation**: Everything in one place
 - **🚀 Easy Maintenance**: Update one file instead of many
+- **🧪 Comprehensive Testing**: Tests all experiment types and components
 
 ### **Remember:**
 - **Always run debug suite** before reporting issues
 - **Use `--quick` for daily checks**, full check for deployments
 - **Check suggested fixes** before asking for help
 - **Keep the debug suite updated** as the project evolves
+- **Test all experiment types** before running experiments
 
 ---
 
 **Status**: **COMPREHENSIVE AND READY** 🚀
 
-**This guide contains everything you need to debug Bayesian LoRA projects effectively!** ✨
+**This guide contains everything you need to debug and test Bayesian LoRA projects effectively!** ✨
+
+**Supports all experiment types: CIFAR (ResNet/WideResNet) + LoRA (RoBERTa) with all SGLD variants!** 🎯

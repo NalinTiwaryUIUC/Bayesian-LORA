@@ -1,0 +1,58 @@
+# Configuration for MRPC RoBERTa LoRA SGLD Experiment
+# Based on experiment outline in sgld_lora_experiment.md
+
+experiment:
+  name: "mrpc_roberta_lora_sgld"
+  description: "SGLD for Bayesian LoRA on MRPC dataset"
+  
+model:
+  backbone: "roberta-base"
+  max_sequence_length: 256
+  lora:
+    inject_into: ["q", "k", "v", "o"]  # All layers
+    rank: 8
+    alpha: 16
+    dropout: 0.05
+
+data:
+  dataset: "mrpc"
+  batch_size: 32
+  max_epochs: 20
+
+training:
+  map_lora:
+    optimizer: "adamw"
+    learning_rate: 5e-5
+    weight_decay: 0.01
+    beta1: 0.9
+    beta2: 0.999
+    scheduler: "linear"
+    warmup_ratio: 0.1
+  
+  sgld_lora:
+    learning_rate: 1e-4
+    temperature: 1.0
+    prior_std: 0.1
+    step_size_schedule:
+      initial: 1e-4
+      decay_rate: 0.6
+      decay_steps: 1000
+    gradient_clip_norm: 1.0
+    chains: 4
+    burn_in_steps: 2000
+    sampling_steps: 10000
+    thinning: 20
+    samples_to_retain: 200
+
+evaluation:
+  metrics: ["accuracy", "nll", "ece"]
+  mcmc_diagnostics:
+    probe_set_size: 512
+    summaries: ["log_posterior", "l2_norm"]
+    r_hat_threshold: 1.05
+    ess_threshold: 200
+
+output:
+  save_dir: "runs/mrpc_roberta_lora_sgld"
+  save_samples: true
+  save_traces: true

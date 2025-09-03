@@ -1,19 +1,16 @@
 #!/bin/bash
-#Batch Job Script for Bayesian LoRA Experiments
+#Batch Job Script for Bayesian Experiments (CIFAR + LoRA)
 #
-#SBATCH --job-name=run_bayesian_lora
-
-#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
+#SBATCH --job-name=bayesian_experiments
+#SBATCH --time=24:00:00                    # Job run time (hh:mm:ss) - 24 hours
 #SBATCH --mail-type=ALL,FAIL
-#SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
+#SBATCH --mail-user="your-email@domain.com" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
 #SBATCH --gres=gpu:1                       # Number of GPUs
 #SBATCH --ntasks-per-node=1                # Number of cores per node
-#SBATCH --job-name=nalint2-lora-exp        # Name of job
-#SBATCH --account=arindamb-cs-eng          # Account
+#SBATCH --account=your-account             # Account
 #SBATCH --partition=eng-research-gpu       # Partition
-#SBATCH --output=nalint2_lora_log_%j       # output file name with job ID
-#
+#SBATCH --output=bayesian_experiments_log_%j    # output file name with job ID
 
 # Load any necessary modules (uncomment if needed)
 # module load python/3.9
@@ -40,13 +37,13 @@ echo "=== Upgrading pip to fix version issues ==="
 python3 -m pip install --upgrade pip
 
 echo "=== Installing dependencies ==="
-echo "Installing package in editable mode (proper way)..."
+echo "Installing package in editable mode..."
 pip3 install -e .
 
-# Check if the installation actually succeeded
+# Check if the installation succeeded
 echo "=== Verifying pip installation ==="
 pip3 show bayesian-lora || {
-    echo "❌ pip install -e . failed or didn't complete properly!"
+    echo "❌ pip install -e . failed!"
     echo "=== Debugging pip install failure ==="
     echo "Python version: $(python3 --version)"
     echo "Pip version: $(pip3 --version)"
@@ -56,8 +53,6 @@ pip3 show bayesian-lora || {
     echo "=== File permissions check ==="
     echo "Checking src directory permissions..."
     ls -la src/ 2>/dev/null || echo "❌ Cannot access src directory"
-    echo "Checking current directory permissions..."
-    ls -la . 2>/dev/null || echo "❌ Cannot access current directory"
     
     echo "=== Running emergency debug analysis ==="
     python3 debug/debug_suite.py --quick
@@ -82,7 +77,6 @@ try:
     print('✅ Fallback import successful!')
 except Exception as e:
     print(f'❌ Fallback import failed: {e}')
-    print('This indicates a deeper issue with the package structure.')
 "
         }
     fi
@@ -91,104 +85,124 @@ except Exception as e:
 echo "=== Verifying installation ==="
 echo "Testing package installation status..."
 
-# Test the proper import (should work if pip install -e . succeeded)
+# Test the proper import
 python3 -c "
 import bayesian_lora
 print('✅ bayesian_lora module imported successfully!')
 print(f'Version: {bayesian_lora.__version__}')
 print(f'Author: {bayesian_lora.__author__}')
 " && {
-    echo "✅ Package properly installed! Testing submodules..."
-    echo "=== Running comprehensive debug check ==="
-    python3 debug/debug_suite.py
-    
-    if [ $? -ne 0 ]; then
-        echo "❌ Debug suite failed! This indicates a critical issue."
-        echo "=== Manual debugging required ==="
-        echo "Please check the debug output above and manually fix the issues."
-        echo "Common fixes:"
-        echo "  - Check file permissions: ls -la src/"
-        echo "  - Fix permissions: chmod -R 755 src/"
-        echo "  - Recreate venv: python3 -m venv .venv"
-        echo "  - Try alternative install: pip3 install --user -e ."
-        exit 1
-    fi
+    echo "✅ Package installation verified successfully!"
 } || {
-    echo "❌ Direct import failed. Let's debug..."
-    echo "Current PYTHONPATH: $PYTHONPATH"
-    echo "Current directory: $(pwd)"
-    
-    echo "=== Running comprehensive debug check ==="
-    echo "Running consolidated debug suite..."
+    echo "❌ Package import failed even after installation attempts!"
+    echo "=== Final debugging attempt ==="
     python3 debug/debug_suite.py
-    
-    if [ $? -ne 0 ]; then
-        echo "❌ Debug suite failed! This indicates a critical issue."
-        echo "=== Manual debugging required ==="
-        echo "Please check the debug output above and manually fix the issues."
-        echo "Common fixes:"
-        echo "  - Check file permissions: ls -la src/"
-        echo "  - Fix permissions: chmod -R 755 src/"
-        echo "  - Recreate venv: python3 -m venv .venv"
-        echo "  - Try alternative install: pip3 install --user -e ."
-        exit 1
-    fi
+    exit 1
 }
 
-echo "=== Checking key dependencies ==="
-python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
-python3 -c "import transformers; print(f'✓ Transformers version: {transformers.__version__}')"
-python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
+echo "=== Installing additional requirements ==="
+pip3 install -r requirements_lora.txt
 
-echo "=== Final verification complete ==="
+echo "=== Environment setup complete ==="
+echo "Python executable: $(which python3)"
+echo "Pip executable: $(which pip3)"
+echo "Virtual environment: $VIRTUAL_ENV"
 
-# Try to fix the import path issue before running the experiment
-echo "=== Attempting to fix import path issue ==="
-echo "Current PYTHONPATH: $PYTHONPATH"
-echo "Adding src directory to Python path..."
+# Run the experiments
+echo "=== Starting Bayesian Experiments ==="
 
-# Export PYTHONPATH to include src directory
-export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
-echo "Updated PYTHONPATH: $PYTHONPATH"
+# Phase 1: CIFAR Experiments
+echo "=== Phase 1: CIFAR Experiments with SGLD Variants ==="
 
-# Test if the fix worked
-echo "=== Testing if path fix worked ==="
-python3 -c "
-import sys
-print(f'Python path includes src: {any(\"src\" in p for p in sys.path)}')
-print(f'Current working directory: {sys.getcwd()}')
-print(f'Expected src path: {sys.getcwd()}/src')
+echo "Running CIFAR-10 ResNet-18 SGLD..."
+python3 scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
+if [ $? -eq 0 ]; then
+    echo "✅ CIFAR-10 experiment completed successfully!"
+else
+    echo "❌ CIFAR-10 experiment failed!"
+    exit 1
+fi
 
-try:
-    import bayesian_lora
-    print('✅ Import successful after path fix!')
-    print(f'Version: {bayesian_lora.__version__}')
-    
-    # Test submodule imports
-    try:
-        from bayesian_lora.data import glue_datasets
-        print('✅ Submodule data.glue_datasets import successful!')
-    except Exception as e:
-        print(f'❌ Submodule data.glue_datasets import failed: {e}')
-        
-except Exception as e:
-    print(f'❌ Import still failed after path fix: {e}')
-    print('This indicates a deeper issue with the package structure.')
-"
+echo "Running CIFAR-100 WideResNet-28-10 SGLD..."
+python3 scripts/train.py --config configs/cifar100_wrn2810_sgld.yaml
+if [ $? -eq 0 ]; then
+    echo "✅ CIFAR-100 SGLD experiment completed successfully!"
+else
+    echo "❌ CIFAR-100 SGLD experiment failed!"
+    exit 1
+fi
 
-# Run your experiment using Make commands
-# Example: Running SST-2 BERT SGLD Experiment
-echo "=== Starting SST-2 BERT SGLD Experiment ==="
-make experiment-sst2-bert-sgld
+echo "Running CIFAR-100 WideResNet-28-10 SAM-SGLD..."
+python3 scripts/train.py --config configs/cifar100_wrn2810_sam_sgld.yaml
+if [ $? -eq 0 ]; then
+    echo "✅ CIFAR-100 SAM-SGLD experiment completed successfully!"
+else
+    echo "❌ CIFAR-100 SAM-SGLD experiment failed!"
+    exit 1
+fi
 
-# Alternative examples you can uncomment and use:
-# echo "=== Starting SST-2 RoBERTa SAM-SGLD Experiment ==="
-# make experiment-sst2-roberta-sam-sgld
+echo "Running CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1..."
+python3 scripts/train.py --config configs/cifar100_wrn2810_sam_sgld_r1.yaml
+if [ $? -eq 0 ]; then
+    echo "✅ CIFAR-100 SAM-SGLD Rank-1 experiment completed successfully!"
+else
+    echo "❌ CIFAR-100 SAM-SGLD Rank-1 experiment failed!"
+    exit 1
+fi
 
-# echo "=== Starting MRPC DistilBERT ASGLD Experiment ==="
-# make experiment-mrpc-distilbert-asgld
+# Phase 2: LoRA Experiment
+echo "=== Phase 2: MRPC RoBERTa LoRA SGLD Experiment ==="
+echo "Configuration: configs/mrpc_roberta_lora_sgld.yaml"
+echo "Output directory: runs/mrpc_roberta_lora_sgld"
 
-# echo "=== Starting IMDB BERT SAM-SGLD-R1 Experiment ==="
-# make experiment-imdb-bert-sam-sgld-r1
+# Run LoRA training
+echo "=== Phase 2a: Training MAP LoRA and SGLD Sampling ==="
+python3 scripts/train_mrpc_lora.py \
+    --config configs/mrpc_roberta_lora_sgld.yaml \
+    --output_dir runs/mrpc_roberta_lora_sgld
 
-echo "=== Experiment Completed ==="
+if [ $? -eq 0 ]; then
+    echo "✅ LoRA training completed successfully!"
+else
+    echo "❌ LoRA training failed!"
+    exit 1
+fi
+
+# Run LoRA evaluation
+echo "=== Phase 2b: Evaluating LoRA Results ==="
+python3 scripts/eval_mrpc_lora.py \
+    --config configs/mrpc_roberta_lora_sgld.yaml \
+    --map_model_path runs/mrpc_roberta_lora_sgld/map_model.pth \
+    --sgld_samples_path runs/mrpc_roberta_lora_sgld/sgld_samples.pth \
+    --output_dir runs/mrpc_roberta_lora_sgld
+
+if [ $? -eq 0 ]; then
+    echo "✅ LoRA evaluation completed successfully!"
+else
+    echo "❌ LoRA evaluation failed!"
+    exit 1
+fi
+
+# Phase 3: Evaluate CIFAR Experiments
+echo "=== Phase 3: Evaluating CIFAR Experiments ==="
+
+echo "Evaluating CIFAR-10 ResNet-18 SGLD..."
+python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --output_dir runs/c10_r18_sgld
+
+echo "Evaluating CIFAR-100 WideResNet-28-10 SGLD..."
+python3 scripts/eval.py --config configs/cifar100_wrn2810_sgld.yaml --output_dir runs/c100_wrn2810_sgld
+
+echo "Evaluating CIFAR-100 WideResNet-28-10 SAM-SGLD..."
+python3 scripts/eval.py --config configs/cifar100_wrn2810_sam_sgld.yaml --output_dir runs/c100_wrn2810_sam_sgld
+
+echo "Evaluating CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1..."
+python3 scripts/eval.py --config configs/cifar100_wrn2810_sam_sgld_r1.yaml --output_dir runs/c100_wrn2810_sam_sgld_r1
+
+echo "=== All experiments completed successfully! ==="
+echo "Results saved to:"
+echo "  - CIFAR-10: runs/c10_r18_sgld/"
+echo "  - CIFAR-100 SGLD: runs/c100_wrn2810_sgld/"
+echo "  - CIFAR-100 SAM-SGLD: runs/c100_wrn2810_sam_sgld/"
+echo "  - CIFAR-100 SAM-SGLD Rank-1: runs/c100_wrn2810_sam_sgld_r1/"
+echo "  - MRPC LoRA: runs/mrpc_roberta_lora_sgld/"
+echo "Job completed at: $(date)"

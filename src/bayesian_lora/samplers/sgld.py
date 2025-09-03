@@ -1,88 +1,302 @@
 # src/bayesian_lora/samplers/sgld.py
 import math
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-@torch.no_grad()
-def sgld_step(x, grad, eps, tau, debug=False, step=None):
-    """
-    Single SGLD update on a flat parameter vector x.
+# =============================================================================
+# Sampler Classes for Training Scripts
+# =============================================================================
 
-    x   : flat params tensor
-    grad: gradient tensor (same shape as x)
-    eps : step size
-    tau : temperature (often 1.0)
-    """
-    noise_std = math.sqrt(2 * tau * eps)
-    noise = torch.randn_like(x) * noise_std
-    x = x - eps * grad + noise
+class BaseSampler:
+    """Base class for all samplers."""
+    
+    def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0):
+        self.model = model
+        self.temperature = temperature
+        self.step_size = step_size
+        self.noise_scale = noise_scale
+        self.device = next(model.parameters()).device
+    
+    def get_current_state(self):
+        """Get current model state."""
+        return {name: param.clone().detach() for name, param in self.model.named_parameters()}
+    
+    def step(self, data, target):
+        """Take one sampling step."""
+        raise NotImplementedError
 
-    if debug and step is not None and step % 50 == 0:
-        print(f"[SGLD {step}] ‖grad‖={grad.norm().item():.4f}, ‖x‖={x.norm().item():.4f}")
-    return x
 
-@torch.no_grad()
-def asgld_step(x, m, v, grad, eps, beta1, beta2, a, lambd, tau, step=None, debug=False):
-    # Update moment estimates
-    m = beta1 * m + (1 - beta1) * grad
-    v = beta2 * v + (1 - beta2) * (grad * grad)
-    # Adaptive drift
-    A = m / (v.sqrt() + lambd)
-    # Noise
-    noise_std = math.sqrt(2 * tau * eps)
-    noise = torch.randn_like(x) * noise_std
-    # Update
-    x = x - eps * (grad + a * A) + noise
+class SGLDSampler(BaseSampler):
+    """Stochastic Gradient Langevin Dynamics sampler."""
+    
+    def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0, 
+                 prior_std=0.1, gradient_clip_norm=1.0):
+        super().__init__(model, temperature, step_size, noise_scale)
+        self.prior_std = prior_std
+        self.gradient_clip_norm = gradient_clip_norm
+    
+    def step(self, *args):
+        """
+        Take one SGLD step.
+        Supports both (data, target) and (input_ids, attention_mask, labels) formats.
+        """
+        self.model.train()
+        
+        # Handle different input formats
+        if len(args) == 2:
+            # Traditional format: (data, target)
+            data, target = args
+            output = self.model(data)
+        elif len(args) == 3:
+            # LoRA format: (input_ids, attention_mask, labels)
+            input_ids, attention_mask, labels = args
+            output = self.model(input_ids, attention_mask=attention_mask)
+            target = labels
+        else:
+            raise ValueError("Expected 2 or 3 arguments")
+        
+        # Handle different output formats
+        if hasattr(output, 'logits'):
+            # HuggingFace output object (LoRA models)
+            logits = output.logits
+        else:
+            # Direct logits (CIFAR models)
+            logits = output
+        
+        # Compute loss
+        loss = F.cross_entropy(logits, target)
+        
+        # Add prior term (Gaussian prior on LoRA parameters)
+        prior_loss = 0.0
+        for param in self.model.parameters():
+            if param.requires_grad:  # Only LoRA parameters
+                prior_loss += torch.sum(param ** 2) / (2 * self.prior_std ** 2)
+        
+        total_loss = loss + prior_loss
+        
+        # Backward pass
+        self.model.zero_grad()
+        total_loss.backward()
+        
+        # Gradient clipping
+        if self.gradient_clip_norm > 0:
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
+        
+        # SGLD update
+        with torch.no_grad():
+            for param in self.model.parameters():
+                if param.grad is not None and param.requires_grad:
+                    # SGLD update: θ ← θ - η∇L(θ) + √(2η/τ)ξ
+                    # where L(θ) = NLL + prior
+                    param.data -= self.step_size * param.grad
+                    
+                    # Add noise: √(2η/τ)ξ
+                    noise_std = math.sqrt(2 * self.temperature * self.step_size)
+                    noise = torch.randn_like(param) * noise_std
+                    param.data += noise
 
-    if debug and step is not None and step % 50 == 0:
-        print(f"[ASGLD {step}] ‖grad‖={grad.norm().item():.4f}, "
-              f"‖m‖={m.norm().item():.4f}, ‖v‖={v.norm().item():.4f}, "
-              f"‖A‖={A.norm().item():.4f}, eps={eps:.3e}")
-    return x, m, v
 
-@torch.no_grad()
-def sam_sgld_step(x, grad_fn, eps, tau, rho, lambd, debug=False, step=None):
-    """
-    Single SAM-SGLD update, assuming grad_fn returns ∇_x log p(x|D) (i.e., data + prior if you want).
-    """
-    noise_std = math.sqrt(2 * tau * eps)
-    noise = torch.randn_like(x) * noise_std
+class ASGLDSampler(BaseSampler):
+    """Adaptive SGLD sampler."""
+    
+    def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0, 
+                 beta1=0.9, beta2=0.999, a=0.1, lambd=1e-8):
+        super().__init__(model, temperature, step_size, noise_scale)
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.a = a
+        self.lambd = lambd
+        
+        # Initialize moment estimates
+        self.m = {name: torch.zeros_like(param) for name, param in self.model.named_parameters()}
+        self.v = {name: torch.zeros_like(param) for name, param in self.model.named_parameters()}
+    
+    def step(self, data, target):
+        self.model.train()
+        
+        # Forward pass
+        output = self.model(data)
+        
+        # Handle different output formats
+        if hasattr(output, 'logits'):
+            logits = output.logits
+        else:
+            logits = output
+            
+        loss = F.cross_entropy(logits, target)
+        
+        # Backward pass
+        self.model.zero_grad()
+        loss.backward()
+        
+        # ASGLD update
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if param.grad is not None:
+                    grad = param.grad.data
+                    
+                    # Update moment estimates
+                    self.m[name] = self.beta1 * self.m[name] + (1 - self.beta1) * grad
+                    self.v[name] = self.beta2 * self.v[name] + (1 - self.beta2) * (grad * grad)
+                    
+                    # Adaptive drift
+                    A = self.m[name] / (self.v[name].sqrt() + self.lambd)
+                    
+                    # Noise
+                    noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
+                    
+                    # Update
+                    param.data -= self.step_size * (grad + self.a * A) + noise
 
-    grad = grad_fn(x)
-    delta = rho * grad / (grad.norm() + lambd)
-    grad_sam = grad_fn(x + delta)
 
-    x_new = x - eps * grad_sam + noise
+class SAMSGLDSampler(BaseSampler):
+    """SAM-SGLD sampler."""
+    
+    def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0, 
+                 rho=0.1, lambd=1e-8, beta1=0.9, beta2=0.999):
+        super().__init__(model, temperature, step_size, noise_scale)
+        self.rho = rho
+        self.lambd = lambd
+        self.beta1 = beta1
+        self.beta2 = beta2
+    
+    def step(self, data, target):
+        self.model.train()
+        
+        # First forward pass
+        output1 = self.model(data)
+        
+        # Handle different output formats
+        if hasattr(output1, 'logits'):
+            logits1 = output1.logits
+        else:
+            logits1 = output1
+            
+        loss1 = F.cross_entropy(logits1, target)
+        
+        # Backward pass for first gradient
+        self.model.zero_grad()
+        loss1.backward()
+        
+        # Store first gradient
+        grad1 = {name: param.grad.clone() if param.grad is not None else None 
+                for name, param in self.model.named_parameters()}
+        
+        # Perturb parameters
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if grad1[name] is not None:
+                    grad_norm = grad1[name].norm() + self.lambd
+                    delta = self.rho * grad1[name] / grad_norm
+                    param.data += delta
+        
+        # Second forward pass
+        output2 = self.model(data)
+        
+        # Handle different output formats
+        if hasattr(output2, 'logits'):
+            logits2 = output2.logits
+        else:
+            logits2 = output2
+            
+        loss2 = F.cross_entropy(logits2, target)
+        
+        # Backward pass for second gradient
+        self.model.zero_grad()
+        loss2.backward()
+        
+        # SGLD update with SAM gradient
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if param.grad is not None:
+                    # Add noise
+                    noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
+                    param.data -= self.step_size * param.grad + noise
+        
+        # Restore original parameters
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if grad1[name] is not None:
+                    grad_norm = grad1[name].norm() + self.lambd
+                    delta = self.rho * grad1[name] / grad_norm
+                    param.data -= delta
 
-    if debug and step is not None and step % 50 == 0:
-        print(f"[SAM-SGLD {step}] ‖g‖={grad.norm().item():.4f}, "
-              f"‖g_sam‖={grad_sam.norm().item():.4f}, ‖noise‖={noise.norm().item():.4f}")
-    return x_new
 
-def sample_rank1_noise(u, base_std, sigma_dir=1.0):
-    z = torch.randn_like(u)
-    u_hat = u / (u.norm() + 1e-8)
-    z_proj = torch.dot(z, u_hat)
-    return base_std * (z + sigma_dir * z_proj * u_hat)
-
-@torch.no_grad()
-def sam_sgld_rank_1_step(x, data_grad_fn, prior_prec, eps, tau, rho, lambd, sigma_dir=1.0, debug=False):
-    """
-    SAM-SGLD with rank-1 directional noise. Adds Gaussian prior via prior_prec * x.
-    """
-    grad = data_grad_fn(x)
-    grad_norm = grad.norm() + lambd
-
-    delta = rho * grad / grad_norm
-    grad_sam = data_grad_fn(x + delta)
-
-    # Add prior after data gradient
-    grad_sam = grad_sam + prior_prec * x
-
-    noise_std = math.sqrt(2 * tau * eps)
-    noise = sample_rank1_noise(grad_sam.detach(), noise_std, sigma_dir)
-    x_new = x - eps * grad_sam + noise
-
-    if debug:
-        print(f"[SAM-SGLD-R1] ‖g‖={grad.norm().item():.4f}, ‖g_sam‖={grad_sam.norm().item():.4f}, "
-              f"‖noise‖={noise.norm().item():.4f}, ‖x‖={x_new.norm().item():.4f}")
-    return x_new
+class SAMSGLDRank1Sampler(BaseSampler):
+    """SAM-SGLD Rank-1 sampler."""
+    
+    def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0, 
+                 rho=0.1, lambd=1e-8, beta1=0.9, beta2=0.999, sigma_dir=1.0):
+        super().__init__(model, temperature, step_size, noise_scale)
+        self.rho = rho
+        self.lambd = lambd
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.sigma_dir = sigma_dir
+    
+    def step(self, data, target):
+        self.model.train()
+        
+        # First forward pass
+        output1 = self.model(data)
+        
+        # Handle different output formats
+        if hasattr(output1, 'logits'):
+            logits1 = output1.logits
+        else:
+            logits1 = output1
+            
+        loss1 = F.cross_entropy(logits1, target)
+        
+        # Backward pass for first gradient
+        self.model.zero_grad()
+        loss1.backward()
+        
+        # Store first gradient
+        grad1 = {name: param.grad.clone() if param.grad is not None else None 
+                for name, param in self.model.named_parameters()}
+        
+        # Perturb parameters
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if grad1[name] is not None:
+                    grad_norm = grad1[name].norm() + self.lambd
+                    delta = self.rho * grad1[name] / grad_norm
+                    param.data += delta
+        
+        # Second forward pass
+        output2 = self.model(data)
+        
+        # Handle different output formats
+        if hasattr(output2, 'logits'):
+            logits2 = output2.logits
+        else:
+            logits2 = output2
+            
+        loss2 = F.cross_entropy(logits2, target)
+        
+        # Backward pass for second gradient
+        self.model.zero_grad()
+        loss2.backward()
+        
+        # SGLD update with SAM gradient and rank-1 noise
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if param.grad is not None:
+                    # Rank-1 noise
+                    noise_std = math.sqrt(2 * self.temperature * self.step_size)
+                    z = torch.randn_like(param)
+                    u_hat = param.grad / (param.grad.norm() + 1e-8)
+                    z_proj = torch.dot(z.flatten(), u_hat.flatten())
+                    noise = noise_std * (z + self.sigma_dir * z_proj * u_hat)
+                    
+                    param.data -= self.step_size * param.grad + noise
+        
+        # Restore original parameters
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if grad1[name] is not None:
+                    grad_norm = grad1[name].norm() + self.lambd
+                    delta = self.rho * grad1[name] / grad_norm
+                    param.data -= delta

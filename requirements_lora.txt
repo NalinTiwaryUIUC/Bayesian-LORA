@@ -5,6 +5,7 @@ numpy
 tqdm
 pyyaml
 scikit-learn
+scipy
 matplotlib
 
 # HuggingFace ecosystem

@@ -1,12 +1,29 @@
 # Bayesian LORA
 
-Bayesian posterior sampling for deep neural networks with **SGLD variants** (SGLD, ASGLD, SAM-SGLD, SAM-SGLD Rank-1), applied to CIFAR classification using ResNet and WideResNet backbones.
+Bayesian posterior sampling for deep neural networks using **SGLD (Stochastic Gradient Langevin Dynamics)** applied to both **ResNet/CIFAR classification** and **LoRA (Low-Rank Adaptation)** on transformer models.
 
 This repository provides:
-- A clean **experiment bench** for posterior sampling in deep learning.
-- Modularized code for **models, samplers, utilities, and evaluation**.
-- Scripts for **training/sampling** and **evaluation/ensembling**.
-- Config-driven experiments for reproducibility.
+- A clean **experiment bench** for Bayesian posterior sampling in deep learning
+- **CIFAR experiments** with ResNet and WideResNet using SGLD variants
+- **LoRA experiments** with transformers using SGLD sampling
+- Modularized code for **models, samplers, utilities, and evaluation**
+- Scripts for **training/sampling** and **evaluation/ensembling**
+- Config-driven experiments for reproducibility
+
+---
+
+## Experiments Available
+
+### 1. CIFAR Classification with SGLD Variants
+- **CIFAR-10 + ResNet-18 + SGLD**
+- **CIFAR-100 + WideResNet-28-10 + SGLD**
+- **CIFAR-100 + WideResNet-28-10 + SAM-SGLD**
+- **CIFAR-100 + WideResNet-28-10 + SAM-SGLD Rank-1**
+
+### 2. MRPC RoBERTa LoRA SGLD
+- **Dataset**: GLUE MRPC (Microsoft Research Paraphrase Corpus)
+- **Model**: RoBERTa-base with LoRA adaptation
+- **Methods**: MAP-LoRA (baseline) vs. SGLD-LoRA (Bayesian)
 
 ---
 
@@ -17,74 +34,109 @@ This repository provides:
 python3 -m venv .venv
 source .venv/bin/activate
 pip3 install -e .
-pip3 install -r requirements.txt
+pip3 install -r requirements_lora.txt
 ```
 
-### 2. Run Training & Sampling
-Example: ResNet-18 + CIFAR-10 + SGLD
+### 2. Run CIFAR Experiments
 ```bash
-python3 scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
+# Individual experiments
+make experiment-cifar10-resnet18-sgld
+make experiment-cifar100-wrn2810-sgld
+make experiment-cifar100-wrn2810-sam-sgld
+make experiment-cifar100-wrn2810-sam-sgld-r1
+
+# Or run all CIFAR experiments
+make experiments-cifar
 ```
 
-### 3. Evaluate
-Single sample:
+### 3. Run LoRA Experiment
 ```bash
-python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --single
+# Complete MRPC LoRA experiment
+make experiment-mrpc-lora
+
+# Or run phases separately
+make train-mrpc-lora
+make eval-mrpc-lora
 ```
 
-Ensemble (first K samples):
+### 4. Run All Experiments
 ```bash
-python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --k 20
+make experiments-all
 ```
 
 ## Configuration
-Experiments are fully driven by YAML config files in `configs/`.
 
-Key sections:
-- **data**: dataset name, root path, batch size, augmentation.
-- **model**: backbone (`resnet18_cifar`, `resnet34_cifar`, `wrn_28_10_cifar`).
-- **train** *(optional)*: supervised pretraining before sampling (epochs, lr, weight_decay, etc.).
-- **sampler**: type & hyperparameters (e.g., `type: sgld|asgld|sam-sgld|sam-sgld-r1`, `step_size`, `burn_in`, `thin`, `rho`, `beta1`, `beta2`, noise settings).
-- **out**: directory for saving samples and `manifest.json`.
+### CIFAR Experiments
+Each CIFAR experiment has its own YAML config file in `configs/`:
+- `cifar10_resnet18_sgld.yaml`
+- `cifar100_wrn2810_sgld.yaml`
+- `cifar100_wrn2810_sam_sgld.yaml`
+- `cifar100_wrn2810_sam_sgld_r1.yaml`
 
-Example (minimal):
-```yaml
-data:
-  name: cifar10
-  root: /path/to/data
-  batch_size: 128
-model:
-  name: resnet18_cifar
-train:
-  epochs: 0
-sampler:
-  type: sgld
-  step_size: 1e-4
-  burn_in: 2000
-  thin: 200
-out:
-  dir: runs/c10_r18_sgld
+### LoRA Experiment
+The MRPC LoRA experiment uses:
+- `configs/mrpc_roberta_lora_sgld.yaml`
+
+## Methods Implemented
+
+### CIFAR Experiments
+- **SGLD**: Stochastic Gradient Langevin Dynamics
+- **ASGLD**: Adaptive SGLD with Adam-like moments
+- **SAM-SGLD**: Sharpness-Aware SGLD with adversarial perturbations
+- **SAM-SGLD Rank-1**: Directional low-rank noise variant
+
+### LoRA Experiment
+- **MAP-LoRA**: Standard LoRA training with AdamW optimizer
+- **SGLD-LoRA**: Stochastic Gradient Langevin Dynamics in LoRA subspace
+
+## Evaluation
+
+### CIFAR Experiments
+```bash
+# Single sample evaluation
+make eval-cifar10-resnet18-sgld
+make eval-cifar100-wrn2810-sgld
+make eval-cifar100-wrn2810-sam-sgld
+make eval-cifar100-wrn2810-sam-sgld-r1
+
+# Or evaluate all CIFAR experiments
+make eval-cifar
 ```
 
-## Samplers Implemented
-- **SGLD** — Stochastic Gradient Langevin Dynamics  
-- **ASGLD** — Adaptive SGLD with Adam-like moments  
-- **SAM-SGLD** — Sharpness-Aware SGLD with adversarial perturbations  
-- **SAM-SGLD Rank-1** — Directional low-rank noise variant
+### LoRA Experiment
+```bash
+make eval-mrpc-lora
+```
+
+### All Experiments
+```bash
+make eval-all
+```
+
+## Metrics & Diagnostics
+
+### Predictive Performance
+- **Accuracy**: Classification accuracy
+- **NLL**: Negative Log-Likelihood
+- **ECE**: Expected Calibration Error
+
+### MCMC Diagnostics (SGLD only)
+- **R-hat**: Gelman-Rubin statistic for convergence
+- **ESS**: Effective Sample Size for mixing quality
+- **Trace plots**: Parameter evolution across chains
 
 ## Example Workflow
-1. **(Optional) Pretrain**  
-   Set `train.epochs > 0` to get a good initialization near a high-probability region.
 
-2. **Sample**  
-   Choose a sampler via the config (`sampler.type`) and run `scripts/train.py` to generate `sample_XXXX.pth` files under `out.dir`.
+### CIFAR Experiments
+1. **Choose sampler** via config (`sampler.type`)
+2. **Run sampling** with `scripts/train.py`
+3. **Evaluate** with `scripts/eval.py` (single or ensemble)
 
-3. **Evaluate**  
-   Use `scripts/eval.py` for single-sample or K-sample ensembles (accuracy, calibration, etc.).
-
-4. **Tune/Repeat**  
-   Adjust `step_size`, `burn_in`, `thin`, and (for SAM variants) perturbation radius to trade off mixing vs. bias.
-
+### LoRA Experiment
+1. **Train MAP LoRA** to establish baseline
+2. **Sample with SGLD** to explore posterior in LoRA subspace
+3. **Compare performance** and calibration
+4. **Analyze MCMC diagnostics**
 
 ## Debugging
 
@@ -101,5 +153,9 @@ python3 debug/debug_suite.py
 ### **Comprehensive Guide:**
 See `debug/DEBUG_GUIDE.md` for detailed debugging information, common issues, and solutions.
 
-## TODO
-- Implement LORA experiments with transformers
+## Clean Up
+```bash
+make clean          # Remove LoRA experiment results
+make clean-cifar    # Remove CIFAR experiment results
+make clean-all      # Remove all runs
+```

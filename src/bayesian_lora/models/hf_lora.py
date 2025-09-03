@@ -9,38 +9,33 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from peft import get_peft_model, LoraConfig, TaskType
 from typing import Dict, Any, Tuple, Optional
 
-class HuggingFaceLoRAModel(nn.Module):
+class LoRAModel(nn.Module):
     """
-    HuggingFace model with LoRA adaptation for Bayesian sampling.
-    
-    This class wraps a pre-trained HuggingFace model and applies LoRA
-    to enable parameter-efficient fine-tuning while keeping the base
-    model frozen for Bayesian sampling of only the LoRA parameters.
+    Generic LoRA model wrapper for HuggingFace models.
+    This is the main class expected by the training scripts.
     """
     
-    def __init__(self, model_name: str, num_labels: int, lora_config: Dict[str, Any]):
+    def __init__(self, base_model, r: int = 8, alpha: float = 16.0, 
+                 dropout: float = 0.05, target_modules: list = None):
         super().__init__()
         
-        # Load pre-trained model and tokenizer
-        self.model_name = model_name
-        self.base_model = AutoModelForSequenceClassification.from_pretrained(
-            model_name, 
-            num_labels=num_labels,
-            return_dict=True
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.base_model = base_model
         
-        # Apply LoRA configuration
+        # Set default target modules if not provided
+        if target_modules is None:
+            target_modules = ["q", "k", "v", "o"]
+        
+        # Create LoRA configuration
         self.lora_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
-            r=lora_config.get('rank', 8),
-            lora_alpha=lora_config.get('alpha', 16.0),
-            lora_dropout=lora_config.get('dropout', 0.1),
-            target_modules=lora_config.get('target_modules', None)
+            r=r,
+            lora_alpha=alpha,
+            lora_dropout=dropout,
+            target_modules=target_modules
         )
         
-        # Create PEFT model with LoRA
-        self.peft_model = get_peft_model(self.base_model, self.lora_config)
+        # Apply LoRA to the base model
+        self.model = get_peft_model(base_model, self.lora_config)
         
         # Freeze base model parameters
         self._freeze_base_model()
@@ -55,17 +50,16 @@ class HuggingFaceLoRAModel(nn.Module):
             param.requires_grad = False
         
         # Ensure LoRA parameters remain trainable
-        for name, param in self.peft_model.named_parameters():
+        for name, param in self.model.named_parameters():
             if 'lora' in name.lower():
                 param.requires_grad = True
     
     def _print_parameter_info(self):
         """Print information about trainable vs. frozen parameters."""
-        total_params = sum(p.numel() for p in self.peft_model.parameters())
-        trainable_params = sum(p.numel() for p in self.peft_model.parameters() if p.requires_grad)
+        total_params = sum(p.numel() for p in self.model.parameters())
+        trainable_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
         frozen_params = total_params - trainable_params
         
-        print(f"Model: {self.model_name}")
         print(f"Total parameters: {total_params:,}")
         print(f"Trainable (LoRA) parameters: {trainable_params:,}")
         print(f"Frozen (base) parameters: {frozen_params:,}")
@@ -73,72 +67,20 @@ class HuggingFaceLoRAModel(nn.Module):
     
     def forward(self, input_ids, attention_mask=None, labels=None):
         """Forward pass through the LoRA model."""
-        return self.peft_model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+        return self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
     
     def get_lora_parameters(self):
         """Get only the LoRA parameters for sampling."""
-        return [p for p in self.peft_model.parameters() if p.requires_grad]
+        return [p for p in self.model.parameters() if p.requires_grad]
     
     def get_base_parameters(self):
         """Get only the base model parameters (frozen)."""
-        return [p for p in self.peft_model.parameters() if not p.requires_grad]
+        return [p for p in self.model.parameters() if not p.requires_grad]
     
-    def get_tokenizer(self):
-        """Get the tokenizer for text preprocessing."""
-        return self.tokenizer
+    @classmethod
+    def from_pretrained(cls, model_name: str, **kwargs):
+        """Create LoRA model from pretrained model name."""
+        base_model = AutoModelForSequenceClassification.from_pretrained(model_name, **kwargs)
+        return cls(base_model, **kwargs)
 
-class BERTLoRAModel(HuggingFaceLoRAModel):
-    """BERT model with LoRA adaptation."""
-    
-    def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        # Set BERT-specific LoRA target modules before calling parent
-        if lora_config.get('target_modules') is None:
-            lora_config = lora_config.copy()
-            lora_config['target_modules'] = ["query", "value"]
-        
-        super().__init__("bert-base-uncased", num_labels, lora_config)
 
-class RoBERTaLoRAModel(HuggingFaceLoRAModel):
-    """RoBERTa model with LoRA adaptation."""
-    
-    def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        # Set RoBERTa-specific LoRA target modules before calling parent
-        if lora_config.get('target_modules') is None:
-            lora_config = lora_config.copy()
-            lora_config['target_modules'] = ["query", "value"]
-        
-        super().__init__("roberta-base", num_labels, lora_config)
-
-class DistilBERTLoRAModel(HuggingFaceLoRAModel):
-    """DistilBERT model with LoRA adaptation."""
-    
-    def __init__(self, num_labels: int, lora_config: Dict[str, Any]):
-        # Set DistilBERT-specific LoRA target modules before calling parent
-        if lora_config.get('target_modules') is None:
-            lora_config = lora_config.copy()
-            lora_config['target_modules'] = ["q_lin", "v_lin"]
-        
-        super().__init__("distilbert-base-uncased", num_labels, lora_config)
-
-def build_huggingface_lora_model(model_config: Dict[str, Any]) -> HuggingFaceLoRAModel:
-    """
-    Factory function to build the appropriate HuggingFace LoRA model.
-    
-    Args:
-        model_config: Configuration dictionary containing model settings
-        
-    Returns:
-        Configured HuggingFace LoRA model
-    """
-    model_name = model_config['name']
-    num_labels = model_config['num_labels']
-    lora_config = model_config['lora']
-    
-    if 'bert' in model_name.lower():
-        return BERTLoRAModel(num_labels, lora_config)
-    elif 'roberta' in model_name.lower():
-        return RoBERTaLoRAModel(num_labels, lora_config)
-    elif 'distilbert' in model_name.lower():
-        return DistilBERTLoRAModel(num_labels, lora_config)
-    else:
-        raise ValueError(f"Unsupported model: {model_name}")

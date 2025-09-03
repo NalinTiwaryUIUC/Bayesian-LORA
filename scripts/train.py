@@ -1,253 +1,315 @@
-#!/usr/bin/env python
-# scripts/train.py
-import argparse, json, random
+#!/usr/bin/env python3
+"""
+Training script for CIFAR experiments with SGLD variants.
+Supports SGLD, ASGLD, SAM-SGLD, and SAM-SGLD Rank-1 samplers.
+"""
+
+import argparse
+import logging
+import os
+import yaml
 from pathlib import Path
+from typing import Dict, Any
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
-import yaml
+from torch.utils.data import DataLoader
+from torchvision import transforms
 
-from bayesian_lora.data.cifar import get_cifar_loaders
-from bayesian_lora.models.resnet_cifar import ResNet18CIFAR, ResNet34CIFAR
-from bayesian_lora.models.wide_resnet import WRN_28_10_CIFAR
+from bayesian_lora.data.cifar import get_cifar_dataset
+from bayesian_lora.models.resnet_cifar import ResNetCIFAR
+from bayesian_lora.models.wide_resnet import WideResNetCIFAR
+from bayesian_lora.samplers.sgld import SGLDSampler, ASGLDSampler, SAMSGLDSampler, SAMSGLDRank1Sampler
 
-# --- Use *repo* utilities (no re-implementations) ---
-from bayesian_lora.utils.params import (
-    flatten_params,
-    unflatten_params,
-    flatten_grads,
-)
-from bayesian_lora.utils.bn import get_bn_buffers
-from bayesian_lora.samplers.utils import cosine_annealed_eps
-from bayesian_lora.samplers.sgld import (
-    sgld_step,
-    asgld_step,
-    sam_sgld_step,
-    sam_sgld_rank_1_step,
-)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-def set_seed(seed: int):
-    random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.benchmark = True
+def load_config(config_path: str) -> Dict[str, Any]:
+    """Load experiment configuration from YAML file."""
+    with open(config_path, 'r') as f:
+        return yaml.safe_load(f)
 
 
-def build_model(cfg_model, num_classes: int):
-    name = cfg_model["name"].lower()
-    if name in {"resnet18_cifar", "resnet18"}:
-        return ResNet18CIFAR(num_classes=num_classes)
-    if name in {"resnet34_cifar", "resnet34"}:
-        return ResNet34CIFAR(num_classes=num_classes)
-    if name in {"wrn_28_10_cifar", "wrn", "wideresnet"}:
-        return WRN_28_10_CIFAR(num_classes=num_classes)
-    raise ValueError(f"Unknown model name: {cfg_model['name']}")
-
-
-def make_grad_fn(model, criterion, batch, device, prior_prec):
-    """
-    Returns a closure grad_fn(x_flat) -> grad_flat for the *current* batch.
-    Uses repo utils: unflatten_params, flatten_grads.
-    Adds Gaussian prior gradient: prior_prec * x (weight-decay prior).
-    """
-    inputs, targets = batch
-
-    def grad_fn(x_flat: torch.Tensor) -> torch.Tensor:
-        # load params from flat vector
-        unflatten_params(model, x_flat)
-        model.zero_grad(set_to_none=True)
-
-        logits = model(inputs)
-        loss = criterion(logits, targets)
-        loss.backward()
-
-        g = flatten_grads(model)
-        if prior_prec != 0.0:
-            g = g + prior_prec * x_flat
-        return g
-
-    return grad_fn
-
-
-def main(cfg_path: str):
-    with open(cfg_path, "r") as f:
-        cfg = yaml.safe_load(f)
-
-    set_seed(cfg.get("seed", 123))
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # ---------------- Data ----------------
-    train_loader, test_loader, num_classes = get_cifar_loaders(
-        name=cfg["data"]["name"],
-        root=cfg["data"]["root"],
-        batch_size=cfg["data"]["batch_size"],
-        num_workers=cfg["data"].get("num_workers", 4),
-        augment=cfg["data"].get("augment", True),
-    )
-
-    # ---------------- Model ----------------
-    model = build_model(cfg["model"], num_classes=num_classes).to(device)
-
-    # ---------------- (Optional) Pretrain / Finetune ----------------
-    epochs = cfg["train"].get("epochs", 0)
-    if epochs > 0:
-        opt = optim.SGD(
-            model.parameters(),
-            lr=cfg["train"].get("lr", 0.1),
-            momentum=0.9,
-            weight_decay=cfg["train"].get("weight_decay", 5e-4),
+def setup_model(config: Dict[str, Any], device: torch.device):
+    """Initialize model based on configuration."""
+    model_config = config['model']
+    
+    if model_config['name'] == 'resnet18_cifar':
+        model = ResNetCIFAR(
+            depth=18,
+            num_classes=model_config['num_classes']
         )
-        criterion = nn.CrossEntropyLoss()
-        for ep in range(epochs):
-            model.train()
-            for x, y in train_loader:
-                x, y = x.to(device), y.to(device)
-                opt.zero_grad(set_to_none=True)
-                logits = model(x)
-                loss = criterion(logits, y)
-                loss.backward()
-                opt.step()
+    elif model_config['name'] == 'wrn_28_10_cifar':
+        model = WideResNetCIFAR(
+            depth=model_config['depth'],
+            widen_factor=model_config['widen_factor'],
+            num_classes=model_config['num_classes']
+        )
+    else:
+        raise ValueError(f"Unknown model: {model_config['name']}")
+    
+    model.to(device)
+    return model
 
-    # ---------------- Sampling config ----------------
-    sampler = cfg["sampler"]["name"].lower()
-    eps = float(cfg["sampler"].get("step_size", 1e-3))  # base step size
-    tau = float(cfg["sampler"].get("tau", 1.0))         # temperature
-    burn_in = int(cfg["sampler"].get("burn_in", 0))
-    thin = int(cfg["sampler"].get("thin", 1))
-    num_samples = int(cfg["sampler"].get("num_samples", 0))
-    prior_prec = float(cfg["sampler"].get("prior_prec", 0.0))  # gradient of log prior ~ prior_prec * x
 
-    # ASGLD params (only used if sampler == "asgld")
-    beta1 = float(cfg["sampler"].get("beta1", 0.9))
-    beta2 = float(cfg["sampler"].get("beta2", 0.999))
-    a = float(cfg["sampler"].get("a", 1.0))
-    lambd = float(cfg["sampler"].get("lambd", 1e-8))
+def setup_data(config: Dict[str, Any]):
+    """Setup data loaders."""
+    data_config = config['data']
+    
+    # Data augmentation
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+    ])
+    
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+    ])
+    
+    # Get datasets
+    train_dataset, test_dataset = get_cifar_dataset(
+        name=data_config['name'],
+        root=data_config['root'],
+        transform_train=transform_train,
+        transform_test=transform_test
+    )
+    
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=data_config['batch_size'],
+        shuffle=True,
+        num_workers=data_config['num_workers']
+    )
+    
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=data_config['batch_size'],
+        shuffle=False,
+        num_workers=data_config['num_workers']
+    )
+    
+    return train_loader, test_loader
 
-    # SAM params (used for samplers starting with "sam")
-    rho = float(cfg["sampler"].get("rho", 0.05))
-    sigma_dir = float(cfg["sampler"].get("sigma_dir", 0.0))  # for rank-1 variant
-    # optional cosine schedule
-    use_cosine = bool(cfg["sampler"].get("cosine_eps", False))
-    t_max = int(cfg["sampler"].get("t_max", 0))  # period for cosine annealing
 
-    out_dir = Path(cfg["out"]["dir"])
-    out_dir.mkdir(parents=True, exist_ok=True)
+def pretrain_model(model: nn.Module, train_loader: DataLoader, test_loader: DataLoader,
+                  config: Dict[str, Any], device: torch.device):
+    """Pretrain model if specified in config."""
+    if config['train']['epochs'] == 0:
+        logger.info("No pretraining specified, skipping...")
+        return model
+    
+    logger.info(f"Starting pretraining for {config['train']['epochs']} epochs...")
+    
+    # Setup optimizer
+    if config['train']['optimizer'] == 'sgd':
+        optimizer = torch.optim.SGD(
+            model.parameters(),
+            lr=config['train']['learning_rate'],
+            weight_decay=config['train']['weight_decay']
+        )
+    else:
+        raise ValueError(f"Unknown optimizer: {config['train']['optimizer']}")
+    
+    # Setup scheduler
+    if config['train']['scheduler'] == 'cosine':
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=config['train']['epochs']
+        )
+    else:
+        scheduler = None
+    
+    # Training loop
+    for epoch in range(config['train']['epochs']):
+        model.train()
+        total_loss = 0
+        for batch_idx, (data, target) in enumerate(train_loader):
+            data, target = data.to(device), target.to(device)
+            
+            optimizer.zero_grad()
+            output = model(data)
+            loss = nn.CrossEntropyLoss()(output, target)
+            loss.backward()
+            optimizer.step()
+            
+            total_loss += loss.item()
+            
+            if batch_idx % 100 == 0:
+                logger.info(f"Epoch {epoch+1}, Batch {batch_idx}, Loss: {loss.item():.4f}")
+        
+        if scheduler:
+            scheduler.step()
+        
+        # Validation
+        model.eval()
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for data, target in test_loader:
+                data, target = data.to(device), target.to(device)
+                output = model(data)
+                _, predicted = torch.max(output.data, 1)
+                total += target.size(0)
+                correct += (predicted == target).sum().item()
+        
+        accuracy = 100 * correct / total
+        logger.info(f"Epoch {epoch+1}: Train Loss: {total_loss/len(train_loader):.4f}, "
+                   f"Test Accuracy: {accuracy:.2f}%")
+        
+        model.train()
+    
+    logger.info("Pretraining completed!")
+    return model
 
-    # ---------------- Sampling loop (flat vector space) ----------------
-    criterion = nn.CrossEntropyLoss()
-    x_flat = flatten_params(model).to(device)
-    # ASGLD state
-    m = torch.zeros_like(x_flat)
-    v = torch.zeros_like(x_flat)
 
-    it = 0
-    saved = 0
-    model.train()  # we mutate BN stats during forward on train batches
+def setup_sampler(model: nn.Module, config: Dict[str, Any], device: torch.device):
+    """Setup SGLD sampler based on configuration."""
+    sampler_config = config['sampler']
+    sampler_type = sampler_config['type']
+    
+    if sampler_type == 'sgld':
+        sampler = SGLDSampler(
+            model=model,
+            temperature=sampler_config['temperature'],
+            step_size=sampler_config['step_size'],
+            noise_scale=sampler_config['noise_scale']
+        )
+    elif sampler_type == 'asgld':
+        sampler = ASGLDSampler(
+            model=model,
+            temperature=sampler_config['temperature'],
+            step_size=sampler_config['step_size'],
+            noise_scale=sampler_config['noise_scale']
+        )
+    elif sampler_type == 'sam-sgld':
+        sampler = SAMSGLDSampler(
+            model=model,
+            temperature=sampler_config['temperature'],
+            step_size=sampler_config['step_size'],
+            noise_scale=sampler_config['noise_scale'],
+            rho=sampler_config['rho'],
+            beta1=sampler_config['beta1'],
+            beta2=sampler_config['beta2']
+        )
+    elif sampler_type == 'sam-sgld-r1':
+        sampler = SAMSGLDRank1Sampler(
+            model=model,
+            temperature=sampler_config['temperature'],
+            step_size=sampler_config['step_size'],
+            noise_scale=sampler_config['noise_scale'],
+            rho=sampler_config['rho'],
+            beta1=sampler_config['beta1'],
+            beta2=sampler_config['beta2']
+        )
+    else:
+        raise ValueError(f"Unknown sampler type: {sampler_type}")
+    
+    return sampler
 
-    # Single pass over many epochs' worth by cycling the loader
-    # until we collect num_samples (after burn-in with thinning)
-    while saved < num_samples:
-        for batch in train_loader:
-            inputs, targets = batch
-            inputs, targets = inputs.to(device), targets.to(device)
 
-            # either constant eps or cosine-annealed
-            cur_eps = (
-                cosine_annealed_eps(it, t_max, eps_min=eps * 0.1, eps_max=eps)
-                if (use_cosine and t_max > 0)
-                else eps
-            )
+def run_sampling(model: nn.Module, sampler, train_loader: DataLoader, config: Dict[str, Any],
+                device: torch.device, output_dir: Path):
+    """Run SGLD sampling."""
+    sampler_config = config['sampler']
+    
+    logger.info(f"Starting {sampler_config['type'].upper()} sampling...")
+    logger.info(f"Burn-in steps: {sampler_config['burn_in']}")
+    logger.info(f"Sampling steps: {sampler_config['num_samples'] * sampler_config['thin']}")
+    logger.info(f"Thinning: {sampler_config['thin']}")
+    
+    # Burn-in phase
+    logger.info("Phase 1: Burn-in...")
+    for step in range(sampler_config['burn_in']):
+        batch = next(iter(train_loader))
+        data, target = batch[0].to(device), batch[1].to(device)
+        
+        sampler.step(data, target)
+        
+        if step % 500 == 0:
+            logger.info(f"Burn-in step {step}/{sampler_config['burn_in']}")
+    
+    # Sampling phase
+    logger.info("Phase 2: Sampling...")
+    samples = []
+    for step in range(sampler_config['num_samples'] * sampler_config['thin']):
+        batch = next(iter(train_loader))
+        data, target = batch[0].to(device), batch[1].to(device)
+        
+        sampler.step(data, target)
+        
+        # Save sample based on thinning
+        if step % sampler_config['thin'] == 0:
+            sample_state = sampler.get_current_state()
+            samples.append(sample_state)
+            
+            # Save individual sample
+            sample_path = output_dir / f"sample_{len(samples):04d}.pth"
+            torch.save(sample_state, sample_path)
+            
+            logger.info(f"Saved sample {len(samples)}/{sampler_config['num_samples']}")
+    
+    logger.info(f"Sampling completed! {len(samples)} samples saved to {output_dir}")
+    return samples
 
-            # Build grad_fn for *this* batch (uses utils flatten/unflatten)
-            grad_fn = make_grad_fn(model, criterion, (inputs, targets), device, prior_prec)
 
-            if sampler == "sgld":
-                # g(x): compute from current x_flat
-                g = grad_fn(x_flat)
-                x_flat = sgld_step(x_flat, g, eps=cur_eps, tau=tau, debug=False, step=it)
-
-            elif sampler == "asgld":
-                g = grad_fn(x_flat)
-                x_flat, m, v = asgld_step(
-                    x=x_flat, m=m, v=v, grad=g,
-                    eps=cur_eps, beta1=beta1, beta2=beta2, a=a, lambd=lambd, tau=tau,
-                    step=it, debug=False
-                )
-
-            elif sampler in {"sam-sgld", "sam_sgld"}:
-                x_flat = sam_sgld_step(
-                    x=x_flat, grad_fn=grad_fn,
-                    eps=cur_eps, tau=tau, rho=rho, lambd=lambd,
-                    debug=False, step=it
-                )
-
-            elif sampler in {"sam-sgld-r1", "sam_sgld_rank_1"}:
-                # data_grad_fn should not include prior; we add prior inside sam_sgld_rank_1 via prior_prec
-                def data_grad_fn(xx):
-                    # grad w.r.t. data likelihood only
-                    unflatten_params(model, xx)
-                    model.zero_grad(set_to_none=True)
-                    logits = model(inputs)
-                    loss = criterion(logits, targets)
-                    loss.backward()
-                    return flatten_grads(model)
-
-                x_flat = sam_sgld_rank_1_step(
-                    x=x_flat,
-                    data_grad_fn=data_grad_fn,
-                    prior_prec=prior_prec,
-                    eps=cur_eps,
-                    tau=tau,
-                    rho=rho,
-                    lambd=lambd,
-                    sigma_dir=sigma_dir,
-                    debug=False,
-                )
-            else:
-                raise ValueError(f"Unknown sampler: {sampler}")
-
-            # push params back to the model
-            unflatten_params(model, x_flat)
-
-            # Save sample after burn-in and thinning
-            if it >= burn_in and ((it - burn_in) % thin == 0):
-                sample = {
-                    "x": x_flat.detach().clone().cpu(),
-                    "bn": [b.detach().clone().cpu() for b in get_bn_buffers(model)],
-                }
-                torch.save(sample, out_dir / f"sample_{saved+1:04d}.pth")
-                saved += 1
-
-            it += 1
-            if saved >= num_samples:
-                break
+def main():
+    parser = argparse.ArgumentParser(description="Train CIFAR models with SGLD variants")
+    parser.add_argument("--config", type=str, required=True,
+                       help="Path to configuration file")
+    parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu",
+                       help="Device to use for training")
+    
+    args = parser.parse_args()
+    
+    # Load configuration
+    config = load_config(args.config)
+    
+    # Setup device
+    device = torch.device(args.device)
+    logger.info(f"Using device: {device}")
+    
+    # Create output directory
+    output_dir = Path(config['out']['dir'])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Save configuration
+    config_save_path = output_dir / "config.yaml"
+    with open(config_save_path, 'w') as f:
+        yaml.dump(config, f, default_flow_style=False)
+    
+    # Setup model
+    model = setup_model(config, device)
+    
+    # Setup data
+    train_loader, test_loader = setup_data(config)
+    
+    # Pretrain if specified
+    model = pretrain_model(model, train_loader, test_loader, config, device)
+    
+    # Setup sampler
+    sampler = setup_sampler(model, config, device)
+    
+    # Run sampling
+    samples = run_sampling(model, sampler, train_loader, config, device, output_dir)
 
     # Save manifest
     manifest = {
-        "config": cfg,
-        "num_samples": num_samples,
-        "burn_in": burn_in,
-        "thin": thin,
-        "tau": tau,
-        "prior_prec": prior_prec,
-        "beta1": beta1,
-        "beta2": beta2,
-        "a": a,
-        "lambd": lambd,
-        "rho": rho,
-        "sigma_dir": sigma_dir,
-        "eps": eps,
-        "cosine_eps": use_cosine,
-        "t_max": t_max,
+        'config': config,
+        'num_samples': len(samples),
+        'device': str(device),
+        'sampler_type': config['sampler']['type']
     }
-    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
-    print(f"Saved {num_samples} samples to {out_dir}")
+    
+    manifest_path = output_dir / "manifest.json"
+    import json
+    with open(manifest_path, 'w') as f:
+        json.dump(manifest, f, indent=2)
+    
+    logger.info("Experiment completed successfully!")
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--config", required=True)
-    args = ap.parse_args()
-    main(args.config)
+    main()
