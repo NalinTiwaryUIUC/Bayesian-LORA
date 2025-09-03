@@ -2,13 +2,14 @@
 #Batch Job Script for Bayesian Experiments (CIFAR + LoRA)
 #
 #SBATCH --job-name=bayesian_experiments
-#SBATCH --time=24:00:00                    # Job run time (hh:mm:ss) - 24 hours
+#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
 #SBATCH --mail-type=ALL,FAIL
-#SBATCH --mail-user="your-email@domain.com" # Email address to alert when job starts/finishes
+#SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
 #SBATCH --gres=gpu:1                       # Number of GPUs
 #SBATCH --ntasks-per-node=1                # Number of cores per node
-#SBATCH --account=your-account             # Account
+#SBATCH --job-name=nalint2-lora-exp        # Name of job
+#SBATCH --account=arindamb-cs-eng          # Account
 #SBATCH --partition=eng-research-gpu       # Partition
 #SBATCH --output=bayesian_experiments_log_%j    # output file name with job ID
 
