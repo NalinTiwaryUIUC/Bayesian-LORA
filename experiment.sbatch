@@ -118,6 +118,18 @@ print(f'Author: {bayesian_lora.__author__}')
         echo "  - Try alternative install: pip3 install --user -e ."
         exit 1
     fi
+    
+    echo "=== Running import path analysis ==="
+    echo "Testing different import paths to identify the issue..."
+    python3 debug/test_import_paths.py
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Import path testing failed! This indicates a deeper issue."
+        echo "=== Critical debugging required ==="
+        echo "The import path testing script itself failed."
+        echo "This suggests a fundamental Python environment problem."
+        exit 1
+    fi
 }
 
 echo "=== Checking key dependencies ==="
@@ -128,8 +140,42 @@ python3 -c "import peft; print(f'✓ PEFT version: {peft.__version__}')"
 echo "=== Running quick debug check ==="
 python3 debug/cluster_troubleshooting.py
 
+# Try to fix the import path issue before running the experiment
+echo "=== Attempting to fix import path issue ==="
+echo "Current PYTHONPATH: $PYTHONPATH"
+echo "Adding src directory to Python path..."
+
+# Export PYTHONPATH to include src directory
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+echo "Updated PYTHONPATH: $PYTHONPATH"
+
+# Test if the fix worked
+echo "=== Testing if path fix worked ==="
+python3 -c "
+import sys
+print(f'Python path includes src: {any(\"src\" in p for p in sys.path)}')
+print(f'Current working directory: {sys.getcwd()}')
+print(f'Expected src path: {sys.getcwd()}/src')
+
+try:
+    import bayesian_lora
+    print('✅ Import successful after path fix!')
+    print(f'Version: {bayesian_lora.__version__}')
+    
+    # Test submodule imports
+    try:
+        from bayesian_lora.data import glue_datasets
+        print('✅ Submodule data.glue_datasets import successful!')
+    except Exception as e:
+        print(f'❌ Submodule data.glue_datasets import failed: {e}')
+        
+except Exception as e:
+    print(f'❌ Import still failed after path fix: {e}')
+    print('This indicates a deeper issue with the package structure.')
+"
+
 # Run your experiment using Make commands
-# Example: Running SST-2 BERT SGLD experiment
+# Example: Running SST-2 BERT SGLD Experiment
 echo "=== Starting SST-2 BERT SGLD Experiment ==="
 make experiment-sst2-bert-sgld
 
