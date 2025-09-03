@@ -1,8 +1,8 @@
 #!/bin/bash
-#Batch Job Script for Bayesian Experiments (CIFAR + LoRA)
+#Batch Job Script for LoRA Experiment Only
 #
-#SBATCH --job-name=bayesian_experiments
-#SBATCH --time=10:00:00                    # Job run time (hh:mm:ss) - 10 hours
+#SBATCH --job-name=bayesian_lora_experiment
+#SBATCH --time=5:00:00                    # Job run time (hh:mm:ss) - 5 hours for LoRA only
 #SBATCH --mail-type=ALL,FAIL
 #SBATCH --mail-user="nalint2@illinois.edu" # Email address to alert when job starts/finishes
 #SBATCH --nodes=1                          # Number of nodes
@@ -11,7 +11,7 @@
 #SBATCH --job-name=nalint2-lora-exp        # Name of job
 #SBATCH --account=arindamb-cs-eng          # Account
 #SBATCH --partition=eng-research-gpu       # Partition
-#SBATCH --output=bayesian_experiments_log_%j    # output file name with job ID
+#SBATCH --output=bayesian_lora_experiment_log_%j    # output file name with job ID
 
 # Load any necessary modules (uncomment if needed)
 # module load python/3.9
@@ -109,55 +109,13 @@ echo "Python executable: $(which python3)"
 echo "Pip executable: $(which pip3)"
 echo "Virtual environment: $VIRTUAL_ENV"
 
-# Run the experiments
-echo "=== Starting Bayesian Experiments ==="
-
-# Phase 1: CIFAR Experiments
-echo "=== Phase 1: CIFAR Experiments with SGLD Variants ==="
-
-echo "Running CIFAR-10 ResNet-18 SGLD..."
-python3 scripts/train.py --config configs/cifar10_resnet18_sgld.yaml
-if [ $? -eq 0 ]; then
-    echo "✅ CIFAR-10 experiment completed successfully!"
-else
-    echo "❌ CIFAR-10 experiment failed!"
-    exit 1
-fi
-
-echo "Running CIFAR-100 WideResNet-28-10 SGLD..."
-python3 scripts/train.py --config configs/cifar100_wrn2810_sgld.yaml
-if [ $? -eq 0 ]; then
-    echo "✅ CIFAR-100 SGLD experiment completed successfully!"
-else
-    echo "❌ CIFAR-100 SGLD experiment failed!"
-    exit 1
-fi
-
-echo "Running CIFAR-100 WideResNet-28-10 SAM-SGLD..."
-python3 scripts/train.py --config configs/cifar100_wrn2810_sam_sgld.yaml
-if [ $? -eq 0 ]; then
-    echo "✅ CIFAR-100 SAM-SGLD experiment completed successfully!"
-else
-    echo "❌ CIFAR-100 SAM-SGLD experiment failed!"
-    exit 1
-fi
-
-echo "Running CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1..."
-python3 scripts/train.py --config configs/cifar100_wrn2810_sam_sgld_r1.yaml
-if [ $? -eq 0 ]; then
-    echo "✅ CIFAR-100 SAM-SGLD Rank-1 experiment completed successfully!"
-else
-    echo "❌ CIFAR-100 SAM-SGLD Rank-1 experiment failed!"
-    exit 1
-fi
-
-# Phase 2: LoRA Experiment
-echo "=== Phase 2: MRPC RoBERTa LoRA SGLD Experiment ==="
+# Run the LoRA experiment only
+echo "=== Starting LoRA Experiment ==="
 echo "Configuration: configs/mrpc_roberta_lora_sgld.yaml"
 echo "Output directory: runs/mrpc_roberta_lora_sgld"
 
-# Run LoRA training
-echo "=== Phase 2a: Training MAP LoRA and SGLD Sampling ==="
+# Phase 1: LoRA Training
+echo "=== Phase 1: Training MAP LoRA and SGLD Sampling ==="
 python3 scripts/train_mrpc_lora.py \
     --config configs/mrpc_roberta_lora_sgld.yaml \
     --output_dir runs/mrpc_roberta_lora_sgld
@@ -169,8 +127,8 @@ else
     exit 1
 fi
 
-# Run LoRA evaluation
-echo "=== Phase 2b: Evaluating LoRA Results ==="
+# Phase 2: LoRA Evaluation
+echo "=== Phase 2: Evaluating LoRA Results ==="
 python3 scripts/eval_mrpc_lora.py \
     --config configs/mrpc_roberta_lora_sgld.yaml \
     --map_model_path runs/mrpc_roberta_lora_sgld/map_model.pth \
@@ -184,26 +142,6 @@ else
     exit 1
 fi
 
-# Phase 3: Evaluate CIFAR Experiments
-echo "=== Phase 3: Evaluating CIFAR Experiments ==="
-
-echo "Evaluating CIFAR-10 ResNet-18 SGLD..."
-python3 scripts/eval.py --config configs/cifar10_resnet18_sgld.yaml --output_dir runs/c10_r18_sgld
-
-echo "Evaluating CIFAR-100 WideResNet-28-10 SGLD..."
-python3 scripts/eval.py --config configs/cifar100_wrn2810_sgld.yaml --output_dir runs/c100_wrn2810_sgld
-
-echo "Evaluating CIFAR-100 WideResNet-28-10 SAM-SGLD..."
-python3 scripts/eval.py --config configs/cifar100_wrn2810_sam_sgld.yaml --output_dir runs/c100_wrn2810_sam_sgld
-
-echo "Evaluating CIFAR-100 WideResNet-28-10 SAM-SGLD Rank-1..."
-python3 scripts/eval.py --config configs/cifar100_wrn2810_sam_sgld_r1.yaml --output_dir runs/c100_wrn2810_sam_sgld_r1
-
-echo "=== All experiments completed successfully! ==="
-echo "Results saved to:"
-echo "  - CIFAR-10: runs/c10_r18_sgld/"
-echo "  - CIFAR-100 SGLD: runs/c100_wrn2810_sgld/"
-echo "  - CIFAR-100 SAM-SGLD: runs/c100_wrn2810_sam_sgld/"
-echo "  - CIFAR-100 SAM-SGLD Rank-1: runs/c100_wrn2810_sam_sgld_r1/"
-echo "  - MRPC LoRA: runs/mrpc_roberta_lora_sgld/"
+echo "=== LoRA experiment completed successfully! ==="
+echo "Results saved to: runs/mrpc_roberta_lora_sgld/"
 echo "Job completed at: $(date)"

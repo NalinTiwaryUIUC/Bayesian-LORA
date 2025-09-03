@@ -67,10 +67,10 @@ class SGLDSampler(BaseSampler):
         # Compute loss
         loss = F.cross_entropy(logits, target)
         
-        # Add prior term (Gaussian prior on LoRA parameters)
+        # Add prior term (Gaussian prior on trainable parameters)
         prior_loss = 0.0
         for param in self.model.parameters():
-            if param.requires_grad:  # Only LoRA parameters
+            if param.requires_grad:  # Only trainable parameters
                 prior_loss += torch.sum(param ** 2) / (2 * self.prior_std ** 2)
         
         total_loss = loss + prior_loss
@@ -89,12 +89,12 @@ class SGLDSampler(BaseSampler):
                 if param.grad is not None and param.requires_grad:
                     # SGLD update: θ ← θ - η∇L(θ) + √(2η/τ)ξ
                     # where L(θ) = NLL + prior
-                    param.data -= self.step_size * param.grad
+                    param.data = param.data - self.step_size * param.grad
                     
                     # Add noise: √(2η/τ)ξ
                     noise_std = math.sqrt(2 * self.temperature * self.step_size)
                     noise = torch.randn_like(param) * noise_std
-                    param.data += noise
+                    param.data = param.data + noise
 
 
 class ASGLDSampler(BaseSampler):
@@ -147,7 +147,7 @@ class ASGLDSampler(BaseSampler):
                     noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
                     
                     # Update
-                    param.data -= self.step_size * (grad + self.a * A) + noise
+                    param.data = param.data - self.step_size * (grad + self.a * A) + noise
 
 
 class SAMSGLDSampler(BaseSampler):
@@ -189,7 +189,7 @@ class SAMSGLDSampler(BaseSampler):
                 if grad1[name] is not None:
                     grad_norm = grad1[name].norm() + self.lambd
                     delta = self.rho * grad1[name] / grad_norm
-                    param.data += delta
+                    param.data = param.data + delta
         
         # Second forward pass
         output2 = self.model(data)
@@ -212,7 +212,7 @@ class SAMSGLDSampler(BaseSampler):
                 if param.grad is not None:
                     # Add noise
                     noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
-                    param.data -= self.step_size * param.grad + noise
+                    param.data = param.data - self.step_size * param.grad + noise
         
         # Restore original parameters
         with torch.no_grad():
@@ -220,7 +220,7 @@ class SAMSGLDSampler(BaseSampler):
                 if grad1[name] is not None:
                     grad_norm = grad1[name].norm() + self.lambd
                     delta = self.rho * grad1[name] / grad_norm
-                    param.data -= delta
+                    param.data = param.data - delta
 
 
 class SAMSGLDRank1Sampler(BaseSampler):
@@ -263,7 +263,7 @@ class SAMSGLDRank1Sampler(BaseSampler):
                 if grad1[name] is not None:
                     grad_norm = grad1[name].norm() + self.lambd
                     delta = self.rho * grad1[name] / grad_norm
-                    param.data += delta
+                    param.data = param.data + delta
         
         # Second forward pass
         output2 = self.model(data)
@@ -291,7 +291,7 @@ class SAMSGLDRank1Sampler(BaseSampler):
                     z_proj = torch.dot(z.flatten(), u_hat.flatten())
                     noise = noise_std * (z + self.sigma_dir * z_proj * u_hat)
                     
-                    param.data -= self.step_size * param.grad + noise
+                    param.data = param.data - self.step_size * param.grad + noise
         
         # Restore original parameters
         with torch.no_grad():
@@ -299,4 +299,4 @@ class SAMSGLDRank1Sampler(BaseSampler):
                 if grad1[name] is not None:
                     grad_norm = grad1[name].norm() + self.lambd
                     delta = self.rho * grad1[name] / grad_norm
-                    param.data -= delta
+                    param.data = param.data - delta
