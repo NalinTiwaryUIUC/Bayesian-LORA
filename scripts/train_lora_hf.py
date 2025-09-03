@@ -422,13 +422,97 @@ def main(config_path: str):
             # Apply sampler step
             lora_params = get_lora_parameters(model)
             if sampler_name == 'sgld':
-                sgld_step(lora_params, sampler_config['step_size'])
+                # Flatten parameters and gradients for SGLD
+                x_flat = torch.cat([p.flatten() for p in lora_params])
+                g_flat = torch.cat([p.grad.flatten() if p.grad is not None else torch.zeros_like(p).flatten() for p in lora_params])
+                x_new = sgld_step(x_flat, g_flat, sampler_config['step_size'], sampler_config.get('tau', 1.0))
+                
+                # Update parameters
+                start_idx = 0
+                for param in lora_params:
+                    param_size = param.numel()
+                    param.data = x_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    start_idx += param_size
+                    
             elif sampler_name == 'asgld':
-                asgld_step(lora_params, sampler_config['step_size'], sampler_config.get('momentum', 0.9))
+                # Initialize momentum and variance if not exists
+                if not hasattr(model, '_asgld_m'):
+                    model._asgld_m = [torch.zeros_like(p) for p in lora_params]
+                    model._asgld_v = [torch.zeros_like(p) for p in lora_params]
+                
+                # Flatten parameters, gradients, and momentum
+                x_flat = torch.cat([p.flatten() for p in lora_params])
+                g_flat = torch.cat([p.grad.flatten() if p.grad is not None else torch.zeros_like(p).flatten() for p in lora_params])
+                m_flat = torch.cat([m.flatten() for m in model._asgld_m])
+                v_flat = torch.cat([v.flatten() for v in model._asgld_v])
+                
+                x_new, m_new, v_new = asgld_step(
+                    x_flat, m_flat, v_flat, g_flat,
+                    sampler_config['step_size'],
+                    sampler_config.get('beta1', 0.9),
+                    sampler_config.get('beta2', 0.999),
+                    sampler_config.get('a', 0.1),
+                    sampler_config.get('lambd', 1e-8),
+                    sampler_config.get('tau', 1.0)
+                )
+                
+                # Update parameters and momentum
+                start_idx = 0
+                for i, param in enumerate(lora_params):
+                    param_size = param.numel()
+                    param.data = x_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    model._asgld_m[i].data = m_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    model._asgld_v[i].data = v_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    start_idx += param_size
+                    
             elif sampler_name == 'sam_sgld':
-                sam_sgld_step(lora_params, sampler_config['step_size'], sampler_config.get('rho', 0.1))
+                # For SAM-SGLD, we need a gradient function
+                def grad_fn(x_flat):
+                    return torch.cat([p.grad.flatten() if p.grad is not None else torch.zeros_like(p).flatten() for p in lora_params])
+                
+                # Flatten parameters
+                x_flat = torch.cat([p.flatten() for p in lora_params])
+                
+                # Apply SAM-SGLD step
+                x_new = sam_sgld_step(
+                    x_flat, grad_fn,
+                    sampler_config['step_size'],
+                    sampler_config.get('tau', 1.0),
+                    sampler_config.get('rho', 0.1),
+                    sampler_config.get('lambd', 1e-8)
+                )
+                
+                # Update parameters
+                start_idx = 0
+                for param in lora_params:
+                    param_size = param.numel()
+                    param.data = x_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    start_idx += param_size
+                    
             elif sampler_name == 'sam_sgld_r1':
-                sam_sgld_rank_1_step(lora_params, sampler_config['step_size'], sampler_config.get('rho', 0.1))
+                # For SAM-SGLD-R1, we need a gradient function and prior precision
+                def grad_fn(x_flat):
+                    return torch.cat([p.grad.flatten() if p.grad is not None else torch.zeros_like(p).flatten() for p in lora_params])
+                
+                # Flatten parameters
+                x_flat = torch.cat([p.flatten() for p in lora_params])
+                
+                # Apply SAM-SGLD-R1 step
+                x_new = sam_sgld_rank_1_step(
+                    x_flat, grad_fn,
+                    sampler_config.get('prior_prec', 1e-4),
+                    sampler_config['step_size'],
+                    sampler_config.get('tau', 1.0),
+                    sampler_config.get('rho', 0.1),
+                    sampler_config.get('lambd', 1e-8)
+                )
+                
+                # Update parameters
+                start_idx = 0
+                for param in lora_params:
+                    param_size = param.numel()
+                    param.data = x_new[start_idx:start_idx + param_size].reshape(param.shape)
+                    start_idx += param_size
         
         # Save sample
         sample_path = os.path.join(config['out']['dir'], f'sample_{sample_idx+1:04d}.pth')

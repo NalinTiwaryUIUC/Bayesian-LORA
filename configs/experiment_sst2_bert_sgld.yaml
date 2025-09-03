@@ -18,7 +18,7 @@ model:
 
 sampler:
   name: sgld
-  step_size: 5.0e-4
+  step_size: 5e-5
   tau: 1.0
   burn_in: 1000
   thin: 200
