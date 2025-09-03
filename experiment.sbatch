@@ -40,40 +40,60 @@ echo "=== Upgrading pip to fix version issues ==="
 python3 -m pip install --upgrade pip
 
 echo "=== Installing dependencies ==="
-echo "Installing dependencies directly (skipping problematic package install)..."
-pip3 install -r requirements_lora.txt
+echo "Installing package in editable mode (proper way)..."
+pip3 install -e .
 
-echo "=== Setting up Python path for imports ==="
-export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
-echo "PYTHONPATH set to: $PYTHONPATH"
+# Check if the installation actually succeeded
+echo "=== Verifying pip installation ==="
+pip3 show bayesian-lora || {
+    echo "❌ pip install -e . failed or didn't complete properly!"
+    echo "=== Debugging pip install failure ==="
+    echo "Python version: $(python3 --version)"
+    echo "Pip version: $(pip3 --version)"
+    echo "Current directory: $(pwd)"
+    echo "Virtual environment: $VIRTUAL_ENV"
+    
+    echo "=== Running deep debug analysis ==="
+    python3 debug/deep_debug.py
+    
+    echo "=== Trying alternative approaches ==="
+    echo "Attempting pip install . (non-editable)..."
+    pip3 install . || {
+        echo "❌ pip install . also failed. Installing dependencies only..."
+        pip3 install -r requirements_lora.txt
+        
+        echo "=== Setting PYTHONPATH as fallback ==="
+        export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+        echo "PYTHONPATH set to: $PYTHONPATH"
+    }
+}
 
 echo "=== Verifying installation ==="
-echo "Testing import with PYTHONPATH set..."
+echo "Testing package installation status..."
 
-# First try the simple import test
-echo "Running simple import test..."
-python3 debug/simple_import_test.py
-
-if [ $? -ne 0 ]; then
-    echo "❌ Simple import test failed!"
-    echo "Trying to debug the issue..."
+# Test the proper import (should work if pip install -e . succeeded)
+python3 -c "
+import bayesian_lora
+print('✅ bayesian_lora module imported successfully!')
+print(f'Version: {bayesian_lora.__version__}')
+print(f'Author: {bayesian_lora.__author__}')
+" && {
+    echo "✅ Package properly installed! Testing submodules..."
+    python3 debug/test_installation.py
+} || {
+    echo "❌ Direct import failed. Let's debug..."
     echo "Current PYTHONPATH: $PYTHONPATH"
     echo "Current directory: $(pwd)"
-    echo "Listing src directory:"
-    ls -la src/
-    echo "Listing src/bayesian_lora directory:"
-    ls -la src/bayesian_lora/
     
-    echo "Trying alternative import test..."
-    python3 debug/test_import.py
+    echo "=== Running debug tests ==="
+    echo "Running installation test..."
+    python3 debug/test_installation.py
     
     if [ $? -ne 0 ]; then
-        echo "❌ Both import tests failed! Exiting."
+        echo "❌ Installation test failed! Exiting."
         exit 1
     fi
-else
-    echo "✅ Simple import test successful!"
-fi
+}
 
 echo "=== Checking key dependencies ==="
 python3 -c "import torch; print(f'✓ PyTorch version: {torch.__version__}')"
