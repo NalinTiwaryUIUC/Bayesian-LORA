@@ -70,8 +70,12 @@ def train_epoch(model, train_loader, optimizer, device, sampler_name, sampler_pa
         outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         loss = outputs.loss
         
-        # Backward pass
-        optimizer.zero_grad()
+        # Backward pass - only for traditional optimizers
+        if optimizer is not None:
+            optimizer.zero_grad()
+        else:
+            # For Bayesian samplers, manually zero gradients
+            model.zero_grad()
         loss.backward()
         
         # Apply sampler-specific update
@@ -198,7 +202,9 @@ def train_epoch(model, train_loader, optimizer, device, sampler_name, sampler_pa
                 start_idx += param_size
         else:
             # Standard SGD update
-            optimizer.step()
+            if optimizer is not None:
+                optimizer.step()
+            # For Bayesian samplers, parameters are already updated above
         
         total_loss += loss.item()
     
