@@ -19,8 +19,14 @@ class BaseSampler:
         self.device = next(model.parameters()).device
     
     def get_current_state(self):
-        """Get current model state."""
-        return {name: param.clone().detach() for name, param in self.model.named_parameters()}
+        """Get current model state (only trainable parameters to save memory)."""
+        # Clear GPU cache before saving state
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        
+        # Only save trainable parameters (LoRA parameters)
+        return {name: param.clone().detach() for name, param in self.model.named_parameters() 
+                if param.requires_grad}
     
     def step(self, data, target):
         """Take one sampling step."""
