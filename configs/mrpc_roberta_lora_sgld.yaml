@@ -9,7 +9,7 @@ model:
   backbone: "roberta-base"
   max_sequence_length: 256
   lora:
-    inject_into: ["query", "key", "value", "output.dense"]  # Correct RoBERTa module names
+    inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
     rank: 8
     alpha: 16
     dropout: 0.05
