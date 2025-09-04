@@ -33,7 +33,7 @@ training:
   sgld_lora:
     learning_rate: 5e-4  # Reduced for better stability
     temperature: 1.0
-    prior_std: 0.5  # Reduced prior std for better convergence
+    prior_std: 0.01  # Very strong prior to balance likelihood
     step_size_schedule:
       initial: 5e-4  # Reduced initial step size for stability
       decay_rate: 0.5  # Slower decay for more stable sampling

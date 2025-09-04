@@ -215,6 +215,7 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
         # Load sample state
         # Load LoRA-only weights; ignore missing base model keys
         model.load_state_dict(sample_state, strict=False)
+        
         model.eval()
         
         sample_predictions = []

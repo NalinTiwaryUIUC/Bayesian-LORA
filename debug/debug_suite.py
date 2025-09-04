@@ -13,6 +13,7 @@ It provides systematic diagnostics for:
 - Training script verification
 - Configuration validation
 - Package installation status
+- SGLD sample independence testing
 
 Usage:
     python3 debug/debug_suite.py [--quick] [--verbose] [--fix]
@@ -493,10 +494,72 @@ class BayesianLoRADebugger:
             'data_loading': self.check_data_loading(),
             'configurations': self.check_configurations(),
             'training_scripts': self.check_training_scripts(),
-            'makefile': self.check_makefile_targets()
+            'makefile': self.check_makefile_targets(),
+            'sgld_independence': self.check_sgld_independence()
         }
         
         return all_results
+    
+    def check_sgld_independence(self) -> Dict[str, bool]:
+        """Check SGLD sample independence and behavior."""
+        self.log("🔬 Testing SGLD sample independence...")
+        
+        try:
+            # Import the test module
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__)))
+            
+            # Run the SGLD independence test
+            from test_sgld_independence import main as run_sgld_test
+            
+            # Capture output
+            import io
+            import contextlib
+            
+            f = io.StringIO()
+            with contextlib.redirect_stdout(f):
+                results = run_sgld_test()
+            
+            output = f.getvalue()
+            # Only log results in verbose mode
+            if self.verbose:
+                self.log(f"SGLD test results: {results}")
+            
+            # Check if all tests passed
+            all_passed = all(results.values()) if results else False
+            
+            if all_passed:
+                self.log("✅ SGLD independence tests passed")
+            else:
+                self.log("❌ Some SGLD independence tests failed")
+                self.log(f"Test results: {results}")
+            
+            # Map test names to boolean results
+            test_mapping = {
+                'Prior-Likelihood Balance': 'prior_likelihood_balance',
+                'Parameter Exploration': 'parameter_exploration', 
+                'Sample Independence': 'sample_independence',
+                'Ensemble Predictions': 'ensemble_predictions',
+                'Convergence Diagnostics': 'convergence_diagnostics'
+            }
+            
+            result_dict = {'sgld_independence_tests': all_passed}
+            for test_name, key in test_mapping.items():
+                result_dict[key] = results.get(test_name, False)
+            
+            return result_dict
+            
+        except Exception as e:
+            self.log(f"❌ SGLD independence test failed: {e}")
+            return {
+                'sgld_independence_tests': False,
+                'prior_likelihood_balance': False,
+                'parameter_exploration': False,
+                'sample_independence': False,
+                'ensemble_predictions': False,
+                'convergence_diagnostics': False
+            }
     
     def run_quick_check(self) -> Dict[str, Dict[str, bool]]:
         """Run essential checks only."""
