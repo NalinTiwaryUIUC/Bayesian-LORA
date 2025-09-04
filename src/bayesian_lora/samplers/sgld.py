@@ -98,7 +98,8 @@ class SGLDSampler(BaseSampler):
                     param.data = param.data - self.step_size * param.grad
                     
                     # Add noise: √(2η/τ)ξ
-                    noise_std = math.sqrt(2 * self.temperature * self.step_size)
+                    # Use a more conservative noise scaling for stability
+                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * 0.1  # Scale down noise by 10x
                     noise = torch.randn_like(param) * noise_std
                     param.data = param.data + noise
 
@@ -150,7 +151,7 @@ class ASGLDSampler(BaseSampler):
                     A = self.m[name] / (self.v[name].sqrt() + self.lambd)
                     
                     # Noise
-                    noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
+                    noise = torch.randn_like(param) * math.sqrt(2 * self.step_size / self.temperature) * 0.1
                     
                     # Update
                     param.data = param.data - self.step_size * (grad + self.a * A) + noise
@@ -217,7 +218,7 @@ class SAMSGLDSampler(BaseSampler):
             for name, param in self.model.named_parameters():
                 if param.grad is not None:
                     # Add noise
-                    noise = torch.randn_like(param) * math.sqrt(2 * self.temperature * self.step_size)
+                    noise = torch.randn_like(param) * math.sqrt(2 * self.step_size / self.temperature) * 0.1
                     param.data = param.data - self.step_size * param.grad + noise
         
         # Restore original parameters
@@ -291,7 +292,7 @@ class SAMSGLDRank1Sampler(BaseSampler):
             for name, param in self.model.named_parameters():
                 if param.grad is not None:
                     # Rank-1 noise
-                    noise_std = math.sqrt(2 * self.temperature * self.step_size)
+                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * 0.1
                     z = torch.randn_like(param)
                     u_hat = param.grad / (param.grad.norm() + 1e-8)
                     z_proj = torch.dot(z.flatten(), u_hat.flatten())

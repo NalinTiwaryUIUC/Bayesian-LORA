@@ -31,11 +31,11 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 5e-5  # Reduced for better stability
+    learning_rate: 1e-3  # Increased for actual learning
     temperature: 1.0
-    prior_std: 0.05  # Reduced prior std for tighter regularization
+    prior_std: 1.0  # Increased prior std to allow learning
     step_size_schedule:
-      initial: 5e-5  # Reduced initial step size
+      initial: 1e-3  # Increased initial step size for learning
       decay_rate: 0.6
       decay_steps: 1000
     gradient_clip_norm: 0.5  # Tighter gradient clipping
