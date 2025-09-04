@@ -6,7 +6,6 @@ __pycache__/
 data/
 # But allow source code data modules
 !src/bayesian_lora/data/
-runs/
 outputs/
 checkpoints/
 *.pt *.pth *.ckpt

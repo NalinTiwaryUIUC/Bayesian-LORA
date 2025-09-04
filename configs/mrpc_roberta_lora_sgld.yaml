@@ -7,12 +7,12 @@ experiment:
   
 model:
   backbone: "roberta-base"
-  max_sequence_length: 32  # Ultra-reduced for GPU memory constraints
+  max_sequence_length: 64  # Moderately increased for better performance
   lora:
     inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
-    rank: 2  # Ultra-reduced rank for memory efficiency
-    alpha: 4  # Reduced alpha proportionally
-    dropout: 0.05
+    rank: 4  # Increased for better expressiveness
+    alpha: 8  # Increased proportionally with rank
+    dropout: 0.1
 
 data:
   dataset: "mrpc"
@@ -31,18 +31,18 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 1e-4
+    learning_rate: 5e-5  # Reduced for better stability
     temperature: 1.0
-    prior_std: 0.1
+    prior_std: 0.05  # Reduced prior std for tighter regularization
     step_size_schedule:
-      initial: 1e-4
+      initial: 5e-5  # Reduced initial step size
       decay_rate: 0.6
       decay_steps: 1000
-    gradient_clip_norm: 1.0
+    gradient_clip_norm: 0.5  # Tighter gradient clipping
     chains: 3  # Restored for R-hat computation
-    burn_in_steps: 500  # Keep reduced for faster execution
-    sampling_steps: 2000  # Keep reduced for faster execution
-    thinning: 10  # Reduced thinning for more samples
+    burn_in_steps: 1500  # Increased for better convergence
+    sampling_steps: 3000  # Increased for more samples
+    thinning: 15  # Increased thinning for better mixing
     samples_to_retain: 200
 
 evaluation:

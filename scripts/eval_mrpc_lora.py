@@ -362,6 +362,20 @@ def main():
     logger.info(f"ESS (log posterior): {mcmc_diagnostics['ess_log_posterior']}")
     logger.info(f"ESS (L2 norm): {mcmc_diagnostics['ess_l2_norm']}")
     
+    # Convert numpy values to Python native types for human-readable YAML
+    def convert_numpy_to_python(obj):
+        """Recursively convert numpy types to Python native types."""
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, (np.floating, np.integer)):
+            return obj.item()
+        elif isinstance(obj, dict):
+            return {key: convert_numpy_to_python(value) for key, value in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_numpy_to_python(item) for item in obj]
+        else:
+            return obj
+    
     # Save results
     results = {
         'map_lora': {
@@ -377,9 +391,12 @@ def main():
         }
     }
     
+    # Convert all numpy values to Python native types
+    results = convert_numpy_to_python(results)
+    
     results_path = output_dir / "evaluation_results.yaml"
     with open(results_path, 'w') as f:
-        yaml.dump(results, f, default_flow_style=False)
+        yaml.dump(results, f, default_flow_style=False, sort_keys=False)
     
     logger.info(f"\nResults saved to {results_path}")
 
