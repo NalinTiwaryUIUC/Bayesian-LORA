@@ -7,16 +7,17 @@ experiment:
   
 model:
   backbone: "roberta-base"
-  max_sequence_length: 128  # Reduced for GPU memory constraints
+  max_sequence_length: 32  # Ultra-reduced for GPU memory constraints
   lora:
     inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
-    rank: 8
-    alpha: 16
+    rank: 2  # Ultra-reduced rank for memory efficiency
+    alpha: 4  # Reduced alpha proportionally
     dropout: 0.05
 
 data:
   dataset: "mrpc"
-  batch_size: 16  # Reduced for GPU memory constraints
+  batch_size: 4  # Ultra-reduced for GPU memory constraints
+  gradient_accumulation_steps: 8  # Maintain effective batch size of 32
   max_epochs: 20
 
 training:
@@ -38,10 +39,10 @@ training:
       decay_rate: 0.6
       decay_steps: 1000
     gradient_clip_norm: 1.0
-    chains: 2  # Reduced for GPU memory constraints
-    burn_in_steps: 1000  # Reduced for faster execution
-    sampling_steps: 5000  # Reduced for faster execution
-    thinning: 20
+    chains: 3  # Restored for R-hat computation
+    burn_in_steps: 500  # Keep reduced for faster execution
+    sampling_steps: 2000  # Keep reduced for faster execution
+    thinning: 10  # Reduced thinning for more samples
     samples_to_retain: 200
 
 evaluation:

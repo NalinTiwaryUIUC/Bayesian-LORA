@@ -102,25 +102,32 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
         num_training_steps=total_steps
     )
     
-    # Training loop
+    # Training loop with gradient accumulation
     model.train()
+    gradient_accumulation_steps = config['data'].get('gradient_accumulation_steps', 1)
+    
     for epoch in range(config['data']['max_epochs']):
         total_loss = 0
-        for batch in train_dataloader:
+        optimizer.zero_grad()
+        
+        for step, batch in enumerate(train_dataloader):
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             labels = batch['labels'].to(device)
             
-            optimizer.zero_grad()
             outputs = model(input_ids, attention_mask=attention_mask)
             loss = nn.CrossEntropyLoss()(outputs.logits, labels)
+            loss = loss / gradient_accumulation_steps  # Scale loss for gradient accumulation
             loss.backward()
             
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
-            scheduler.step()
+            total_loss += loss.item() * gradient_accumulation_steps  # Unscale for logging
             
-            total_loss += loss.item()
+            # Update weights every gradient_accumulation_steps
+            if (step + 1) % gradient_accumulation_steps == 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                optimizer.step()
+                scheduler.step()
+                optimizer.zero_grad()
         
         # Validation
         model.eval()
@@ -199,8 +206,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             
             sampler.step(input_ids, attention_mask, labels)
             
-            # Clear GPU cache periodically to prevent memory issues
-            if step % 100 == 0:
+            # Clear GPU cache more frequently to prevent memory issues
+            if step % 50 == 0:
                 torch.cuda.empty_cache()
             
             if step % 500 == 0:
@@ -224,8 +231,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             
             sampler.step(input_ids, attention_mask, labels)
             
-            # Clear GPU cache periodically to prevent memory issues
-            if step % 100 == 0:
+            # Clear GPU cache more frequently to prevent memory issues
+            if step % 50 == 0:
                 torch.cuda.empty_cache()
             
             # Keep samples based on thinning
