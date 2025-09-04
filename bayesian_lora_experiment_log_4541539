@@ -1,5 +1,5 @@
 === GPU Information ===
-Wed Sep  3 18:44:22 2025       
+Wed Sep  3 19:32:33 2025       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
 |-----------------------------------------+------------------------+----------------------+
@@ -21,7 +21,7 @@ Wed Sep  3 18:44:22 2025
 +-----------------------------------------------------------------------------------------+
 === Memory Information ===
                total        used        free      shared  buff/cache   available
-Mem:           503Gi        51Gi       400Gi        18Gi        72Gi       452Gi
+Mem:           503Gi        51Gi       399Gi        18Gi        73Gi       452Gi
 Swap:             0B          0B          0B
 === Current Directory ===
 /u/nalint2/scratch/Bayesian-LORA
@@ -123,8 +123,8 @@ Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/sit
 Building wheels for collected packages: Bayesian-LORA
   Building editable for Bayesian-LORA (pyproject.toml): started
   Building editable for Bayesian-LORA (pyproject.toml): finished with status 'done'
-  Created wheel for Bayesian-LORA: filename=bayesian_lora-0.1.0-0.editable-py3-none-any.whl size=1457 sha256=3eb776d4e8426e1e0c49ab0adc2369b9ea4919ac749e290f7f2280974c3a7cb7
-  Stored in directory: /tmp/pip-ephem-wheel-cache-hq0jqguh/wheels/e6/8c/54/9ced548b41650fdd37110b7a4079fec5aecbe008507cf13c8d
+  Created wheel for Bayesian-LORA: filename=bayesian_lora-0.1.0-0.editable-py3-none-any.whl size=1457 sha256=5558ba9ff611cf34aee454a1eebef49d953ba7f27eaf505cdc28bd063cdadc3d
+  Stored in directory: /tmp/pip-ephem-wheel-cache-wjrk_7c3/wheels/e6/8c/54/9ced548b41650fdd37110b7a4079fec5aecbe008507cf13c8d
 Successfully built Bayesian-LORA
 Installing collected packages: Bayesian-LORA
   Attempting uninstall: Bayesian-LORA
@@ -146,9 +146,12 @@ Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, sciki
 Required-by: 
 === Verifying installation ===
 Testing package installation status...
+=== Testing bayesian_lora import ===
+Python path: ['', '/usr/lib64/python39.zip', '/usr/lib64/python3.9']...
 ✅ bayesian_lora module imported successfully!
 Version: 0.1.0
 Author: Bayesian LoRA Team
+Module location: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py
 ✅ Package installation verified successfully!
 === Installing additional requirements ===
 Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 2)) (2.8.0)
@@ -234,29 +237,114 @@ Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-pack
 Python executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/python3
 Pip executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/pip3
 Virtual environment: /scratch/nalint2/Bayesian-LORA/.venv
-=== Starting Bayesian Experiments ===
-=== Phase 1: CIFAR Experiments with SGLD Variants ===
-Running CIFAR-10 ResNet-18 SGLD...
+=== Starting LoRA Experiment ===
+Configuration: configs/mrpc_roberta_lora_sgld.yaml
+Output directory: runs/mrpc_roberta_lora_sgld
+=== Phase 1: Training MAP LoRA and SGLD Sampling ===
 INFO:__main__:Using device: cuda
-  0%|          | 0.00/170M [00:00<?, ?B/s]  0%|          | 65.5k/170M [00:00<06:15, 454kB/s]  0%|          | 197k/170M [00:00<03:57, 718kB/s]   0%|          | 688k/170M [00:00<01:28, 1.92MB/s]  1%|          | 1.90M/170M [00:00<00:33, 5.05MB/s]  2%|▏         | 4.23M/170M [00:00<00:15, 10.6MB/s]  4%|▍         | 7.21M/170M [00:00<00:09, 16.4MB/s]  6%|▌         | 10.5M/170M [00:00<00:07, 21.2MB/s]  8%|▊         | 13.5M/170M [00:00<00:06, 24.0MB/s] 10%|▉         | 16.7M/170M [00:01<00:05, 26.3MB/s] 12%|█▏        | 19.9M/170M [00:01<00:05, 28.0MB/s] 13%|█▎        | 22.9M/170M [00:01<00:05, 28.7MB/s] 15%|█▌        | 26.2M/170M [00:01<00:04, 30.1MB/s] 17%|█▋        | 29.3M/170M [00:01<00:04, 29.9MB/s] 19%|█▉        | 32.7M/170M [00:01<00:04, 31.0MB/s] 21%|██        | 35.8M/170M [00:01<00:04, 30.7MB/s] 23%|██▎       | 39.2M/170M [00:01<00:04, 31.3MB/s] 25%|██▍       | 42.3M/170M [00:01<00:04, 30.9MB/s] 27%|██▋       | 45.7M/170M [00:01<00:03, 31.8MB/s] 29%|██▊       | 49.0M/170M [00:02<00:03, 31.3MB/s] 31%|███       | 52.3M/170M [00:02<00:03, 31.8MB/s] 33%|███▎      | 55.5M/170M [00:02<00:03, 31.2MB/s] 35%|███▍      | 59.2M/170M [00:02<00:03, 32.7MB/s] 37%|███▋      | 63.5M/170M [00:02<00:03, 35.7MB/s] 40%|███▉      | 68.1M/170M [00:02<00:02, 38.5MB/s] 42%|████▏     | 72.0M/170M [00:02<00:02, 37.6MB/s] 45%|████▍     | 76.7M/170M [00:02<00:02, 38.8MB/s] 48%|████▊     | 82.0M/170M [00:02<00:02, 39.9MB/s] 51%|█████     | 86.7M/170M [00:03<00:02, 40.2MB/s] 54%|█████▍    | 91.8M/170M [00:03<00:01, 41.0MB/s] 57%|█████▋    | 96.4M/170M [00:03<00:01, 40.9MB/s] 59%|█████▉    | 101M/170M [00:03<00:01, 40.9MB/s]  62%|██████▏   | 106M/170M [00:03<00:01, 41.1MB/s] 65%|██████▍   | 111M/170M [00:03<00:01, 40.7MB/s] 68%|██████▊   | 115M/170M [00:03<00:01, 40.8MB/s] 70%|███████   | 120M/170M [00:03<00:01, 40.8MB/s] 73%|███████▎  | 125M/170M [00:03<00:01, 40.6MB/s] 76%|███████▌  | 130M/170M [00:04<00:01, 40.9MB/s] 79%|███████▊  | 134M/170M [00:04<00:00, 40.7MB/s] 82%|████████▏ | 139M/170M [00:04<00:00, 40.9MB/s] 84%|████████▍ | 144M/170M [00:04<00:00, 40.7MB/s] 87%|████████▋ | 149M/170M [00:04<00:00, 41.4MB/s] 90%|█████████ | 154M/170M [00:04<00:00, 41.5MB/s] 93%|█████████▎| 158M/170M [00:04<00:00, 41.0MB/s] 96%|█████████▌| 163M/170M [00:04<00:00, 41.1MB/s] 98%|█████████▊| 168M/170M [00:05<00:00, 40.7MB/s]100%|██████████| 170M/170M [00:05<00:00, 33.7MB/s]
-/usr/lib64/python3.9/tarfile.py:2285: RuntimeWarning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
-  warnings.warn(
-/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
-  warnings.warn(
-INFO:__main__:No pretraining specified, skipping...
-INFO:__main__:Starting SGLD sampling...
-INFO:__main__:Burn-in steps: 2000
-INFO:__main__:Sampling steps: 20000
-INFO:__main__:Thinning: 200
-INFO:__main__:Phase 1: Burn-in...
+Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+INFO:__main__:Starting MAP LoRA training...
+INFO:__main__:Epoch 1: Train Loss: 0.7216, Val Loss: 0.7014, Val Acc: 0.3162
+INFO:__main__:Epoch 2: Train Loss: 0.5996, Val Loss: 0.5147, Val Acc: 0.6838
+INFO:__main__:Epoch 3: Train Loss: 0.5255, Val Loss: 0.4582, Val Acc: 0.7181
+INFO:__main__:Epoch 4: Train Loss: 0.4821, Val Loss: 0.4242, Val Acc: 0.7745
+INFO:__main__:Epoch 5: Train Loss: 0.4509, Val Loss: 0.4123, Val Acc: 0.8137
+INFO:__main__:Epoch 6: Train Loss: 0.4260, Val Loss: 0.3763, Val Acc: 0.8578
+INFO:__main__:Epoch 7: Train Loss: 0.3958, Val Loss: 0.3545, Val Acc: 0.8529
+INFO:__main__:Epoch 8: Train Loss: 0.3742, Val Loss: 0.3470, Val Acc: 0.8505
+INFO:__main__:Epoch 9: Train Loss: 0.3718, Val Loss: 0.3405, Val Acc: 0.8652
+INFO:__main__:Epoch 10: Train Loss: 0.3507, Val Loss: 0.3278, Val Acc: 0.8750
+INFO:__main__:Epoch 11: Train Loss: 0.3443, Val Loss: 0.3254, Val Acc: 0.8676
+INFO:__main__:Epoch 12: Train Loss: 0.3340, Val Loss: 0.3226, Val Acc: 0.8750
+INFO:__main__:Epoch 13: Train Loss: 0.3209, Val Loss: 0.3186, Val Acc: 0.8676
+INFO:__main__:Epoch 14: Train Loss: 0.3273, Val Loss: 0.3121, Val Acc: 0.8652
+INFO:__main__:Epoch 15: Train Loss: 0.3160, Val Loss: 0.3164, Val Acc: 0.8750
+INFO:__main__:Epoch 16: Train Loss: 0.3157, Val Loss: 0.3155, Val Acc: 0.8676
+INFO:__main__:Epoch 17: Train Loss: 0.3071, Val Loss: 0.3143, Val Acc: 0.8775
+INFO:__main__:Epoch 18: Train Loss: 0.3048, Val Loss: 0.3119, Val Acc: 0.8750
+INFO:__main__:Epoch 19: Train Loss: 0.3121, Val Loss: 0.3114, Val Acc: 0.8725
+INFO:__main__:Epoch 20: Train Loss: 0.3044, Val Loss: 0.3125, Val Acc: 0.8701
+INFO:__main__:MAP model saved to runs/mrpc_roberta_lora_sgld/map_model.pth
+INFO:__main__:Starting SGLD LoRA training...
+INFO:__main__:Running chain 1/4
+INFO:__main__:Chain 1: Burn-in phase (2000 steps)
+INFO:__main__:Burn-in step 0/2000, step_size: 1.00e-04
+INFO:__main__:Burn-in step 500/2000, step_size: 7.84e-05
+INFO:__main__:Burn-in step 1000/2000, step_size: 6.60e-05
+INFO:__main__:Burn-in step 1500/2000, step_size: 5.77e-05
+INFO:__main__:Chain 1: Sampling phase (10000 steps)
+INFO:__main__:Sampling step 0/10000, step_size: 1.00e-04
+Total parameters: 125,829,124
+Trainable (LoRA) parameters: 589,824
+Frozen (base) parameters: 125,239,300
+LoRA ratio: 0.47%
 Traceback (most recent call last):
-  File "/scratch/nalint2/Bayesian-LORA/scripts/train.py", line 315, in <module>
+  File "/scratch/nalint2/Bayesian-LORA/scripts/train_mrpc_lora.py", line 303, in <module>
     main()
-  File "/scratch/nalint2/Bayesian-LORA/scripts/train.py", line 296, in main
-    samples = run_sampling(model, sampler, train_loader, config, device, output_dir)
-  File "/scratch/nalint2/Bayesian-LORA/scripts/train.py", line 229, in run_sampling
-    sampler.step(data, target)
-  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/samplers/sgld.py", line 92, in step
-    param.data -= self.step_size * param.grad
-TypeError: only integer tensors of a single element can be converted to an index
-❌ CIFAR-10 experiment failed!
+  File "/scratch/nalint2/Bayesian-LORA/scripts/train_mrpc_lora.py", line 292, in main
+    sgld_samples = train_sgld_lora(model, train_dataloader, config, device)
+  File "/scratch/nalint2/Bayesian-LORA/scripts/train_mrpc_lora.py", line 221, in train_sgld_lora
+    sampler.step(input_ids, attention_mask, labels)
+  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/samplers/sgld.py", line 54, in step
+    output = self.model(input_ids, attention_mask=attention_mask)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/src/bayesian_lora/models/hf_lora.py", line 70, in forward
+    return self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/peft/peft_model.py", line 1652, in forward
+    return self.base_model(
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/peft/tuners/tuners_utils.py", line 222, in forward
+    return self.model.forward(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 1187, in forward
+    outputs = self.roberta(
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 861, in forward
+    encoder_outputs = self.encoder(
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 605, in forward
+    layer_outputs = layer_module(
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 542, in forward
+    layer_output = apply_chunking_to_forward(
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/pytorch_utils.py", line 257, in apply_chunking_to_forward
+    return forward_fn(*input_tensors)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 550, in feed_forward_chunk
+    intermediate_output = self.intermediate(attention_output)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/models/roberta/modeling_roberta.py", line 465, in forward
+    hidden_states = self.intermediate_act_fn(hidden_states)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/nalint2/Bayesian-LORA/.venv/lib64/python3.9/site-packages/transformers/activations.py", line 70, in forward
+    return self.act(input)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 96.00 MiB. GPU 0 has a total capacity of 22.06 GiB of which 41.38 MiB is free. Including non-PyTorch memory, this process has 22.01 GiB memory in use. Of the allocated memory 21.34 GiB is allocated by PyTorch, and 399.74 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+❌ LoRA training failed!
