@@ -85,20 +85,52 @@ except Exception as e:
 echo "=== Verifying installation ==="
 echo "Testing package installation status..."
 
-# Test the proper import
+# Test the proper import with timeout and better error handling
+echo "=== Testing bayesian_lora import ==="
 python3 -c "
-import bayesian_lora
-print('✅ bayesian_lora module imported successfully!')
-print(f'Version: {bayesian_lora.__version__}')
-print(f'Author: {bayesian_lora.__author__}')
-" && {
+import sys
+print(f'Python path: {sys.path[:3]}...')
+try:
+    import bayesian_lora
+    print('✅ bayesian_lora module imported successfully!')
+    print(f'Version: {getattr(bayesian_lora, \"__version__\", \"Unknown\")}')
+    print(f'Author: {getattr(bayesian_lora, \"__author__\", \"Unknown\")}')
+    print(f'Module location: {bayesian_lora.__file__}')
+except ImportError as e:
+    print(f'❌ ImportError: {e}')
+    sys.exit(1)
+except Exception as e:
+    print(f'❌ Unexpected error: {e}')
+    sys.exit(1)
+" 
+
+if [ $? -eq 0 ]; then
     echo "✅ Package installation verified successfully!"
-} || {
-    echo "❌ Package import failed even after installation attempts!"
-    echo "=== Final debugging attempt ==="
-    python3 debug/debug_suite.py
+else
+    echo "❌ Package import failed!"
+    echo "=== Debugging import failure ==="
+    
+    echo "=== Checking Python path ==="
+    python3 -c "import sys; print('Python path:'); [print(f'  {p}') for p in sys.path[:10]]"
+    
+    echo "=== Checking if package files exist ==="
+    ls -la src/bayesian_lora/ 2>/dev/null || echo "❌ src/bayesian_lora/ not found"
+    
+    echo "=== Running debug suite ==="
+    python3 debug/debug_suite.py --quick || echo "❌ Debug suite failed"
+    
+    echo "=== Final attempt: direct import test ==="
+    cd src && python3 -c "
+try:
+    import bayesian_lora
+    print('✅ Direct import from src successful!')
+except Exception as e:
+    print(f'❌ Direct import failed: {e}')
+" || echo "❌ Direct import test failed"
+    
+    cd ..
     exit 1
-}
+fi
 
 echo "=== Installing additional requirements ==="
 pip3 install -r requirements_lora.txt
