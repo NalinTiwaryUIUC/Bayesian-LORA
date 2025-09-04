@@ -7,7 +7,7 @@ experiment:
   
 model:
   backbone: "roberta-base"
-  max_sequence_length: 256
+  max_sequence_length: 128  # Reduced for GPU memory constraints
   lora:
     inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
     rank: 8
@@ -16,7 +16,7 @@ model:
 
 data:
   dataset: "mrpc"
-  batch_size: 32
+  batch_size: 16  # Reduced for GPU memory constraints
   max_epochs: 20
 
 training:
@@ -38,9 +38,9 @@ training:
       decay_rate: 0.6
       decay_steps: 1000
     gradient_clip_norm: 1.0
-    chains: 4
-    burn_in_steps: 2000
-    sampling_steps: 10000
+    chains: 2  # Reduced for GPU memory constraints
+    burn_in_steps: 1000  # Reduced for faster execution
+    sampling_steps: 5000  # Reduced for faster execution
     thinning: 20
     samples_to_retain: 200
 

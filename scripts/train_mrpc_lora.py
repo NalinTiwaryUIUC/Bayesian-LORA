@@ -199,6 +199,10 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             
             sampler.step(input_ids, attention_mask, labels)
             
+            # Clear GPU cache periodically to prevent memory issues
+            if step % 100 == 0:
+                torch.cuda.empty_cache()
+            
             if step % 500 == 0:
                 logger.info(f"Burn-in step {step}/{sgld_config['burn_in_steps']}, "
                            f"step_size: {current_step_size:.2e}")
@@ -220,6 +224,10 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             
             sampler.step(input_ids, attention_mask, labels)
             
+            # Clear GPU cache periodically to prevent memory issues
+            if step % 100 == 0:
+                torch.cuda.empty_cache()
+            
             # Keep samples based on thinning
             if step % sgld_config['thinning'] == 0:
                 # Save current model state
@@ -239,6 +247,9 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         chain_samples = chain_samples[-samples_per_chain:]
         all_samples.extend(chain_samples)
         logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+        
+        # Clear GPU cache after each chain
+        torch.cuda.empty_cache()
     
     logger.info(f"Total samples collected: {len(all_samples)}")
     return all_samples
@@ -287,6 +298,9 @@ def main():
     map_save_path = output_dir / "map_model.pth"
     torch.save(map_model.state_dict(), map_save_path)
     logger.info(f"MAP model saved to {map_save_path}")
+    
+    # Clear GPU cache before SGLD training
+    torch.cuda.empty_cache()
     
     # Train SGLD LoRA
     sgld_samples = train_sgld_lora(model, train_dataloader, config, device)
