@@ -26,8 +26,40 @@ from bayesian_lora.data.glue_datasets import MRPCDataset
 from bayesian_lora.samplers.sgld import SGLDSampler
 from bayesian_lora.utils.lora_params import LoRAParams
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Setup logging to both console and file
+def setup_logging():
+    """Setup logging to both console and file."""
+    # Create logs directory
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+    
+    # Create formatter
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    # Setup root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    
+    # Clear any existing handlers
+    logger.handlers.clear()
+    
+    # Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    
+    # File handler
+    file_handler = logging.FileHandler(logs_dir / "training.log")
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    
+    return logger
+
+logger = setup_logging()
 
 
 def load_config(config_path: str) -> Dict[str, Any]:
