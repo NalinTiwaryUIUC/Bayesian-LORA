@@ -32,8 +32,23 @@ logger = logging.getLogger(__name__)
 
 def load_config(config_path: str) -> Dict[str, Any]:
     """Load experiment configuration from YAML file."""
+    def convert_scientific_notation(loader, node):
+        """Convert scientific notation strings to floats."""
+        value = loader.construct_scalar(node)
+        try:
+            return float(value)
+        except ValueError:
+            return value
+    
+    # Create custom loader that handles scientific notation
+    class ScientificNotationLoader(yaml.SafeLoader):
+        pass
+    
+    # Register the converter for scalar nodes
+    ScientificNotationLoader.add_constructor('tag:yaml.org,2002:str', convert_scientific_notation)
+    
     with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
+        return yaml.load(f, Loader=ScientificNotationLoader)
 
 
 def setup_model_and_tokenizer(config: Dict[str, Any]):
