@@ -31,18 +31,18 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 1e-3  # Increased for actual learning
+    learning_rate: 5e-4  # Reduced for better stability
     temperature: 1.0
-    prior_std: 1.0  # Increased prior std to allow learning
+    prior_std: 0.5  # Reduced prior std for better convergence
     step_size_schedule:
-      initial: 1e-3  # Increased initial step size for learning
-      decay_rate: 0.6
-      decay_steps: 1000
+      initial: 5e-4  # Reduced initial step size for stability
+      decay_rate: 0.5  # Slower decay for more stable sampling
+      decay_steps: 2000  # Longer decay schedule
     gradient_clip_norm: 0.5  # Tighter gradient clipping
     chains: 3  # Restored for R-hat computation
-    burn_in_steps: 1500  # Increased for better convergence
-    sampling_steps: 3000  # Increased for more samples
-    thinning: 15  # Increased thinning for better mixing
+    burn_in_steps: 5000  # Much longer burn-in for convergence
+    sampling_steps: 10000  # Many more samples for better ESS
+    thinning: 50  # Much higher thinning for independent samples
     samples_to_retain: 200
 
 evaluation:
