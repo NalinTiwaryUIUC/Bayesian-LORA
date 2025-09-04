@@ -8,7 +8,6 @@
 #SBATCH --nodes=1                          # Number of nodes
 #SBATCH --gres=gpu:1                       # Number of GPUs
 #SBATCH --ntasks-per-node=1                # Number of cores per node
-#SBATCH --job-name=nalint2-lora-exp        # Name of job
 #SBATCH --account=arindamb-cs-eng          # Account
 #SBATCH --partition=eng-research-gpu       # Partition
 #SBATCH --output=bayesian_lora_experiment_log_%j    # output file name with job ID
