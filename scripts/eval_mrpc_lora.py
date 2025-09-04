@@ -163,7 +163,7 @@ def evaluate_map_model(model: LoRAModel, dataloader: torch.utils.data.DataLoader
 
 
 def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: torch.utils.data.DataLoader,
-                         device: torch.device) -> Tuple[float, float, float, Dict]:
+                         device: torch.device, num_chains: int, samples_per_chain: int) -> Tuple[float, float, float, Dict]:
     """Evaluate SGLD samples and compute ensemble metrics."""
     all_predictions = []
     all_confidences = []
@@ -237,27 +237,41 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
     probe_logits = all_logits[:, :probe_size, :]
     
     # Summary 1: Log posterior (simplified as negative log-likelihood)
-    log_posterior_chains = []
+    # Collect per-sample scalar metric first, then partition by chains
+    log_posterior_values = []
     for sample_logits in probe_logits:
         sample_probs = F.softmax(torch.tensor(sample_logits), dim=1).numpy()
         sample_nll = -np.mean([np.log(sample_probs[i, all_labels[i]]) 
                               for i in range(probe_size)])
-        log_posterior_chains.append(sample_nll)
+        log_posterior_values.append(sample_nll)
     
     # Summary 2: L2 norm of LoRA parameters
-    l2_norm_chains = []
+    l2_norm_values = []
     for sample_state in samples:
         l2_norm = 0
         for param in sample_state.values():
             if isinstance(param, torch.Tensor):
                 l2_norm += torch.norm(param).item() ** 2
-        l2_norm_chains.append(np.sqrt(l2_norm))
+        l2_norm_values.append(np.sqrt(l2_norm))
+
+    # Partition metrics into chains
+    def partition_into_chains(values: List[float], num_chains: int, samples_per_chain: int) -> List[np.ndarray]:
+        chains = []
+        for c in range(num_chains):
+            start = c * samples_per_chain
+            end = start + samples_per_chain
+            chains.append(np.array(values[start:end]))
+        return chains
+
+    log_posterior_chains = partition_into_chains(log_posterior_values, num_chains, samples_per_chain)
+    l2_norm_chains = partition_into_chains(l2_norm_values, num_chains, samples_per_chain)
     
     # Compute R-hat and ESS for each summary
     mcmc_diagnostics['r_hat_log_posterior'] = compute_r_hat(log_posterior_chains)
     mcmc_diagnostics['r_hat_l2_norm'] = compute_r_hat(l2_norm_chains)
-    mcmc_diagnostics['ess_log_posterior'] = compute_ess(log_posterior_chains)
-    mcmc_diagnostics['ess_l2_norm'] = compute_ess(l2_norm_chains)
+    # Compute ESS per chain and report the minimum as conservative estimate
+    mcmc_diagnostics['ess_log_posterior'] = min(compute_ess(chain) for chain in log_posterior_chains)
+    mcmc_diagnostics['ess_l2_norm'] = min(compute_ess(chain) for chain in l2_norm_chains)
     
     return accuracy, nll, ece, mcmc_diagnostics
 
@@ -326,10 +340,12 @@ def main():
     logger.info("Evaluating MAP model...")
     map_accuracy, map_nll, map_ece = evaluate_map_model(map_model, eval_dataloader, device)
     
-    # Evaluate SGLD samples
-    logger.info("Evaluating SGLD samples...")
+    # Determine chain partitioning from config
+    num_chains = int(config['training']['sgld_lora']['chains'])
+    samples_total = int(config['training']['sgld_lora']['samples_to_retain'])
+    samples_per_chain = samples_total // num_chains
     sgld_accuracy, sgld_nll, sgld_ece, mcmc_diagnostics = evaluate_sgld_samples(
-        map_model, sgld_samples, eval_dataloader, device
+        map_model, sgld_samples, eval_dataloader, device, num_chains, samples_per_chain
     )
     
     # Print results
