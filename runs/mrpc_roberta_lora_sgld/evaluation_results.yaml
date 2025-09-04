@@ -1,0 +1,13 @@
+map_lora:
+  accuracy: 0.8112745098039216
+  nll: 0.4213045800433439
+  ece: 0.06628085775118249
+sgld_lora:
+  accuracy: 0.3161764705882353
+  nll: 0.7723144292831421
+  ece: 0.27005064838072834
+  mcmc_diagnostics:
+    r_hat_log_posterior: 1.6179159879684448
+    r_hat_l2_norm: 0.9945969798236032
+    ess_log_posterior: 2
+    ess_l2_norm: 2
