@@ -27,8 +27,26 @@ logger = logging.getLogger(__name__)
 
 def load_config(config_path: str) -> Dict[str, Any]:
     """Load experiment configuration from YAML file."""
+    def convert_scientific_notation(loader, node):
+        """Convert scientific notation strings to floats."""
+        value = loader.construct_scalar(node)
+        try:
+            if any(char in value.lower() for char in '0123456789.e+-'):
+                return float(value)
+            else:
+                return value
+        except ValueError:
+            return value
+    
+    # Create custom loader that handles scientific notation
+    class ScientificNotationLoader(yaml.SafeLoader):
+        pass
+    
+    # Register the converter for scalar nodes
+    ScientificNotationLoader.add_constructor('tag:yaml.org,2002:str', convert_scientific_notation)
+    
     with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
+        return yaml.load(f, Loader=ScientificNotationLoader)
 
 
 def compute_ece(confidences: np.ndarray, accuracies: np.ndarray, n_bins: int = 15) -> float:
@@ -271,7 +289,24 @@ def main():
     
     # Load MAP model
     logger.info("Loading MAP model...")
-    map_model = LoRAModel.from_pretrained(config['model']['backbone'])
+    
+    # Create LoRA model with proper configuration
+    from transformers import RobertaForSequenceClassification
+    base_model = RobertaForSequenceClassification.from_pretrained(
+        config['model']['backbone'],
+        num_labels=2  # MRPC is binary classification
+    )
+    
+    lora_config = config['model']['lora']
+    map_model = LoRAModel(
+        base_model,
+        r=lora_config['rank'],
+        alpha=lora_config['alpha'],
+        dropout=lora_config['dropout'],
+        target_modules=lora_config['inject_into']
+    )
+    
+    # Load the trained state
     map_model.load_state_dict(torch.load(args.map_model_path, map_location=device))
     map_model.to(device)
     
