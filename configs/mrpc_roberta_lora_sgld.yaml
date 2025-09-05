@@ -31,18 +31,18 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 1e-3  # Sweet spot for exploration and convergence
+    learning_rate: 1e-4  # Much smaller for convergence (R-hat was 3.27)
     temperature: 1.0
     prior_std: 0.01  # Very strong prior to balance likelihood
     step_size_schedule:
-      initial: 1e-3  # Sweet spot for exploration and convergence
+      initial: 1e-4  # Much smaller for convergence (R-hat was 3.27)
       decay_rate: 0.3  # More conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule
     gradient_clip_norm: 0.5  # Tighter gradient clipping
-    chains: 3  # Restored for R-hat computation
-    burn_in_steps: 8000  # Even longer burn-in for better convergence
-    sampling_steps: 12000  # More samples for better ESS
-    thinning: 100  # Higher thinning for more independent samples
+    chains: 5  # Restored for R-hat computation
+    burn_in_steps: 10000  # Longer burn-in for convergence with smaller step size
+    sampling_steps: 15000  # More samples for better ESS
+    thinning: 50  # Higher thinning for more independent samples
     samples_to_retain: 200
 
 evaluation:
