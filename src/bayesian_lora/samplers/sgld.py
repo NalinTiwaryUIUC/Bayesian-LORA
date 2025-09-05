@@ -41,6 +41,7 @@ class SGLDSampler(BaseSampler):
         super().__init__(model, temperature, step_size, noise_scale)
         self.prior_std = prior_std
         self.gradient_clip_norm = gradient_clip_norm
+        self.noise_scale = noise_scale  # Store noise scale for use in step function
     
     def step(self, *args):
         """
@@ -98,8 +99,8 @@ class SGLDSampler(BaseSampler):
                     param.data = param.data - self.step_size * param.grad
                     
                     # Add noise: √(2η/τ)ξ
-                    # Use an extremely conservative noise scaling for stability
-                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * 0.001  # Scale down noise by 1000x
+                    # Use configurable noise scaling for stability
+                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
                     noise = torch.randn_like(param) * noise_std
                     param.data = param.data + noise
 
