@@ -10,14 +10,14 @@ model:
   max_sequence_length: 64  # Moderately increased for better performance
   lora:
     inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
-    rank: 4  # Increased for better expressiveness
-    alpha: 8  # Increased proportionally with rank
+    rank: 8  # Increased for better expressiveness
+    alpha: 16  # Increased proportionally with rank
     dropout: 0.1
 
 data:
   dataset: "mrpc"
-  batch_size: 4  # Ultra-reduced for GPU memory constraints
-  gradient_accumulation_steps: 8  # Maintain effective batch size of 32
+  batch_size: 8  # Increased to reduce noise
+  gradient_accumulation_steps: 4  # Maintain effective batch size of 32
   max_epochs: 20
 
 training:
@@ -31,18 +31,18 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 5e-4  # Reduced for better stability
+    learning_rate: 1e-3  # Sweet spot for exploration and convergence
     temperature: 1.0
     prior_std: 0.01  # Very strong prior to balance likelihood
     step_size_schedule:
-      initial: 5e-4  # Reduced initial step size for stability
-      decay_rate: 0.5  # Slower decay for more stable sampling
-      decay_steps: 2000  # Longer decay schedule
+      initial: 1e-3  # Sweet spot for exploration and convergence
+      decay_rate: 0.3  # More conservative decay for better convergence
+      decay_steps: 3000  # Longer decay schedule
     gradient_clip_norm: 0.5  # Tighter gradient clipping
     chains: 3  # Restored for R-hat computation
-    burn_in_steps: 5000  # Much longer burn-in for convergence
-    sampling_steps: 10000  # Many more samples for better ESS
-    thinning: 50  # Much higher thinning for independent samples
+    burn_in_steps: 8000  # Even longer burn-in for better convergence
+    sampling_steps: 12000  # More samples for better ESS
+    thinning: 100  # Higher thinning for more independent samples
     samples_to_retain: 200
 
 evaluation:
