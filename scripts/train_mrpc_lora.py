@@ -219,10 +219,9 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         logger.info(f"Running chain {chain + 1}/{sgld_config['chains']}")
         
         # Reset model to MAP state for each chain
-        if chain > 0:
-            # Load MAP model state for fresh start
-            map_state = torch.load(f"runs/mrpc_roberta_lora_sgld/map_model.pth", map_location=device)
-            model.load_state_dict(map_state)
+        # Load MAP model state for fresh start (including chain 0)
+        map_state = torch.load(f"runs/mrpc_roberta_lora_sgld/map_model.pth", map_location=device)
+        model.load_state_dict(map_state)
         
         # Burn-in phase
         logger.info(f"Chain {chain + 1}: Burn-in phase ({sgld_config['burn_in_steps']} steps)")
