@@ -7,7 +7,7 @@ experiment:
   
 model:
   backbone: "roberta-base"
-  max_sequence_length: 64  # Moderately increased for better performance
+  max_sequence_length: 256
   lora:
     inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
     rank: 8  # Increased for better expressiveness
@@ -16,32 +16,31 @@ model:
 
 data:
   dataset: "mrpc"
-  batch_size: 8  # Increased to reduce noise
-  gradient_accumulation_steps: 4  # Maintain effective batch size of 32
+  batch_size: 32  # Optimized for best convergence and GPU utilization
+  gradient_accumulation_steps: 1  # No longer needed with larger batch size
   max_epochs: 20
 
 training:
   map_lora:
-    optimizer: "adamw"
-    learning_rate: 5e-5
+    optimizer: "sgd"  # Changed to SGD for apples-to-apples comparison with SGLD
+    learning_rate: 1e-3  # Higher LR for SGD (typically needs 10x higher than AdamW)
     weight_decay: 0.01
-    beta1: 0.9
-    beta2: 0.999
+    momentum: 0.9  # SGD momentum
     scheduler: "linear"
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 1e-4  # Much smaller for convergence (R-hat was 3.27)
+    learning_rate: 1e-4  # Smaller step size for stable SGLD sampling
     temperature: 1.0
     prior_std: 0.01  # Very strong prior to balance likelihood
     step_size_schedule:
-      initial: 1e-4  # Much smaller for convergence (R-hat was 3.27)
-      decay_rate: 0.3  # More conservative decay for better convergence
+      initial: 1e-4  # Smaller step size for stable SGLD sampling
+      decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule
-    gradient_clip_norm: 0.5  # Tighter gradient clipping
-    chains: 5  # Restored for R-hat computation
-    burn_in_steps: 10000  # Longer burn-in for convergence with smaller step size
-    sampling_steps: 15000  # More samples for better ESS
+    gradient_clip_norm: 1.0
+    chains: 4  # Restored for R-hat computation
+    burn_in_steps: 8000  # Longer burn-in for better convergence
+    sampling_steps: 12000  # More samples for better ESS
     thinning: 50  # Higher thinning for more independent samples
     samples_to_retain: 200
 

@@ -118,12 +118,22 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
     train_config = config['training']['map_lora']
     
     # Setup optimizer
-    optimizer = AdamW(
-        model.parameters(),
-        lr=train_config['learning_rate'],
-        betas=(train_config['beta1'], train_config['beta2']),
-        weight_decay=train_config['weight_decay']
-    )
+    if train_config['optimizer'] == 'adamw':
+        optimizer = AdamW(
+            model.parameters(),
+            lr=train_config['learning_rate'],
+            betas=(train_config['beta1'], train_config['beta2']),
+            weight_decay=train_config['weight_decay']
+        )
+    elif train_config['optimizer'] == 'sgd':
+        optimizer = torch.optim.SGD(
+            model.parameters(),
+            lr=train_config['learning_rate'],
+            momentum=train_config.get('momentum', 0.9),
+            weight_decay=train_config['weight_decay']
+        )
+    else:
+        raise ValueError(f"Unsupported optimizer: {train_config['optimizer']}")
     
     # Setup scheduler
     total_steps = len(train_dataloader) * config['data']['max_epochs']
@@ -198,8 +208,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
     
     sgld_config = config['training']['sgld_lora']
     
-            # Initialize SGLD sampler with proper configuration
-        sampler = SGLDSampler(
+    # Initialize SGLD sampler with proper configuration
+    sampler = SGLDSampler(
             model=model,
             temperature=sgld_config['temperature'],
             step_size=sgld_config['learning_rate'],

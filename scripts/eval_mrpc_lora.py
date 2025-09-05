@@ -244,9 +244,17 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
     all_confidences = np.array(all_confidences)  # [n_samples, n_examples]
     all_logits = np.array(all_logits)  # [n_samples, n_examples, n_classes]
     
-    # Ensemble predictions
-    ensemble_logits = np.mean(all_logits, axis=0)  # [n_examples, n_classes]
-    ensemble_probs = F.softmax(torch.tensor(ensemble_logits), dim=1).numpy()
+    # Ensemble predictions - average probabilities, not logits
+    # Convert logits to probabilities for each sample
+    all_probs = []
+    for sample_logits in all_logits:
+        sample_probs = F.softmax(torch.tensor(sample_logits), dim=1).numpy()
+        all_probs.append(sample_probs)
+    
+    all_probs = np.array(all_probs)  # [n_samples, n_examples, n_classes]
+    
+    # Average probabilities across samples (proper ensemble)
+    ensemble_probs = np.mean(all_probs, axis=0)  # [n_examples, n_classes]
     ensemble_confidences = np.max(ensemble_probs, axis=1)
     ensemble_predictions = np.argmax(ensemble_probs, axis=1)
     
