@@ -30,15 +30,15 @@ training:
     warmup_ratio: 0.1
   
   sgld_lora:
-    learning_rate: 5e-5  # Smaller step size for stable sampling
+    learning_rate: 3.2e-3  # Increased step size to match effective step per sample of working version
     temperature: 2.0  # Optimized for perfect noise-gradient balance
     prior_std: 9.5  # Optimal prior for balanced SGLD sampling (experimentally determined)
     step_size_schedule:
-      initial: 5e-5  # Smaller step size for stable sampling
+      initial: 3.2e-3  # Increased step size to match effective step per sample of working version
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule
     gradient_clip_norm: 1.0
-    noise_scale: 0.000015  # Optimized noise scale for temperature 2.0
+    noise_scale: 0.0001  # Increased noise scale for better balance with larger step size
     chains: 4  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 12000  # More samples for better ESS
