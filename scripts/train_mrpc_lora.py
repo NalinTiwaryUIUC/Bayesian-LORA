@@ -14,6 +14,7 @@ from typing import Dict, Any
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from transformers import (
@@ -26,6 +27,16 @@ from bayesian_lora.models.hf_lora import LoRAModel
 from bayesian_lora.data.glue_datasets import MRPCDataset
 from bayesian_lora.samplers.sgld import SGLDSampler
 from bayesian_lora.utils.lora_params import LoRAParams
+
+# Import ESS computation function
+try:
+    from scripts.eval_mrpc_lora import compute_ess
+except ImportError:
+    # Fallback for when running from different directory
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    from eval_mrpc_lora import compute_ess
 
 # Setup logging to both console and file
 def setup_logging():
@@ -320,8 +331,6 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         
         # Compute ESS for this chain
         if len(log_posterior_values) > 0:
-            from scripts.eval_mrpc_lora import compute_ess
-            import numpy as np
             
             # Keep only the diagnostics for the retained samples
             log_posterior_chain = np.array(log_posterior_values[-samples_per_chain:])
