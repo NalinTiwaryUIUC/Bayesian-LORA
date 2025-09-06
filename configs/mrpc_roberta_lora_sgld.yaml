@@ -48,10 +48,11 @@ training:
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
   mcmc_diagnostics:
-    probe_set_size: 256
+    probe_set_size: 512
     summaries: ["log_posterior", "l2_norm"]
     r_hat_threshold: 1.05
     ess_threshold: 50
+    track_min_ess: true  # Track minimum ESS across all chains and metrics
 
 output:
   save_dir: "runs/mrpc_roberta_lora_sgld"

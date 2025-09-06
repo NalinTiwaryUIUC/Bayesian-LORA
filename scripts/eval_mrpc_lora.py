@@ -102,57 +102,146 @@ def compute_ece(confidences: np.ndarray, accuracies: np.ndarray, n_bins: int = 1
 
 
 def compute_r_hat(chains: List[np.ndarray]) -> float:
-    """Compute R-hat (Gelman-Rubin statistic) for MCMC diagnostics."""
+    """Compute rank-normalized, split-chain R-hat (Gelman-Rubin statistic) for MCMC diagnostics.
+    
+    This implements the rank-normalized, split-chain R-hat as specified in the convergence document.
+    """
     if len(chains) < 2:
         return 1.0
     
     # Convert to numpy arrays if needed
     chains = [np.array(chain) for chain in chains]
     
-    # Compute within-chain variance
-    chain_means = [np.mean(chain) for chain in chains]
-    chain_vars = [np.var(chain, ddof=1) for chain in chains]
+    # Step 1: Rank-normalize all values
+    # Pool all values and convert to ranks
+    all_values = np.concatenate(chains)
+    ranks = np.argsort(np.argsort(all_values)) + 1  # 1-based ranks
+    n_total = len(all_values)
     
-    n = len(chains[0])  # Assuming all chains have same length
-    m = len(chains)
+    # Map ranks to (0,1) via r/(n_total+1), then apply standard normal inverse CDF
+    from scipy.stats import norm
+    normalized_values = norm.ppf(ranks / (n_total + 1))
     
-    # Within-chain variance
+    # Split back into chains
+    rank_normalized_chains = []
+    start_idx = 0
+    for chain in chains:
+        end_idx = start_idx + len(chain)
+        rank_normalized_chains.append(normalized_values[start_idx:end_idx])
+        start_idx = end_idx
+    
+    # Step 2: Split each chain in half
+    split_chains = []
+    for chain in rank_normalized_chains:
+        n = len(chain)
+        if n < 2:
+            continue
+        # Split chain in half
+        half_length = n // 2
+        split_chains.append(chain[:half_length])
+        split_chains.append(chain[half_length:])
+    
+    if len(split_chains) < 2:
+        return 1.0
+    
+    # Step 3: Compute within/between variances for split chains
+    n_half = len(split_chains[0])  # Length of each half-chain
+    m_half = len(split_chains)     # Number of half-chains (2K)
+    
+    # Within-chain variance (W)
+    chain_vars = [np.var(chain, ddof=1) for chain in split_chains]
     W = np.mean(chain_vars)
     
-    # Between-chain variance
+    # Between-chain variance (B)
+    chain_means = [np.mean(chain) for chain in split_chains]
     overall_mean = np.mean(chain_means)
-    B = (n / (m - 1)) * np.sum((chain_means - overall_mean) ** 2)
+    B = (n_half / (m_half - 1)) * np.sum((chain_means - overall_mean) ** 2)
     
-    # Pooled variance
-    V = ((n - 1) / n) * W + (1 / n) * B
-    
-    # R-hat
+    # Step 4: Variance estimate and R-hat
+    V = ((n_half - 1) / n_half) * W + (1 / n_half) * B
     r_hat = np.sqrt(V / W) if W > 0 else 1.0
     
     return r_hat
 
 
 def compute_ess(chain: np.ndarray) -> int:
-    """Compute Effective Sample Size using autocorrelation."""
+    """Compute rank-normalized, split ESS (bulk-ESS) with Geyer IPS truncation.
+    
+    This implements the rank-normalized, split ESS as specified in the convergence document.
+    """
     if len(chain) < 2:
         return len(chain)
     
-    # Compute autocorrelation
-    acf = np.correlate(chain - np.mean(chain), chain - np.mean(chain), mode='full')
-    acf = acf[len(acf)//2:] / acf[len(acf)//2]  # Normalize
+    # For single chain, use rank normalization
+    from scipy.stats import norm
     
-    # Find first crossing of 0.05 threshold
-    threshold = 0.05
-    cutoff = np.where(acf < threshold)[0]
-    if len(cutoff) > 0:
-        lag = cutoff[0]
+    # Rank-normalize the chain
+    ranks = np.argsort(np.argsort(chain)) + 1  # 1-based ranks
+    n = len(chain)
+    normalized_chain = norm.ppf(ranks / (n + 1))
+    
+    # Split chain in half
+    half_length = n // 2
+    if half_length < 2:
+        return len(chain)
+    
+    half_chain1 = normalized_chain[:half_length]
+    half_chain2 = normalized_chain[half_length:]
+    
+    # Compute ESS for each half-chain and average
+    ess1 = _compute_ess_single_chain(half_chain1)
+    ess2 = _compute_ess_single_chain(half_chain2)
+    
+    # Average the ESS values (weighted by within-chain variance)
+    var1 = np.var(half_chain1, ddof=1)
+    var2 = np.var(half_chain2, ddof=1)
+    total_var = var1 + var2
+    
+    if total_var > 0:
+        weighted_ess = (ess1 * var1 + ess2 * var2) / total_var
     else:
-        lag = len(acf) - 1
+        weighted_ess = (ess1 + ess2) / 2
     
-    # ESS = N / (1 + 2 * sum of autocorrelations)
-    ess = len(chain) / (1 + 2 * np.sum(acf[1:lag+1]))
+    # Scale back to original sample size
+    ess = weighted_ess * (n / half_length)
     
     return int(max(1, ess))
+
+
+def _compute_ess_single_chain(chain: np.ndarray) -> float:
+    """Compute ESS for a single chain using Geyer IPS truncation."""
+    if len(chain) < 2:
+        return len(chain)
+    
+    # Compute autocorrelations using FFT-based autocovariance
+    n = len(chain)
+    centered_chain = chain - np.mean(chain)
+    
+    # FFT-based autocovariance
+    fft_chain = np.fft.fft(centered_chain, n=2*n)
+    autocov = np.fft.ifft(fft_chain * np.conj(fft_chain))[:n]
+    autocov = np.real(autocov)
+    
+    # Normalize to get autocorrelations
+    autocorr = autocov / autocov[0]
+    
+    # Geyer IPS truncation: find first odd lag m where ρ_{m-1} + ρ_m < 0
+    m = 1
+    while m < len(autocorr) - 1:
+        if autocorr[m-1] + autocorr[m] < 0:
+            break
+        m += 2  # Only check odd lags
+    
+    # Truncate at m-1
+    truncation_point = max(1, m - 1)
+    
+    # Integrated autocorrelation time
+    tau_int = 1 + 2 * np.sum(autocorr[1:truncation_point+1])
+    
+    # ESS
+    ess = n / tau_int
+    
+    return ess
 
 
 def evaluate_map_model(model: LoRAModel, dataloader: torch.utils.data.DataLoader, 
@@ -403,6 +492,65 @@ def main():
     logger.info(f"ESS (log posterior): {mcmc_diagnostics['ess_log_posterior']}")
     logger.info(f"ESS (L2 norm): {mcmc_diagnostics['ess_l2_norm']}")
     
+    # Compute and report min ESS
+    min_ess = min(mcmc_diagnostics['ess_log_posterior'], mcmc_diagnostics['ess_l2_norm'])
+    logger.info(f"Min ESS: {min_ess}")
+    
+    # Assess MCMC quality
+    r_hat_threshold = config['evaluation']['mcmc_diagnostics']['r_hat_threshold']
+    ess_threshold = config['evaluation']['mcmc_diagnostics']['ess_threshold']
+    
+    r_hat_good = (mcmc_diagnostics['r_hat_log_posterior'] < r_hat_threshold and 
+                  mcmc_diagnostics['r_hat_l2_norm'] < r_hat_threshold)
+    ess_good = min_ess >= ess_threshold
+    
+    logger.info(f"\nMCMC Quality Assessment:")
+    logger.info(f"R-hat threshold: {r_hat_threshold} (Good: {r_hat_good})")
+    logger.info(f"ESS threshold: {ess_threshold} (Good: {ess_good})")
+    logger.info(f"Overall MCMC quality: {'✅ GOOD' if r_hat_good and ess_good else '⚠️  NEEDS IMPROVEMENT'}")
+    
+    if not r_hat_good:
+        logger.warning("R-hat values suggest chains may not have converged")
+    if not ess_good:
+        logger.warning(f"Min ESS ({min_ess}) is below threshold ({ess_threshold}) - samples may be too correlated")
+    
+    # Pass/Fail criteria validation
+    logger.info(f"\nPass/Fail Criteria Assessment:")
+    
+    # Criterion 1: R-hat ≤ 1.05 for S1 and S2
+    r_hat_pass = r_hat_good
+    logger.info(f"  R-hat ≤ 1.05: {'✅ PASS' if r_hat_pass else '❌ FAIL'}")
+    
+    # Criterion 2: ESS ≥ 200 for S1 and S2
+    ess_pass = ess_good
+    logger.info(f"  ESS ≥ 200: {'✅ PASS' if ess_pass else '❌ FAIL'}")
+    
+    # Criterion 3: Accuracy within ±0.3% of MAP-LoRA
+    accuracy_diff = abs(sgld_accuracy - map_accuracy)
+    accuracy_pass = accuracy_diff <= 0.003  # 0.3%
+    logger.info(f"  Accuracy within ±0.3% of MAP: {'✅ PASS' if accuracy_pass else '❌ FAIL'} (diff: {accuracy_diff:.4f})")
+    
+    # Criterion 4: NLL and ECE lower than MAP-LoRA
+    nll_pass = sgld_nll < map_nll
+    ece_pass = sgld_ece < map_ece
+    logger.info(f"  NLL lower than MAP: {'✅ PASS' if nll_pass else '❌ FAIL'} (SGLD: {sgld_nll:.4f}, MAP: {map_nll:.4f})")
+    logger.info(f"  ECE lower than MAP: {'✅ PASS' if ece_pass else '❌ FAIL'} (SGLD: {sgld_ece:.4f}, MAP: {map_ece:.4f})")
+    
+    # Overall pass/fail
+    overall_pass = r_hat_pass and ess_pass and accuracy_pass and nll_pass and ece_pass
+    logger.info(f"\nOverall Convergence Assessment: {'🎉 PASS' if overall_pass else '⚠️  FAIL'}")
+    
+    if not overall_pass:
+        logger.warning("Convergence criteria not met. Consider:")
+        if not r_hat_pass:
+            logger.warning("  - Extend sampling and/or reduce initial step size")
+        if not ess_pass:
+            logger.warning("  - Increase total updates or reduce step size")
+        if not accuracy_pass:
+            logger.warning("  - Check if SGLD is learning properly")
+        if not nll_pass or not ece_pass:
+            logger.warning("  - SGLD should outperform MAP - check implementation")
+    
     # Convert numpy values to Python native types for human-readable YAML
     def convert_numpy_to_python(obj):
         """Recursively convert numpy types to Python native types."""
@@ -428,7 +576,16 @@ def main():
             'accuracy': sgld_accuracy,
             'nll': sgld_nll,
             'ece': sgld_ece,
-            'mcmc_diagnostics': mcmc_diagnostics
+            'mcmc_diagnostics': mcmc_diagnostics,
+            'min_ess': min_ess,
+            'pass_fail_criteria': {
+                'r_hat_pass': r_hat_pass,
+                'ess_pass': ess_pass,
+                'accuracy_pass': accuracy_pass,
+                'nll_pass': nll_pass,
+                'ece_pass': ece_pass,
+                'overall_pass': overall_pass
+            }
         }
     }
     

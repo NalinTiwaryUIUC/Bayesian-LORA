@@ -260,6 +260,10 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         chain_samples = []
         sample_count = 0
         
+        # Track ESS during sampling
+        log_posterior_values = []
+        l2_norm_values = []
+        
         for step in range(sgld_config['sampling_steps']):
             # Update step size according to schedule
             current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
@@ -283,6 +287,24 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 chain_samples.append(sample_state)
                 sample_count += 1
                 
+                # Compute MCMC diagnostics for this sample
+                model.eval()
+                with torch.no_grad():
+                    output = model(input_ids, attention_mask=attention_mask)
+                    logits = output.logits
+                    loss = F.cross_entropy(logits, labels)
+                    
+                    # Log posterior (negative loss + prior)
+                    prior_loss = sum(torch.sum(param ** 2) / (2 * sgld_config['prior_std'] ** 2) 
+                                   for param in model.parameters() if param.requires_grad)
+                    log_posterior = -(loss + prior_loss).item()
+                    log_posterior_values.append(log_posterior)
+                    
+                    # L2 norm of parameters
+                    l2_norm = sum(torch.norm(param).item() for param in model.parameters() if param.requires_grad)
+                    l2_norm_values.append(l2_norm)
+                model.train()
+                
                 if sample_count % 100 == 0:
                     logger.info(f"Chain {chain + 1}: Collected {sample_count} samples")
             
@@ -294,12 +316,40 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         samples_per_chain = sgld_config['samples_to_retain'] // sgld_config['chains']
         chain_samples = chain_samples[-samples_per_chain:]
         all_samples.extend(chain_samples)
-        logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+        
+        # Compute ESS for this chain
+        if len(log_posterior_values) > 0:
+            from scripts.eval_mrpc_lora import compute_ess
+            import numpy as np
+            
+            # Keep only the diagnostics for the retained samples
+            log_posterior_chain = np.array(log_posterior_values[-samples_per_chain:])
+            l2_norm_chain = np.array(l2_norm_values[-samples_per_chain:])
+            
+            ess_log_posterior = compute_ess(log_posterior_chain)
+            ess_l2_norm = compute_ess(l2_norm_chain)
+            min_ess = min(ess_log_posterior, ess_l2_norm)
+            
+            logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+            logger.info(f"Chain {chain + 1}: ESS (log_posterior) = {ess_log_posterior}")
+            logger.info(f"Chain {chain + 1}: ESS (l2_norm) = {ess_l2_norm}")
+            logger.info(f"Chain {chain + 1}: Min ESS = {min_ess}")
+        else:
+            logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
         
         # Clear GPU cache after each chain
         torch.cuda.empty_cache()
     
     logger.info(f"Total samples collected: {len(all_samples)}")
+    
+    # Compute overall ESS across all chains
+    if len(all_samples) > 0:
+        logger.info("Computing overall MCMC diagnostics...")
+        # Note: Full ESS computation will be done during evaluation
+        # Here we just log that samples were collected successfully
+        logger.info(f"SGLD sampling completed with {len(all_samples)} total samples")
+        logger.info("ESS and R-hat will be computed during evaluation phase")
+    
     return all_samples
 
 
