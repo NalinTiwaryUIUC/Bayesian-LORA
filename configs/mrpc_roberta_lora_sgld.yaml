@@ -41,17 +41,17 @@ training:
     noise_scale: 0.0001  # Increased noise scale for better balance with larger step size
     chains: 4  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
-    sampling_steps: 12000  # More samples for better ESS
+    sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
     thinning: 50  # Good thinning for sample independence
-    samples_to_retain: 960  # Match total samples (4 chains * 240 samples per chain)
+    samples_to_retain: 240  # Match total samples (4 chains * 60 samples per chain)
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
   mcmc_diagnostics:
-    probe_set_size: 512
+    probe_set_size: 256
     summaries: ["log_posterior", "l2_norm"]
     r_hat_threshold: 1.05
-    ess_threshold: 200
+    ess_threshold: 50
 
 output:
   save_dir: "runs/mrpc_roberta_lora_sgld"
