@@ -84,7 +84,7 @@ def test_prior_likelihood_balance(model, config):
             prior_loss += torch.sum(param ** 2) / (2 * prior_std ** 2)
             param_count += param.numel()
     
-    prior_loss = prior_loss / param_count  # Average per parameter
+    # Don't divide by param_count - use total prior loss like SGLD does
     
     # Compute likelihood term with dummy data
     model.eval()
@@ -99,7 +99,7 @@ def test_prior_likelihood_balance(model, config):
     
     ratio = prior_loss / likelihood_loss
     print(f"Prior std: {prior_std}")
-    print(f"Prior loss per parameter: {prior_loss:.6f}")
+    print(f"Total prior loss: {prior_loss:.6f}")
     print(f"Likelihood loss: {likelihood_loss:.6f}")
     print(f"Prior/Likelihood ratio: {ratio:.6f}")
     

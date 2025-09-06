@@ -213,7 +213,7 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             model=model,
             temperature=sgld_config['temperature'],
             step_size=sgld_config['learning_rate'],
-            noise_scale=0.005,  # Reduced noise for better convergence (R-hat was 3.27)
+            noise_scale=sgld_config['noise_scale'],  # Use configurable noise scale
             prior_std=sgld_config['prior_std'],
             gradient_clip_norm=sgld_config['gradient_clip_norm']
         )
