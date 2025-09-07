@@ -1,0 +1,303 @@
+2025-09-07 07:02:43,325 - root - INFO - Using device: cuda
+2025-09-07 07:02:43,326 - root - INFO - Loading MAP model...
+2025-09-07 07:02:44,843 - root - INFO - Loading SGLD samples...
+2025-09-07 07:02:51,211 - root - INFO - Evaluating MAP model...
+2025-09-07 07:02:54,276 - root - INFO - Evaluating sample 1/240
+2025-09-07 07:02:56,631 - root - INFO - Evaluating sample 2/240
+2025-09-07 07:02:58,994 - root - INFO - Evaluating sample 3/240
+2025-09-07 07:03:01,381 - root - INFO - Evaluating sample 4/240
+2025-09-07 07:03:03,785 - root - INFO - Evaluating sample 5/240
+2025-09-07 07:03:06,214 - root - INFO - Evaluating sample 6/240
+2025-09-07 07:03:08,659 - root - INFO - Evaluating sample 7/240
+2025-09-07 07:03:11,134 - root - INFO - Evaluating sample 8/240
+2025-09-07 07:03:13,624 - root - INFO - Evaluating sample 9/240
+2025-09-07 07:03:16,118 - root - INFO - Evaluating sample 10/240
+2025-09-07 07:03:18,608 - root - INFO - Evaluating sample 11/240
+2025-09-07 07:03:21,086 - root - INFO - Evaluating sample 12/240
+2025-09-07 07:03:23,558 - root - INFO - Evaluating sample 13/240
+2025-09-07 07:03:26,031 - root - INFO - Evaluating sample 14/240
+2025-09-07 07:03:28,488 - root - INFO - Evaluating sample 15/240
+2025-09-07 07:03:30,942 - root - INFO - Evaluating sample 16/240
+2025-09-07 07:03:33,397 - root - INFO - Evaluating sample 17/240
+2025-09-07 07:03:35,845 - root - INFO - Evaluating sample 18/240
+2025-09-07 07:03:38,285 - root - INFO - Evaluating sample 19/240
+2025-09-07 07:03:40,724 - root - INFO - Evaluating sample 20/240
+2025-09-07 07:03:43,162 - root - INFO - Evaluating sample 21/240
+2025-09-07 07:03:45,596 - root - INFO - Evaluating sample 22/240
+2025-09-07 07:03:48,039 - root - INFO - Evaluating sample 23/240
+2025-09-07 07:03:50,479 - root - INFO - Evaluating sample 24/240
+2025-09-07 07:03:52,912 - root - INFO - Evaluating sample 25/240
+2025-09-07 07:03:55,355 - root - INFO - Evaluating sample 26/240
+2025-09-07 07:03:57,795 - root - INFO - Evaluating sample 27/240
+2025-09-07 07:04:00,242 - root - INFO - Evaluating sample 28/240
+2025-09-07 07:04:02,686 - root - INFO - Evaluating sample 29/240
+2025-09-07 07:04:05,123 - root - INFO - Evaluating sample 30/240
+2025-09-07 07:04:07,572 - root - INFO - Evaluating sample 31/240
+2025-09-07 07:04:10,021 - root - INFO - Evaluating sample 32/240
+2025-09-07 07:04:12,472 - root - INFO - Evaluating sample 33/240
+2025-09-07 07:04:14,914 - root - INFO - Evaluating sample 34/240
+2025-09-07 07:04:17,365 - root - INFO - Evaluating sample 35/240
+2025-09-07 07:04:19,819 - root - INFO - Evaluating sample 36/240
+2025-09-07 07:04:22,283 - root - INFO - Evaluating sample 37/240
+2025-09-07 07:04:24,747 - root - INFO - Evaluating sample 38/240
+2025-09-07 07:04:27,210 - root - INFO - Evaluating sample 39/240
+2025-09-07 07:04:29,676 - root - INFO - Evaluating sample 40/240
+2025-09-07 07:04:32,143 - root - INFO - Evaluating sample 41/240
+2025-09-07 07:04:34,619 - root - INFO - Evaluating sample 42/240
+2025-09-07 07:04:37,099 - root - INFO - Evaluating sample 43/240
+2025-09-07 07:04:39,579 - root - INFO - Evaluating sample 44/240
+2025-09-07 07:04:42,064 - root - INFO - Evaluating sample 45/240
+2025-09-07 07:04:44,541 - root - INFO - Evaluating sample 46/240
+2025-09-07 07:04:47,029 - root - INFO - Evaluating sample 47/240
+2025-09-07 07:04:49,526 - root - INFO - Evaluating sample 48/240
+2025-09-07 07:04:52,031 - root - INFO - Evaluating sample 49/240
+2025-09-07 07:04:54,534 - root - INFO - Evaluating sample 50/240
+2025-09-07 07:04:57,034 - root - INFO - Evaluating sample 51/240
+2025-09-07 07:04:59,540 - root - INFO - Evaluating sample 52/240
+2025-09-07 07:05:02,044 - root - INFO - Evaluating sample 53/240
+2025-09-07 07:05:04,550 - root - INFO - Evaluating sample 54/240
+2025-09-07 07:05:07,059 - root - INFO - Evaluating sample 55/240
+2025-09-07 07:05:09,569 - root - INFO - Evaluating sample 56/240
+2025-09-07 07:05:12,075 - root - INFO - Evaluating sample 57/240
+2025-09-07 07:05:14,584 - root - INFO - Evaluating sample 58/240
+2025-09-07 07:05:17,106 - root - INFO - Evaluating sample 59/240
+2025-09-07 07:05:19,626 - root - INFO - Evaluating sample 60/240
+2025-09-07 07:05:22,149 - root - INFO - Evaluating sample 61/240
+2025-09-07 07:05:24,666 - root - INFO - Evaluating sample 62/240
+2025-09-07 07:05:27,183 - root - INFO - Evaluating sample 63/240
+2025-09-07 07:05:29,703 - root - INFO - Evaluating sample 64/240
+2025-09-07 07:05:32,247 - root - INFO - Evaluating sample 65/240
+2025-09-07 07:05:34,782 - root - INFO - Evaluating sample 66/240
+2025-09-07 07:05:37,320 - root - INFO - Evaluating sample 67/240
+2025-09-07 07:05:39,858 - root - INFO - Evaluating sample 68/240
+2025-09-07 07:05:42,403 - root - INFO - Evaluating sample 69/240
+2025-09-07 07:05:44,940 - root - INFO - Evaluating sample 70/240
+2025-09-07 07:05:47,479 - root - INFO - Evaluating sample 71/240
+2025-09-07 07:05:50,021 - root - INFO - Evaluating sample 72/240
+2025-09-07 07:05:52,559 - root - INFO - Evaluating sample 73/240
+2025-09-07 07:05:55,096 - root - INFO - Evaluating sample 74/240
+2025-09-07 07:05:57,643 - root - INFO - Evaluating sample 75/240
+2025-09-07 07:06:00,180 - root - INFO - Evaluating sample 76/240
+2025-09-07 07:06:02,713 - root - INFO - Evaluating sample 77/240
+2025-09-07 07:06:05,256 - root - INFO - Evaluating sample 78/240
+2025-09-07 07:06:07,793 - root - INFO - Evaluating sample 79/240
+2025-09-07 07:06:10,333 - root - INFO - Evaluating sample 80/240
+2025-09-07 07:06:12,873 - root - INFO - Evaluating sample 81/240
+2025-09-07 07:06:15,410 - root - INFO - Evaluating sample 82/240
+2025-09-07 07:06:17,952 - root - INFO - Evaluating sample 83/240
+2025-09-07 07:06:20,490 - root - INFO - Evaluating sample 84/240
+2025-09-07 07:06:23,031 - root - INFO - Evaluating sample 85/240
+2025-09-07 07:06:25,568 - root - INFO - Evaluating sample 86/240
+2025-09-07 07:06:28,107 - root - INFO - Evaluating sample 87/240
+2025-09-07 07:06:30,648 - root - INFO - Evaluating sample 88/240
+2025-09-07 07:06:33,186 - root - INFO - Evaluating sample 89/240
+2025-09-07 07:06:35,724 - root - INFO - Evaluating sample 90/240
+2025-09-07 07:06:38,268 - root - INFO - Evaluating sample 91/240
+2025-09-07 07:06:40,823 - root - INFO - Evaluating sample 92/240
+2025-09-07 07:06:43,367 - root - INFO - Evaluating sample 93/240
+2025-09-07 07:06:45,901 - root - INFO - Evaluating sample 94/240
+2025-09-07 07:06:48,443 - root - INFO - Evaluating sample 95/240
+2025-09-07 07:06:50,982 - root - INFO - Evaluating sample 96/240
+2025-09-07 07:06:53,520 - root - INFO - Evaluating sample 97/240
+2025-09-07 07:06:56,061 - root - INFO - Evaluating sample 98/240
+2025-09-07 07:06:58,618 - root - INFO - Evaluating sample 99/240
+2025-09-07 07:07:01,178 - root - INFO - Evaluating sample 100/240
+2025-09-07 07:07:03,736 - root - INFO - Evaluating sample 101/240
+2025-09-07 07:07:06,299 - root - INFO - Evaluating sample 102/240
+2025-09-07 07:07:08,857 - root - INFO - Evaluating sample 103/240
+2025-09-07 07:07:11,419 - root - INFO - Evaluating sample 104/240
+2025-09-07 07:07:13,975 - root - INFO - Evaluating sample 105/240
+2025-09-07 07:07:16,531 - root - INFO - Evaluating sample 106/240
+2025-09-07 07:07:19,075 - root - INFO - Evaluating sample 107/240
+2025-09-07 07:07:21,634 - root - INFO - Evaluating sample 108/240
+2025-09-07 07:07:24,218 - root - INFO - Evaluating sample 109/240
+2025-09-07 07:07:26,768 - root - INFO - Evaluating sample 110/240
+2025-09-07 07:07:29,330 - root - INFO - Evaluating sample 111/240
+2025-09-07 07:07:31,890 - root - INFO - Evaluating sample 112/240
+2025-09-07 07:07:34,450 - root - INFO - Evaluating sample 113/240
+2025-09-07 07:07:37,008 - root - INFO - Evaluating sample 114/240
+2025-09-07 07:07:39,566 - root - INFO - Evaluating sample 115/240
+2025-09-07 07:07:42,128 - root - INFO - Evaluating sample 116/240
+2025-09-07 07:07:44,688 - root - INFO - Evaluating sample 117/240
+2025-09-07 07:07:47,243 - root - INFO - Evaluating sample 118/240
+2025-09-07 07:07:49,804 - root - INFO - Evaluating sample 119/240
+2025-09-07 07:07:52,361 - root - INFO - Evaluating sample 120/240
+2025-09-07 07:07:55,282 - root - INFO - Evaluating sample 121/240
+2025-09-07 07:07:57,842 - root - INFO - Evaluating sample 122/240
+2025-09-07 07:08:00,401 - root - INFO - Evaluating sample 123/240
+2025-09-07 07:08:02,958 - root - INFO - Evaluating sample 124/240
+2025-09-07 07:08:05,517 - root - INFO - Evaluating sample 125/240
+2025-09-07 07:08:08,063 - root - INFO - Evaluating sample 126/240
+2025-09-07 07:08:10,619 - root - INFO - Evaluating sample 127/240
+2025-09-07 07:08:13,178 - root - INFO - Evaluating sample 128/240
+2025-09-07 07:08:15,737 - root - INFO - Evaluating sample 129/240
+2025-09-07 07:08:18,295 - root - INFO - Evaluating sample 130/240
+2025-09-07 07:08:20,852 - root - INFO - Evaluating sample 131/240
+2025-09-07 07:08:23,413 - root - INFO - Evaluating sample 132/240
+2025-09-07 07:08:25,971 - root - INFO - Evaluating sample 133/240
+2025-09-07 07:08:28,530 - root - INFO - Evaluating sample 134/240
+2025-09-07 07:08:31,092 - root - INFO - Evaluating sample 135/240
+2025-09-07 07:08:33,648 - root - INFO - Evaluating sample 136/240
+2025-09-07 07:08:36,211 - root - INFO - Evaluating sample 137/240
+2025-09-07 07:08:38,769 - root - INFO - Evaluating sample 138/240
+2025-09-07 07:08:41,325 - root - INFO - Evaluating sample 139/240
+2025-09-07 07:08:43,889 - root - INFO - Evaluating sample 140/240
+2025-09-07 07:08:46,443 - root - INFO - Evaluating sample 141/240
+2025-09-07 07:08:49,007 - root - INFO - Evaluating sample 142/240
+2025-09-07 07:08:51,565 - root - INFO - Evaluating sample 143/240
+2025-09-07 07:08:54,123 - root - INFO - Evaluating sample 144/240
+2025-09-07 07:08:56,683 - root - INFO - Evaluating sample 145/240
+2025-09-07 07:08:59,239 - root - INFO - Evaluating sample 146/240
+2025-09-07 07:09:01,801 - root - INFO - Evaluating sample 147/240
+2025-09-07 07:09:04,358 - root - INFO - Evaluating sample 148/240
+2025-09-07 07:09:06,919 - root - INFO - Evaluating sample 149/240
+2025-09-07 07:09:09,479 - root - INFO - Evaluating sample 150/240
+2025-09-07 07:09:12,035 - root - INFO - Evaluating sample 151/240
+2025-09-07 07:09:14,594 - root - INFO - Evaluating sample 152/240
+2025-09-07 07:09:17,155 - root - INFO - Evaluating sample 153/240
+2025-09-07 07:09:19,715 - root - INFO - Evaluating sample 154/240
+2025-09-07 07:09:22,273 - root - INFO - Evaluating sample 155/240
+2025-09-07 07:09:24,832 - root - INFO - Evaluating sample 156/240
+2025-09-07 07:09:27,373 - root - INFO - Evaluating sample 157/240
+2025-09-07 07:09:29,931 - root - INFO - Evaluating sample 158/240
+2025-09-07 07:09:32,491 - root - INFO - Evaluating sample 159/240
+2025-09-07 07:09:35,051 - root - INFO - Evaluating sample 160/240
+2025-09-07 07:09:37,610 - root - INFO - Evaluating sample 161/240
+2025-09-07 07:09:40,167 - root - INFO - Evaluating sample 162/240
+2025-09-07 07:09:42,726 - root - INFO - Evaluating sample 163/240
+2025-09-07 07:09:45,285 - root - INFO - Evaluating sample 164/240
+2025-09-07 07:09:47,846 - root - INFO - Evaluating sample 165/240
+2025-09-07 07:09:50,403 - root - INFO - Evaluating sample 166/240
+2025-09-07 07:09:52,965 - root - INFO - Evaluating sample 167/240
+2025-09-07 07:09:55,520 - root - INFO - Evaluating sample 168/240
+2025-09-07 07:09:58,081 - root - INFO - Evaluating sample 169/240
+2025-09-07 07:10:00,640 - root - INFO - Evaluating sample 170/240
+2025-09-07 07:10:03,200 - root - INFO - Evaluating sample 171/240
+2025-09-07 07:10:05,761 - root - INFO - Evaluating sample 172/240
+2025-09-07 07:10:08,315 - root - INFO - Evaluating sample 173/240
+2025-09-07 07:10:10,875 - root - INFO - Evaluating sample 174/240
+2025-09-07 07:10:13,438 - root - INFO - Evaluating sample 175/240
+2025-09-07 07:10:15,995 - root - INFO - Evaluating sample 176/240
+2025-09-07 07:10:18,554 - root - INFO - Evaluating sample 177/240
+2025-09-07 07:10:21,113 - root - INFO - Evaluating sample 178/240
+2025-09-07 07:10:23,673 - root - INFO - Evaluating sample 179/240
+2025-09-07 07:10:26,234 - root - INFO - Evaluating sample 180/240
+2025-09-07 07:10:28,792 - root - INFO - Evaluating sample 181/240
+2025-09-07 07:10:31,351 - root - INFO - Evaluating sample 182/240
+2025-09-07 07:10:33,909 - root - INFO - Evaluating sample 183/240
+2025-09-07 07:10:36,469 - root - INFO - Evaluating sample 184/240
+2025-09-07 07:10:39,027 - root - INFO - Evaluating sample 185/240
+2025-09-07 07:10:41,588 - root - INFO - Evaluating sample 186/240
+2025-09-07 07:10:44,145 - root - INFO - Evaluating sample 187/240
+2025-09-07 07:10:46,706 - root - INFO - Evaluating sample 188/240
+2025-09-07 07:10:49,267 - root - INFO - Evaluating sample 189/240
+2025-09-07 07:10:51,825 - root - INFO - Evaluating sample 190/240
+2025-09-07 07:10:54,383 - root - INFO - Evaluating sample 191/240
+2025-09-07 07:10:56,943 - root - INFO - Evaluating sample 192/240
+2025-09-07 07:10:59,500 - root - INFO - Evaluating sample 193/240
+2025-09-07 07:11:02,060 - root - INFO - Evaluating sample 194/240
+2025-09-07 07:11:04,622 - root - INFO - Evaluating sample 195/240
+2025-09-07 07:11:07,180 - root - INFO - Evaluating sample 196/240
+2025-09-07 07:11:09,738 - root - INFO - Evaluating sample 197/240
+2025-09-07 07:11:12,296 - root - INFO - Evaluating sample 198/240
+2025-09-07 07:11:14,857 - root - INFO - Evaluating sample 199/240
+2025-09-07 07:11:17,417 - root - INFO - Evaluating sample 200/240
+2025-09-07 07:11:19,974 - root - INFO - Evaluating sample 201/240
+2025-09-07 07:11:22,537 - root - INFO - Evaluating sample 202/240
+2025-09-07 07:11:25,092 - root - INFO - Evaluating sample 203/240
+2025-09-07 07:11:27,654 - root - INFO - Evaluating sample 204/240
+2025-09-07 07:11:30,213 - root - INFO - Evaluating sample 205/240
+2025-09-07 07:11:32,769 - root - INFO - Evaluating sample 206/240
+2025-09-07 07:11:35,329 - root - INFO - Evaluating sample 207/240
+2025-09-07 07:11:37,888 - root - INFO - Evaluating sample 208/240
+2025-09-07 07:11:40,448 - root - INFO - Evaluating sample 209/240
+2025-09-07 07:11:43,007 - root - INFO - Evaluating sample 210/240
+2025-09-07 07:11:45,564 - root - INFO - Evaluating sample 211/240
+2025-09-07 07:11:48,125 - root - INFO - Evaluating sample 212/240
+2025-09-07 07:11:50,682 - root - INFO - Evaluating sample 213/240
+2025-09-07 07:11:53,241 - root - INFO - Evaluating sample 214/240
+2025-09-07 07:11:55,804 - root - INFO - Evaluating sample 215/240
+2025-09-07 07:11:58,360 - root - INFO - Evaluating sample 216/240
+2025-09-07 07:12:00,923 - root - INFO - Evaluating sample 217/240
+2025-09-07 07:12:03,478 - root - INFO - Evaluating sample 218/240
+2025-09-07 07:12:06,018 - root - INFO - Evaluating sample 219/240
+2025-09-07 07:12:08,577 - root - INFO - Evaluating sample 220/240
+2025-09-07 07:12:11,135 - root - INFO - Evaluating sample 221/240
+2025-09-07 07:12:13,697 - root - INFO - Evaluating sample 222/240
+2025-09-07 07:12:16,254 - root - INFO - Evaluating sample 223/240
+2025-09-07 07:12:18,815 - root - INFO - Evaluating sample 224/240
+2025-09-07 07:12:21,372 - root - INFO - Evaluating sample 225/240
+2025-09-07 07:12:23,914 - root - INFO - Evaluating sample 226/240
+2025-09-07 07:12:26,471 - root - INFO - Evaluating sample 227/240
+2025-09-07 07:12:29,030 - root - INFO - Evaluating sample 228/240
+2025-09-07 07:12:31,591 - root - INFO - Evaluating sample 229/240
+2025-09-07 07:12:34,191 - root - INFO - Evaluating sample 230/240
+2025-09-07 07:12:36,751 - root - INFO - Evaluating sample 231/240
+2025-09-07 07:12:39,309 - root - INFO - Evaluating sample 232/240
+2025-09-07 07:12:41,866 - root - INFO - Evaluating sample 233/240
+2025-09-07 07:12:44,425 - root - INFO - Evaluating sample 234/240
+2025-09-07 07:12:46,985 - root - INFO - Evaluating sample 235/240
+2025-09-07 07:12:49,545 - root - INFO - Evaluating sample 236/240
+2025-09-07 07:12:52,105 - root - INFO - Evaluating sample 237/240
+2025-09-07 07:12:54,661 - root - INFO - Evaluating sample 238/240
+2025-09-07 07:12:57,538 - root - INFO - Evaluating sample 239/240
+2025-09-07 07:13:00,083 - root - INFO - Evaluating sample 240/240
+2025-09-07 07:13:03,584 - root - INFO - 
+==================================================
+2025-09-07 07:13:03,585 - root - INFO - EVALUATION RESULTS
+2025-09-07 07:13:03,585 - root - INFO - ==================================================
+2025-09-07 07:13:03,585 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-07 07:13:03,585 - root - INFO - --------------------------------------------------
+2025-09-07 07:13:03,585 - root - INFO - MAP-LoRA        0.6838     0.6150     0.0238    
+2025-09-07 07:13:03,585 - root - INFO - SGLD-LoRA       0.8725     0.2939     0.0341    
+2025-09-07 07:13:03,585 - root - INFO - 
+MCMC Diagnostics:
+2025-09-07 07:13:03,585 - root - INFO - R-hat (log posterior): 1.0495
+2025-09-07 07:13:03,585 - root - INFO - R-hat (L2 norm): 1.7996
+2025-09-07 07:13:03,585 - root - INFO - ESS (log posterior): 27
+2025-09-07 07:13:03,585 - root - INFO - ESS (L2 norm): 6
+2025-09-07 07:13:03,585 - root - INFO - Min ESS: 6
+2025-09-07 07:13:03,586 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-07 07:13:03,586 - root - INFO - R-hat (log posterior): 1.049
+2025-09-07 07:13:03,586 - root - INFO - R-hat (L2 norm): 1.800
+2025-09-07 07:13:03,586 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ⚠️  CHECK
+2025-09-07 07:13:03,586 - root - INFO - 
+Within-mode mixing:
+2025-09-07 07:13:03,586 - root - INFO - Avg ESS (log posterior): 66.0 ± 47.2
+2025-09-07 07:13:03,586 - root - INFO - Avg ESS (L2 norm): 6.0 ± 0.0
+2025-09-07 07:13:03,586 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-07 07:13:03,586 - root - INFO - 
+ESS Statistics Summary:
+2025-09-07 07:13:03,586 - root - INFO -   Log Posterior ESS: 27 (min), 66.0 ± 47.2 (mean ± std)
+2025-09-07 07:13:03,586 - root - INFO -   L2 Norm ESS: 6 (min), 6.0 ± 0.0 (mean ± std)
+2025-09-07 07:13:03,586 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-07 07:13:03,586 - root - INFO -   • Log posterior ESS varies significantly (std=47.2) - different modes have different mixing quality
+2025-09-07 07:13:03,586 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-07 07:13:03,587 - root - INFO - 
+Per-chain ESS details:
+2025-09-07 07:13:03,587 - root - INFO -   Chain 1: ESS(log_posterior)=59, ESS(l2_norm)=6
+2025-09-07 07:13:03,587 - root - INFO -   Chain 2: ESS(log_posterior)=27, ESS(l2_norm)=6
+2025-09-07 07:13:03,587 - root - INFO -   Chain 3: ESS(log_posterior)=33, ESS(l2_norm)=6
+2025-09-07 07:13:03,587 - root - INFO -   Chain 4: ESS(log_posterior)=145, ESS(l2_norm)=6
+2025-09-07 07:13:03,587 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-07 07:13:03,587 - root - WARNING - R-hat values suggest chains may be in the same mode (not multimodal)
+2025-09-07 07:13:03,587 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-07 07:13:03,587 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-07 07:13:03,587 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ❌ FAIL
+2025-09-07 07:13:03,587 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-07 07:13:03,587 - root - INFO -   Accuracy within ±0.3% of MAP: ❌ FAIL (diff: 0.1887)
+2025-09-07 07:13:03,588 - root - INFO -   NLL lower than MAP: ✅ PASS (SGLD: 0.2939, MAP: 0.6150)
+2025-09-07 07:13:03,588 - root - INFO -   ECE lower than MAP: ❌ FAIL (SGLD: 0.0341, MAP: 0.0238)
+2025-09-07 07:13:03,588 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-07 07:13:03,588 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-07 07:13:03,588 - root - WARNING -   - Chains are in same mode - increase step size or reduce prior strength
+2025-09-07 07:13:03,588 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-07 07:13:03,588 - root - WARNING -   - Check if SGLD is learning properly
+2025-09-07 07:13:03,588 - root - WARNING -   - SGLD should outperform MAP - check implementation
+2025-09-07 07:13:03,594 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_sgld/evaluation_results.yaml
