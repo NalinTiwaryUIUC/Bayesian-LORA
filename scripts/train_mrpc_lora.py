@@ -25,7 +25,7 @@ from transformers import (
 
 from bayesian_lora.models.hf_lora import LoRAModel
 from bayesian_lora.data.glue_datasets import MRPCDataset
-from bayesian_lora.samplers.sgld import SGLDSampler
+from bayesian_lora.samplers.sgld import SGLDSampler, SAMSGLDRank1Sampler
 from bayesian_lora.utils.lora_params import LoRAParams
 
 # Import ESS computation function
@@ -39,10 +39,10 @@ except ImportError:
     from eval_mrpc_lora import compute_ess
 
 # Setup logging to both console and file
-def setup_logging():
+def setup_logging(experiment_name="mrpc_roberta_lora_sgld"):
     """Setup logging to both console and file."""
     # Create logs directory with experiment-specific subfolder
-    logs_dir = Path("logs/mrpc_roberta_lora_sgld")
+    logs_dir = Path(f"logs/{experiment_name}")
     logs_dir.mkdir(parents=True, exist_ok=True)
     
     # Create formatter
@@ -70,9 +70,6 @@ def setup_logging():
     logger.addHandler(file_handler)
     
     return logger
-
-logger = setup_logging()
-
 
 def load_config(config_path: str) -> Dict[str, Any]:
     """Load experiment configuration from YAML file."""
@@ -123,7 +120,7 @@ def setup_model_and_tokenizer(config: Dict[str, Any]):
 
 def train_map_lora(model: LoRAModel, train_dataloader: DataLoader, 
                    val_dataloader: DataLoader, config: Dict[str, Any], 
-                   device: torch.device):
+                   device: torch.device, logger):
     """Train LoRA using MAP estimation."""
     logger.info("Starting MAP LoRA training...")
     
@@ -218,21 +215,43 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
 
 
 def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
-                     config: Dict[str, Any], device: torch.device):
-    """Train LoRA using SGLD sampling."""
-    logger.info("Starting SGLD LoRA training...")
+                     config: Dict[str, Any], device: torch.device, logger):
+    """Train LoRA using SGLD or SAM-SGLD sampling."""
     
-    sgld_config = config['training']['sgld_lora']
+    # Determine which sampler to use based on config
+    if 'sgld_lora' in config['training']:
+        logger.info("Starting SGLD LoRA training...")
+        sgld_config = config['training']['sgld_lora']
+        sampler_class = SGLDSampler
+    elif 'samsgld_rank1_lora' in config['training']:
+        logger.info("Starting SAM-SGLD Rank-1 LoRA training...")
+        sgld_config = config['training']['samsgld_rank1_lora']
+        sampler_class = SAMSGLDRank1Sampler
+    else:
+        raise ValueError("No SGLD or SAM-SGLD configuration found in training config")
     
-    # Initialize SGLD sampler with proper configuration
-    sampler = SGLDSampler(
+    # Initialize sampler with proper configuration
+    if sampler_class == SGLDSampler:
+        sampler = SGLDSampler(
             model=model,
             temperature=sgld_config['temperature'],
             step_size=sgld_config['learning_rate'],
-            noise_scale=sgld_config['noise_scale'],  # Use configurable noise scale
+            noise_scale=sgld_config['noise_scale'],
             prior_std=sgld_config['prior_std'],
             gradient_clip_norm=sgld_config['gradient_clip_norm']
         )
+    elif sampler_class == SAMSGLDRank1Sampler:
+            sampler = SAMSGLDRank1Sampler(
+                model=model,
+                temperature=sgld_config['temperature'],
+                step_size=sgld_config['learning_rate'],
+                noise_scale=sgld_config['noise_scale'],
+                rho=sgld_config['rho'],
+                lambd=sgld_config['lambd'],
+                sigma_dir=sgld_config['sigma_dir'],
+                gradient_clip_norm=sgld_config['gradient_clip_norm'],
+                prior_std=sgld_config['prior_std']
+            )
     
     # Step size schedule parameters
     initial_step_size = sgld_config['step_size_schedule']['initial']
@@ -385,6 +404,10 @@ def main():
     # Load configuration
     config = load_config(args.config)
     
+    # Setup logging with experiment name from config
+    experiment_name = config['experiment']['name']
+    logger = setup_logging(experiment_name)
+    
     # Setup device
     device = torch.device(args.device)
     logger.info(f"Using device: {device}")
@@ -408,7 +431,7 @@ def main():
     val_dataloader = DataLoader(val_dataset, batch_size=config['data']['batch_size'])
     
     # Train MAP LoRA
-    map_model = train_map_lora(model, train_dataloader, val_dataloader, config, device)
+    map_model = train_map_lora(model, train_dataloader, val_dataloader, config, device, logger)
     
     # Save MAP model
     map_save_path = output_dir / "map_model.pth"
@@ -419,7 +442,7 @@ def main():
     torch.cuda.empty_cache()
     
     # Train SGLD LoRA
-    sgld_samples = train_sgld_lora(model, train_dataloader, config, device)
+    sgld_samples = train_sgld_lora(model, train_dataloader, config, device, logger)
     
     # Save SGLD samples
     samples_save_path = output_dir / "sgld_samples.pth"

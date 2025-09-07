@@ -22,10 +22,10 @@ from bayesian_lora.models.hf_lora import LoRAModel
 from bayesian_lora.data.glue_datasets import MRPCDataset
 
 # Setup logging to both console and file
-def setup_logging():
+def setup_logging(experiment_name="mrpc_roberta_lora_sgld"):
     """Setup logging to both console and file."""
     # Create logs directory with experiment-specific subfolder
-    logs_dir = Path("logs/mrpc_roberta_lora_sgld")
+    logs_dir = Path(f"logs/{experiment_name}")
     logs_dir.mkdir(parents=True, exist_ok=True)
     
     # Create formatter
@@ -53,9 +53,6 @@ def setup_logging():
     logger.addHandler(file_handler)
     
     return logger
-
-logger = setup_logging()
-
 
 def load_config(config_path: str) -> Dict[str, Any]:
     """Load experiment configuration from YAML file."""
@@ -435,6 +432,10 @@ def main():
     
     # Load configuration
     config = load_config(args.config)
+    
+    # Setup logging with experiment name from config
+    experiment_name = config['experiment']['name']
+    logger = setup_logging(experiment_name)
     
     # Setup device
     device = torch.device(args.device)

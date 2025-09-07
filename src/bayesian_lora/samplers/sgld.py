@@ -200,7 +200,10 @@ class SAMSGLDSampler(BaseSampler):
                     param.data = param.data + delta
         
         # Second forward pass
-        output2 = self.model(data)
+        if data is not None:
+            output2 = self.model(data)
+        else:
+            output2 = self.model(input_ids, attention_mask=attention_mask)
         
         # Handle different output formats
         if hasattr(output2, 'logits'):
@@ -235,19 +238,36 @@ class SAMSGLDRank1Sampler(BaseSampler):
     """SAM-SGLD Rank-1 sampler."""
     
     def __init__(self, model, temperature=1.0, step_size=1e-4, noise_scale=1.0, 
-                 rho=0.1, lambd=1e-8, beta1=0.9, beta2=0.999, sigma_dir=1.0):
+                 rho=0.1, lambd=1e-8, sigma_dir=1.0, gradient_clip_norm=1.0, prior_std=0.1):
         super().__init__(model, temperature, step_size, noise_scale)
         self.rho = rho
         self.lambd = lambd
-        self.beta1 = beta1
-        self.beta2 = beta2
         self.sigma_dir = sigma_dir
+        self.gradient_clip_norm = gradient_clip_norm
+        self.prior_std = prior_std
     
-    def step(self, data, target):
+    def step(self, *args):
+        """
+        Take one SAM-SGLD step.
+        Supports both (data, target) and (input_ids, attention_mask, labels) formats.
+        """
         self.model.train()
         
+        # Handle different input formats
+        if len(args) == 2:
+            # Traditional format: (data, target)
+            data, target = args
+            input_ids, attention_mask, labels = None, None, target
+            output1 = self.model(data)
+        elif len(args) == 3:
+            # LoRA format: (input_ids, attention_mask, labels)
+            input_ids, attention_mask, labels = args
+            data, target = None, labels
+            output1 = self.model(input_ids, attention_mask=attention_mask)
+        else:
+            raise ValueError("Expected 2 or 3 arguments")
+        
         # First forward pass
-        output1 = self.model(data)
         
         # Handle different output formats
         if hasattr(output1, 'logits'):
@@ -274,7 +294,10 @@ class SAMSGLDRank1Sampler(BaseSampler):
                     param.data = param.data + delta
         
         # Second forward pass
-        output2 = self.model(data)
+        if data is not None:
+            output2 = self.model(data)
+        else:
+            output2 = self.model(input_ids, attention_mask=attention_mask)
         
         # Handle different output formats
         if hasattr(output2, 'logits'):
@@ -284,18 +307,30 @@ class SAMSGLDRank1Sampler(BaseSampler):
             
         loss2 = F.cross_entropy(logits2, target)
         
+        # Add prior term to loss
+        prior_loss = 0
+        for param in self.model.parameters():
+            if param.requires_grad:
+                prior_loss += torch.sum(param ** 2) / (2 * self.prior_std ** 2)
+        
+        total_loss = loss2 + prior_loss
+        
         # Backward pass for second gradient
         self.model.zero_grad()
-        loss2.backward()
+        total_loss.backward()
+        
+        # Apply gradient clipping
+        if self.gradient_clip_norm > 0:
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
         
         # SGLD update with SAM gradient and rank-1 noise
         with torch.no_grad():
             for name, param in self.model.named_parameters():
                 if param.grad is not None:
                     # Rank-1 noise
-                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * 0.001
+                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
                     z = torch.randn_like(param)
-                    u_hat = param.grad / (param.grad.norm() + 1e-8)
+                    u_hat = param.grad / (param.grad.norm() + self.lambd)
                     z_proj = torch.dot(z.flatten(), u_hat.flatten())
                     noise = noise_std * (z + self.sigma_dir * z_proj * u_hat)
                     
