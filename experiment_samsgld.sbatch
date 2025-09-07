@@ -27,52 +27,155 @@ echo "=== GPU Information ==="
 nvidia-smi
 echo "=== Memory Information ==="
 free -h
-echo "=== CPU Information ==="
-lscpu | grep "Model name"
+echo "=== Current Directory ==="
+pwd
 echo "=== Python Version ==="
 python3 --version
-echo "=== PyTorch Version ==="
-python3 -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA Available: {torch.cuda.is_available()}'); print(f'CUDA Version: {torch.version.cuda}')"
-echo "=== Transformers Version ==="
-python3 -c "import transformers; print(f'Transformers: {transformers.__version__}')"
 
-# Change to the project directory
-cd /home/nalint2/Bayesian-LORA
+# Activate virtual environment and install dependencies
+echo "=== Setting up environment ==="
+source .venv/bin/activate
 
-# Install the package in development mode
-echo "=== Installing Bayesian LoRA Package ==="
+echo "=== Upgrading pip to fix version issues ==="
+python3 -m pip install --upgrade pip
+
+echo "=== Installing dependencies ==="
+echo "Installing package in editable mode..."
 pip3 install -e .
 
-# Run the SAM-SGLD LoRA experiment
-echo "=== Starting SAM-SGLD LoRA Experiment ==="
-python3 scripts/train_mrpc_lora.py \
-    --config configs/mrpc_roberta_lora_samsgld_rank1.yaml \
-    --output_dir runs/mrpc_roberta_lora_samsgld_rank1 \
-    --device cuda
-
-# Check if training completed successfully
-if [ $? -eq 0 ]; then
-    echo "=== Training completed successfully ==="
+# Check if the installation succeeded
+echo "=== Verifying pip installation ==="
+pip3 show bayesian-lora || {
+    echo "❌ pip install -e . failed!"
+    echo "=== Debugging pip install failure ==="
+    echo "Python version: $(python3 --version)"
+    echo "Pip version: $(pip3 --version)"
+    echo "Current directory: $(pwd)"
+    echo "Virtual environment: $VIRTUAL_ENV"
     
-    # Run evaluation
-    echo "=== Starting Evaluation ==="
-    python3 scripts/eval_mrpc_lora.py \
-        --config configs/mrpc_roberta_lora_samsgld_rank1.yaml \
-        --map_model_path runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth \
-        --sgld_samples_path runs/mrpc_roberta_lora_samsgld_rank1/sgld_samples.pth \
-        --output_dir runs/mrpc_roberta_lora_samsgld_rank1 \
-        --device cuda
+    echo "=== File permissions check ==="
+    echo "Checking src directory permissions..."
+    ls -la src/ 2>/dev/null || echo "❌ Cannot access src directory"
     
-    if [ $? -eq 0 ]; then
-        echo "=== Evaluation completed successfully ==="
-        echo "=== Experiment completed successfully ==="
-    else
-        echo "=== Evaluation failed ==="
-        exit 1
+    echo "=== Running emergency debug analysis ==="
+    python3 debug/debug_suite.py --quick
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Emergency debug failed! Trying alternative approaches..."
+        echo "Attempting pip install . (non-editable)..."
+        pip3 install . || {
+            echo "❌ pip install . also failed. Installing dependencies only..."
+            pip3 install -r requirements_lora.txt
+            
+            echo "=== Setting PYTHONPATH as fallback ==="
+            export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
+            echo "PYTHONPATH set to: $PYTHONPATH"
+            
+            echo "=== Testing fallback import ==="
+            python3 -c "
+import sys
+sys.path.insert(0, '$(pwd)/src')
+try:
+    import bayesian_lora
+    print('✅ Fallback import successful!')
+except Exception as e:
+    print(f'❌ Fallback import failed: {e}')
+"
+        }
     fi
+}
+
+echo "=== Verifying installation ==="
+echo "Testing package installation status..."
+
+# Test the proper import with timeout and better error handling
+echo "=== Testing bayesian_lora import ==="
+python3 -c "
+import sys
+print(f'Python path: {sys.path[:3]}...')
+try:
+    import bayesian_lora
+    print('✅ bayesian_lora module imported successfully!')
+    print(f'Version: {getattr(bayesian_lora, \"__version__\", \"Unknown\")}')
+    print(f'Author: {getattr(bayesian_lora, \"__author__\", \"Unknown\")}')
+    print(f'Module location: {bayesian_lora.__file__}')
+except ImportError as e:
+    print(f'❌ ImportError: {e}')
+    sys.exit(1)
+except Exception as e:
+    print(f'❌ Unexpected error: {e}')
+    sys.exit(1)
+" 
+
+if [ $? -eq 0 ]; then
+    echo "✅ Package installation verified successfully!"
 else
-    echo "=== Training failed ==="
+    echo "❌ Package import failed!"
+    echo "=== Debugging import failure ==="
+    
+    echo "=== Checking Python path ==="
+    python3 -c "import sys; print('Python path:'); [print(f'  {p}') for p in sys.path[:10]]"
+    
+    echo "=== Checking if package files exist ==="
+    ls -la src/bayesian_lora/ 2>/dev/null || echo "❌ src/bayesian_lora/ not found"
+    
+    echo "=== Running debug suite ==="
+    python3 debug/debug_suite.py --quick || echo "❌ Debug suite failed"
+    
+    echo "=== Final attempt: direct import test ==="
+    cd src && python3 -c "
+try:
+    import bayesian_lora
+    print('✅ Direct import from src successful!')
+except Exception as e:
+    print(f'❌ Direct import failed: {e}')
+" || echo "❌ Direct import test failed"
+    
+    cd ..
     exit 1
 fi
 
-echo "=== Job completed ==="
+echo "=== Installing additional requirements ==="
+pip3 install -r requirements_lora.txt
+
+echo "=== Environment setup complete ==="
+echo "Python executable: $(which python3)"
+echo "Pip executable: $(which pip3)"
+echo "Virtual environment: $VIRTUAL_ENV"
+
+# Run the SAM-SGLD LoRA experiment
+echo "=== Starting SAM-SGLD LoRA Experiment ==="
+echo "Configuration: configs/mrpc_roberta_lora_samsgld_rank1.yaml"
+echo "Output directory: runs/mrpc_roberta_lora_samsgld_rank1"
+
+# Phase 1: SAM-SGLD LoRA Training
+echo "=== Phase 1: Training MAP LoRA and SAM-SGLD Sampling ==="
+python3 scripts/train_mrpc_lora.py \
+    --config configs/mrpc_roberta_lora_samsgld_rank1.yaml \
+    --output_dir runs/mrpc_roberta_lora_samsgld_rank1
+
+if [ $? -eq 0 ]; then
+    echo "✅ SAM-SGLD LoRA training completed successfully!"
+else
+    echo "❌ SAM-SGLD LoRA training failed!"
+    exit 1
+fi
+
+# Phase 2: SAM-SGLD LoRA Evaluation
+echo "=== Phase 2: Evaluating SAM-SGLD LoRA Results ==="
+python3 scripts/eval_mrpc_lora.py \
+    --config configs/mrpc_roberta_lora_samsgld_rank1.yaml \
+    --map_model_path runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth \
+    --sgld_samples_path runs/mrpc_roberta_lora_samsgld_rank1/sgld_samples.pth \
+    --output_dir runs/mrpc_roberta_lora_samsgld_rank1
+
+if [ $? -eq 0 ]; then
+    echo "✅ SAM-SGLD LoRA evaluation completed successfully!"
+else
+    echo "❌ SAM-SGLD LoRA evaluation failed!"
+    exit 1
+fi
+
+echo "=== SAM-SGLD LoRA experiment completed successfully! ==="
+echo "Results saved to: runs/mrpc_roberta_lora_samsgld_rank1/"
+echo "Job completed at: $(date)"
