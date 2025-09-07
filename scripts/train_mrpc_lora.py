@@ -148,13 +148,16 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
         raise ValueError(f"Unsupported optimizer: {train_config['optimizer']}")
     
     # Setup scheduler
-    total_steps = len(train_dataloader) * config['data']['max_epochs']
-    warmup_steps = int(total_steps * train_config['warmup_ratio'])
-    scheduler = get_linear_schedule_with_warmup(
-        optimizer, 
-        num_warmup_steps=warmup_steps,
-        num_training_steps=total_steps
-    )
+    if train_config.get('scheduler', 'linear') == 'none':
+        scheduler = None
+    else:
+        total_steps = len(train_dataloader) * config['data']['max_epochs']
+        warmup_steps = int(total_steps * train_config['warmup_ratio'])
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer, 
+            num_warmup_steps=warmup_steps,
+            num_training_steps=total_steps
+        )
     
     # Training loop with gradient accumulation
     model.train()
@@ -178,9 +181,10 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
             
             # Update weights every gradient_accumulation_steps
             if (step + 1) % gradient_accumulation_steps == 0:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)  # Increased from 1.0 to allow larger updates
                 optimizer.step()
-                scheduler.step()
+                if scheduler is not None:
+                    scheduler.step()
                 optimizer.zero_grad()
         
         # Validation
@@ -276,10 +280,14 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         log_posterior_values = []
         l2_norm_values = []
         
+        # Use fixed step size during sampling for better sample independence
+        # Calculate the step size at the end of burn-in
+        burn_in_end_step_size = initial_step_size * (1 + sgld_config['burn_in_steps'] / decay_steps) ** (-decay_rate)
+        sampler.step_size = burn_in_end_step_size
+        
         for step in range(sgld_config['sampling_steps']):
-            # Update step size according to schedule
-            current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
-            sampler.step_size = current_step_size
+            # Keep step size constant during sampling for better sample independence
+            # (No step size update during sampling phase)
             
             batch = next(iter(train_dataloader))
             input_ids = batch['input_ids'].to(device)

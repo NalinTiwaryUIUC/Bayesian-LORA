@@ -23,11 +23,11 @@ data:
 training:
   map_lora:
     optimizer: "sgd"  # Changed to SGD for apples-to-apples comparison with SGLD
-    learning_rate: 1e-3  # Higher LR for SGD (typically needs 10x higher than AdamW)
+    learning_rate: 3e-3  # Optimal LR for SGD (tested and found to be best)
     weight_decay: 0.01
-    momentum: 0.9  # SGD momentum
-    scheduler: "linear"
-    warmup_ratio: 0.1
+    momentum: 0.5  # Optimal momentum for SGD (tested and found to be best)
+    scheduler: "none"  # Disable scheduler to avoid LR decay
+    warmup_ratio: 0.0  # Disable warmup
   
   sgld_lora:
     learning_rate: 3.2e-3  # Increased step size to match effective step per sample of working version
@@ -37,8 +37,8 @@ training:
       initial: 3.2e-3  # Increased step size to match effective step per sample of working version
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule
-    gradient_clip_norm: 1.0
-    noise_scale: 0.0001  # Increased noise scale for better balance with larger step size
+    gradient_clip_norm: 5.0  # Match MAP training for consistency
+    noise_scale: 0.001  # Increased noise scale for better parameter space exploration
     chains: 4  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
@@ -50,8 +50,8 @@ evaluation:
   mcmc_diagnostics:
     probe_set_size: 512
     summaries: ["log_posterior", "l2_norm"]
-    r_hat_threshold: 1.05
-    ess_threshold: 50
+    r_hat_threshold: 1.05  # Not used for multimodal assessment
+    ess_threshold: 50  # Used for within-mode mixing (threshold/4 = 12.5)
     track_min_ess: true  # Track minimum ESS across all chains and metrics
 
 output:

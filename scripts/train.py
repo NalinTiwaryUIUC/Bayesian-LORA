@@ -124,7 +124,7 @@ def pretrain_model(model: nn.Module, train_loader: DataLoader, test_loader: Data
     
     # Training loop
     for epoch in range(config['train']['epochs']):
-        model.train()
+            model.train()
         total_loss = 0
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
@@ -132,7 +132,7 @@ def pretrain_model(model: nn.Module, train_loader: DataLoader, test_loader: Data
             optimizer.zero_grad()
             output = model(data)
             loss = nn.CrossEntropyLoss()(output, target)
-            loss.backward()
+                loss.backward()
             optimizer.step()
             
             total_loss += loss.item()

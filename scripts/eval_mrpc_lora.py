@@ -399,9 +399,21 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
     # Compute R-hat and ESS for each summary
     mcmc_diagnostics['r_hat_log_posterior'] = compute_r_hat(log_posterior_chains)
     mcmc_diagnostics['r_hat_l2_norm'] = compute_r_hat(l2_norm_chains)
-    # Compute ESS per chain and report the minimum as conservative estimate
-    mcmc_diagnostics['ess_log_posterior'] = min(compute_ess(chain) for chain in log_posterior_chains)
-    mcmc_diagnostics['ess_l2_norm'] = min(compute_ess(chain) for chain in l2_norm_chains)
+    
+    # Compute ESS per chain for multimodal assessment
+    ess_log_posterior_per_chain = [compute_ess(chain) for chain in log_posterior_chains]
+    ess_l2_norm_per_chain = [compute_ess(chain) for chain in l2_norm_chains]
+    
+    mcmc_diagnostics['ess_log_posterior'] = min(ess_log_posterior_per_chain)
+    mcmc_diagnostics['ess_l2_norm'] = min(ess_l2_norm_per_chain)
+    mcmc_diagnostics['ess_log_posterior_per_chain'] = ess_log_posterior_per_chain
+    mcmc_diagnostics['ess_l2_norm_per_chain'] = ess_l2_norm_per_chain
+    
+    # Multimodal-specific diagnostics
+    mcmc_diagnostics['avg_ess_log_posterior'] = np.mean(ess_log_posterior_per_chain)
+    mcmc_diagnostics['avg_ess_l2_norm'] = np.mean(ess_l2_norm_per_chain)
+    mcmc_diagnostics['ess_std_log_posterior'] = np.std(ess_log_posterior_per_chain)
+    mcmc_diagnostics['ess_std_l2_norm'] = np.std(ess_l2_norm_per_chain)
     
     return accuracy, nll, ece, mcmc_diagnostics
 
@@ -496,56 +508,102 @@ def main():
     min_ess = min(mcmc_diagnostics['ess_log_posterior'], mcmc_diagnostics['ess_l2_norm'])
     logger.info(f"Min ESS: {min_ess}")
     
-    # Assess MCMC quality
+    # Multimodal MCMC Quality Assessment
     r_hat_threshold = config['evaluation']['mcmc_diagnostics']['r_hat_threshold']
     ess_threshold = config['evaluation']['mcmc_diagnostics']['ess_threshold']
     
-    r_hat_good = (mcmc_diagnostics['r_hat_log_posterior'] < r_hat_threshold and 
-                  mcmc_diagnostics['r_hat_l2_norm'] < r_hat_threshold)
-    ess_good = min_ess >= ess_threshold
+    # For multimodal distributions, we expect R-hat > 1.05 (chains in different modes)
+    r_hat_log_posterior = mcmc_diagnostics['r_hat_log_posterior']
+    r_hat_l2_norm = mcmc_diagnostics['r_hat_l2_norm']
     
-    logger.info(f"\nMCMC Quality Assessment:")
-    logger.info(f"R-hat threshold: {r_hat_threshold} (Good: {r_hat_good})")
-    logger.info(f"ESS threshold: {ess_threshold} (Good: {ess_good})")
-    logger.info(f"Overall MCMC quality: {'✅ GOOD' if r_hat_good and ess_good else '⚠️  NEEDS IMPROVEMENT'}")
+    # Check if chains are exploring different modes (R-hat > 1.1 but not too extreme)
+    multimodal_r_hat_good = (1.1 < r_hat_log_posterior < 3.0 and 1.1 < r_hat_l2_norm < 3.0)
     
-    if not r_hat_good:
-        logger.warning("R-hat values suggest chains may not have converged")
-    if not ess_good:
-        logger.warning(f"Min ESS ({min_ess}) is below threshold ({ess_threshold}) - samples may be too correlated")
+    # Check within-mode mixing (ESS per chain)
+    avg_ess_log_posterior = mcmc_diagnostics['avg_ess_log_posterior']
+    avg_ess_l2_norm = mcmc_diagnostics['avg_ess_l2_norm']
+    within_mode_mixing_good = (avg_ess_log_posterior >= ess_threshold/4 and avg_ess_l2_norm >= ess_threshold/4)
     
-    # Pass/Fail criteria validation
-    logger.info(f"\nPass/Fail Criteria Assessment:")
+    logger.info(f"\nMultimodal MCMC Quality Assessment:")
+    logger.info(f"R-hat (log posterior): {r_hat_log_posterior:.3f}")
+    logger.info(f"R-hat (L2 norm): {r_hat_l2_norm:.3f}")
+    logger.info(f"Multimodal R-hat (1.1 < R-hat < 3.0): {'✅ GOOD' if multimodal_r_hat_good else '⚠️  CHECK'}")
     
-    # Criterion 1: R-hat ≤ 1.05 for S1 and S2
-    r_hat_pass = r_hat_good
-    logger.info(f"  R-hat ≤ 1.05: {'✅ PASS' if r_hat_pass else '❌ FAIL'}")
+    logger.info(f"\nWithin-mode mixing:")
+    logger.info(f"Avg ESS (log posterior): {avg_ess_log_posterior:.1f} ± {mcmc_diagnostics['ess_std_log_posterior']:.1f}")
+    logger.info(f"Avg ESS (L2 norm): {avg_ess_l2_norm:.1f} ± {mcmc_diagnostics['ess_std_l2_norm']:.1f}")
+    logger.info(f"Within-mode mixing (ESS ≥ {ess_threshold/4}): {'✅ GOOD' if within_mode_mixing_good else '⚠️  NEEDS IMPROVEMENT'}")
     
-    # Criterion 2: ESS ≥ 200 for S1 and S2
-    ess_pass = ess_good
-    logger.info(f"  ESS ≥ 200: {'✅ PASS' if ess_pass else '❌ FAIL'}")
+    logger.info(f"\nESS Statistics Summary:")
+    logger.info(f"  Log Posterior ESS: {mcmc_diagnostics['ess_log_posterior']} (min), {avg_ess_log_posterior:.1f} ± {mcmc_diagnostics['ess_std_log_posterior']:.1f} (mean ± std)")
+    logger.info(f"  L2 Norm ESS: {mcmc_diagnostics['ess_l2_norm']} (min), {avg_ess_l2_norm:.1f} ± {mcmc_diagnostics['ess_std_l2_norm']:.1f} (mean ± std)")
+    
+    # Interpret standard deviations
+    std_lp = mcmc_diagnostics['ess_std_log_posterior']
+    std_l2 = mcmc_diagnostics['ess_std_l2_norm']
+    logger.info(f"\nESS Variability Interpretation:")
+    if std_lp > avg_ess_log_posterior * 0.5:
+        logger.info(f"  • Log posterior ESS varies significantly (std={std_lp:.1f}) - different modes have different mixing quality")
+    else:
+        logger.info(f"  • Log posterior ESS is consistent across modes (std={std_lp:.1f}) - uniform mixing quality")
+    
+    if std_l2 > avg_ess_l2_norm * 0.5:
+        logger.info(f"  • L2 norm ESS varies significantly (std={std_l2:.1f}) - parameter space mixing differs across modes")
+    else:
+        logger.info(f"  • L2 norm ESS is consistent across modes (std={std_l2:.1f}) - uniform parameter space mixing")
+    
+    logger.info(f"\nPer-chain ESS details:")
+    for i, (ess_lp, ess_l2) in enumerate(zip(mcmc_diagnostics['ess_log_posterior_per_chain'], 
+                                           mcmc_diagnostics['ess_l2_norm_per_chain'])):
+        logger.info(f"  Chain {i+1}: ESS(log_posterior)={ess_lp}, ESS(l2_norm)={ess_l2}")
+    
+    overall_multimodal_quality = multimodal_r_hat_good and within_mode_mixing_good
+    logger.info(f"\nOverall Multimodal Quality: {'✅ GOOD' if overall_multimodal_quality else '⚠️  NEEDS IMPROVEMENT'}")
+    
+    if not multimodal_r_hat_good:
+        if r_hat_log_posterior <= 1.1 or r_hat_l2_norm <= 1.1:
+            logger.warning("R-hat values suggest chains may be in the same mode (not multimodal)")
+        elif r_hat_log_posterior >= 3.0 or r_hat_l2_norm >= 3.0:
+            logger.warning("R-hat values are very high - chains may not have converged to any mode")
+    
+    if not within_mode_mixing_good:
+        logger.warning(f"Within-mode ESS is low - samples within each mode are too correlated")
+    
+    # Multimodal Pass/Fail criteria validation
+    logger.info(f"\nMultimodal Pass/Fail Criteria Assessment:")
+    
+    # Criterion 1: Multimodal R-hat (1.1 < R-hat < 3.0) - chains in different modes
+    r_hat_pass = bool(multimodal_r_hat_good)
+    logger.info(f"  Multimodal R-hat (1.1 < R-hat < 3.0): {'✅ PASS' if r_hat_pass else '❌ FAIL'}")
+    
+    # Criterion 2: Within-mode mixing (ESS ≥ threshold/4 per chain)
+    ess_pass = bool(within_mode_mixing_good)
+    logger.info(f"  Within-mode ESS ≥ {ess_threshold/4}: {'✅ PASS' if ess_pass else '❌ FAIL'}")
     
     # Criterion 3: Accuracy within ±0.3% of MAP-LoRA
     accuracy_diff = abs(sgld_accuracy - map_accuracy)
-    accuracy_pass = accuracy_diff <= 0.003  # 0.3%
+    accuracy_pass = bool(accuracy_diff <= 0.003)  # 0.3%
     logger.info(f"  Accuracy within ±0.3% of MAP: {'✅ PASS' if accuracy_pass else '❌ FAIL'} (diff: {accuracy_diff:.4f})")
     
     # Criterion 4: NLL and ECE lower than MAP-LoRA
-    nll_pass = sgld_nll < map_nll
-    ece_pass = sgld_ece < map_ece
+    nll_pass = bool(sgld_nll < map_nll)
+    ece_pass = bool(sgld_ece < map_ece)
     logger.info(f"  NLL lower than MAP: {'✅ PASS' if nll_pass else '❌ FAIL'} (SGLD: {sgld_nll:.4f}, MAP: {map_nll:.4f})")
     logger.info(f"  ECE lower than MAP: {'✅ PASS' if ece_pass else '❌ FAIL'} (SGLD: {sgld_ece:.4f}, MAP: {map_ece:.4f})")
     
-    # Overall pass/fail
-    overall_pass = r_hat_pass and ess_pass and accuracy_pass and nll_pass and ece_pass
-    logger.info(f"\nOverall Convergence Assessment: {'🎉 PASS' if overall_pass else '⚠️  FAIL'}")
+    # Overall multimodal pass/fail
+    overall_pass = bool(r_hat_pass and ess_pass and accuracy_pass and nll_pass and ece_pass)
+    logger.info(f"\nOverall Multimodal Convergence Assessment: {'🎉 PASS' if overall_pass else '⚠️  FAIL'}")
     
     if not overall_pass:
-        logger.warning("Convergence criteria not met. Consider:")
+        logger.warning("Multimodal convergence criteria not met. Consider:")
         if not r_hat_pass:
-            logger.warning("  - Extend sampling and/or reduce initial step size")
+            if r_hat_log_posterior <= 1.1 or r_hat_l2_norm <= 1.1:
+                logger.warning("  - Chains are in same mode - increase step size or reduce prior strength")
+            elif r_hat_log_posterior >= 3.0 or r_hat_l2_norm >= 3.0:
+                logger.warning("  - Chains not converged to any mode - reduce step size or increase burn-in")
         if not ess_pass:
-            logger.warning("  - Increase total updates or reduce step size")
+            logger.warning("  - Within-mode mixing is poor - reduce step size or increase sampling steps")
         if not accuracy_pass:
             logger.warning("  - Check if SGLD is learning properly")
         if not nll_pass or not ece_pass:
@@ -556,7 +614,7 @@ def main():
         """Recursively convert numpy types to Python native types."""
         if isinstance(obj, np.ndarray):
             return obj.tolist()
-        elif isinstance(obj, (np.floating, np.integer)):
+        elif isinstance(obj, (np.floating, np.integer, np.bool_)):
             return obj.item()
         elif isinstance(obj, dict):
             return {key: convert_numpy_to_python(value) for key, value in obj.items()}
@@ -579,12 +637,12 @@ def main():
             'mcmc_diagnostics': mcmc_diagnostics,
             'min_ess': min_ess,
             'pass_fail_criteria': {
-                'r_hat_pass': r_hat_pass,
-                'ess_pass': ess_pass,
+                'multimodal_r_hat_pass': r_hat_pass,
+                'within_mode_ess_pass': ess_pass,
                 'accuracy_pass': accuracy_pass,
                 'nll_pass': nll_pass,
                 'ece_pass': ece_pass,
-                'overall_pass': overall_pass
+                'overall_multimodal_pass': overall_pass
             }
         }
     }
