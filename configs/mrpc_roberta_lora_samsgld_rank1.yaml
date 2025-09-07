@@ -1,0 +1,65 @@
+# Configuration for MRPC RoBERTa LoRA SAM-SGLD Rank-1 Experiment
+# Based on experiment outline in sgld_lora_experiment.md
+
+experiment:
+  name: "mrpc_roberta_lora_samsgld_rank1"
+  description: "SAM-SGLD Rank-1 for Bayesian LoRA on MRPC dataset"
+  
+model:
+  backbone: "roberta-base"
+  max_sequence_length: 256
+  lora:
+    inject_into: ["query", "key", "value", "attention.output.dense"]  # Only attention modules
+    rank: 8  # Increased for better expressiveness
+    alpha: 16  # Increased proportionally with rank
+    dropout: 0.1
+
+data:
+  dataset: "mrpc"
+  batch_size: 32  # Optimized for best convergence and GPU utilization
+  gradient_accumulation_steps: 1  # No longer needed with larger batch size
+  max_epochs: 20
+
+training:
+  map_lora:
+    optimizer: "adamw"  # Back to AdamW for better convergence
+    learning_rate: 2e-5  # Standard AdamW learning rate for RoBERTa
+    weight_decay: 0.01
+    beta1: 0.9
+    beta2: 0.999
+    scheduler: "linear"  # Linear decay schedule
+    warmup_ratio: 0.1  # 10% warmup
+  
+  samsgld_rank1_lora:
+    learning_rate: 0.001  # Optimized based on test results (shows best improvement: 0.139)
+    temperature: 1.0  # Reduced from 1.5 to achieve better noise/gradient balance (ratio ~1.6)
+    prior_std: 10.0  # Reasonable prior std for proper prior-likelihood balance
+    step_size_schedule:
+      initial: 0.001  # Match learning rate (1e-3)
+      decay_rate: 0.3  # Conservative decay for better convergence
+      decay_steps: 3000  # Longer decay schedule for stability
+    gradient_clip_norm: 10.0  # Larger gradient clipping to avoid over-clipping
+    noise_scale: 0.01  # Reduced from 0.1 to achieve reasonable parameter drift (0.6 vs 6.1)
+    # SAM-SGLD specific parameters
+    rho: 0.05  # SAM perturbation radius (standard SAM literature value) - PERFECT
+    lambd: 0.00000001  # SAM regularization (1e-8)
+    sigma_dir: 0.1  # Reduced from 0.5 to achieve reasonable parameter changes (4.3 vs 4.3)
+    chains: 4  # Multiple chains for R-hat computation
+    burn_in_steps: 8000  # Sufficient burn-in for convergence
+    sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
+    thinning: 50  # Good thinning for sample independence
+    samples_to_retain: 240  # Match total samples (4 chains * 60 samples per chain)
+
+evaluation:
+  metrics: ["accuracy", "nll", "ece"]
+  mcmc_diagnostics:
+    probe_set_size: 512
+    summaries: ["log_posterior", "l2_norm"]
+    r_hat_threshold: 1.05  # Not used for multimodal assessment
+    ess_threshold: 50  # Used for within-mode mixing (threshold/4 = 12.5)
+    track_min_ess: true  # Track minimum ESS across all chains and metrics
+
+output:
+  save_dir: "runs/mrpc_roberta_lora_samsgld_rank1"
+  save_samples: true
+  save_traces: true
