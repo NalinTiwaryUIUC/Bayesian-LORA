@@ -10,14 +10,14 @@
 #SBATCH --ntasks-per-node=1                # Number of cores per node
 #SBATCH --account=arindamb-cs-eng          # Account
 #SBATCH --partition=eng-research-gpu       # Partition
-#SBATCH --output=logs/bayesian_lora_experiment_log_%j    # output file name with job ID
+#SBATCH --output=logs/mrpc_roberta_lora_sgld/bayesian_lora_experiment_log_%j    # output file name with job ID
 
 # Load any necessary modules (uncomment if needed)
 # module load python/3.9
 # module load cuda/11.8
 
-# Create logs directory if it doesn't exist
-mkdir -p logs
+# Create logs directory structure if it doesn't exist
+mkdir -p logs/mrpc_roberta_lora_sgld
 
 # Set environment variables to avoid tokenizer warnings
 export TOKENIZERS_PARALLELISM=false

@@ -41,9 +41,9 @@ except ImportError:
 # Setup logging to both console and file
 def setup_logging():
     """Setup logging to both console and file."""
-    # Create logs directory
-    logs_dir = Path("logs")
-    logs_dir.mkdir(exist_ok=True)
+    # Create logs directory with experiment-specific subfolder
+    logs_dir = Path("logs/mrpc_roberta_lora_sgld")
+    logs_dir.mkdir(parents=True, exist_ok=True)
     
     # Create formatter
     formatter = logging.Formatter(
