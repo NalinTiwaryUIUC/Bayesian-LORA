@@ -307,39 +307,72 @@ class SAMSGLDRank1Sampler(BaseSampler):
             
         loss2 = F.cross_entropy(logits2, target)
         
-        # Add prior term to loss
-        prior_loss = 0
-        for param in self.model.parameters():
-            if param.requires_grad:
-                prior_loss += torch.sum(param ** 2) / (2 * self.prior_std ** 2)
-        
-        total_loss = loss2 + prior_loss
+        # Note: Prior term should be evaluated at original parameters, not perturbed ones
+        # We'll add it after restoring parameters
+        total_loss = loss2
         
         # Backward pass for second gradient
         self.model.zero_grad()
         total_loss.backward()
         
-        # Apply gradient clipping
-        if self.gradient_clip_norm > 0:
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
+        # Store the SAM gradient (computed at perturbed parameters)
+        sam_grad = {name: param.grad.clone() if param.grad is not None else None 
+                   for name, param in self.model.named_parameters()}
         
-        # SGLD update with SAM gradient and rank-1 noise
-        with torch.no_grad():
-            for name, param in self.model.named_parameters():
-                if param.grad is not None:
-                    # Rank-1 noise
-                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
-                    z = torch.randn_like(param)
-                    u_hat = param.grad / (param.grad.norm() + self.lambd)
-                    z_proj = torch.dot(z.flatten(), u_hat.flatten())
-                    noise = noise_std * (z + self.sigma_dir * z_proj * u_hat)
-                    
-                    param.data = param.data - self.step_size * param.grad + noise
-        
-        # Restore original parameters
+        # Restore original parameters BEFORE SGLD update
         with torch.no_grad():
             for name, param in self.model.named_parameters():
                 if grad1[name] is not None:
                     grad_norm = grad1[name].norm() + self.lambd
                     delta = self.rho * grad1[name] / grad_norm
                     param.data = param.data - delta
+        
+        # Add prior term to SAM gradient (evaluated at original parameters)
+        prior_grad = {}
+        for name, param in self.model.named_parameters():
+            if param.requires_grad:
+                prior_grad[name] = param / (self.prior_std ** 2)
+        
+        # Combine SAM gradient with prior gradient
+        combined_grad = {}
+        for name in sam_grad:
+            if sam_grad[name] is not None and name in prior_grad:
+                combined_grad[name] = sam_grad[name] + prior_grad[name]
+            elif sam_grad[name] is not None:
+                combined_grad[name] = sam_grad[name]
+            elif name in prior_grad:
+                combined_grad[name] = prior_grad[name]
+            else:
+                combined_grad[name] = None
+        
+        # Apply gradient clipping to the combined gradient (SAM + prior)
+        if self.gradient_clip_norm > 0:
+            # Compute total gradient norm
+            total_norm = 0
+            for grad in combined_grad.values():
+                if grad is not None:
+                    total_norm += grad.norm().item() ** 2
+            total_norm = math.sqrt(total_norm)
+            
+            # Clip if necessary
+            if total_norm > self.gradient_clip_norm:
+                clip_coef = self.gradient_clip_norm / (total_norm + 1e-6)
+                for name in combined_grad:
+                    if combined_grad[name] is not None:
+                        combined_grad[name] = combined_grad[name] * clip_coef
+        
+        # SGLD update with combined gradient and rank-1 noise (applied to original parameters)
+        with torch.no_grad():
+            for name, param in self.model.named_parameters():
+                if combined_grad[name] is not None:
+                    # Rank-1 noise direction based on SAM gradient (corrected)
+                    noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
+                    z = torch.randn_like(param)
+                    u_hat = sam_grad[name] / (sam_grad[name].norm() + self.lambd) if sam_grad[name] is not None else None
+                    if u_hat is not None:
+                        z_proj = torch.dot(z.flatten(), u_hat.flatten())
+                        noise = noise_std * (z + self.sigma_dir * z_proj * u_hat)
+                    else:
+                        noise = noise_std * z  # Fallback to isotropic noise
+                    
+                    param.data = param.data - self.step_size * combined_grad[name] + noise
