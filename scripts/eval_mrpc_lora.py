@@ -281,7 +281,7 @@ def evaluate_map_model(model: LoRAModel, dataloader: torch.utils.data.DataLoader
 
 
 def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: torch.utils.data.DataLoader,
-                         device: torch.device, num_chains: int, samples_per_chain: int) -> Tuple[float, float, float, Dict]:
+                         device: torch.device, num_chains: int, samples_per_chain: int, logger) -> Tuple[float, float, float, Dict]:
     """Evaluate SGLD samples and compute ensemble metrics."""
     all_predictions = []
     all_confidences = []
@@ -383,6 +383,11 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
 
     # Partition metrics into chains
     def partition_into_chains(values: List[float], num_chains: int, samples_per_chain: int) -> List[np.ndarray]:
+        expected = num_chains * samples_per_chain
+        if len(values) < expected:
+            logger.warning(
+                f"Only {len(values)} samples available; expected {expected}. Diagnostics may be biased."
+            )
         chains = []
         for c in range(num_chains):
             start = c * samples_per_chain
@@ -401,10 +406,23 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
     ess_log_posterior_per_chain = [compute_ess(chain) for chain in log_posterior_chains]
     ess_l2_norm_per_chain = [compute_ess(chain) for chain in l2_norm_chains]
     
-    mcmc_diagnostics['ess_log_posterior'] = min(ess_log_posterior_per_chain)
-    mcmc_diagnostics['ess_l2_norm'] = min(ess_l2_norm_per_chain)
+    # Store raw ESS values (including zeros/non-positive values)
     mcmc_diagnostics['ess_log_posterior_per_chain'] = ess_log_posterior_per_chain
     mcmc_diagnostics['ess_l2_norm_per_chain'] = ess_l2_norm_per_chain
+    
+    # For minimum ESS, use actual computed values but warn about issues
+    min_ess_lp = min(ess_log_posterior_per_chain)
+    min_ess_l2 = min(ess_l2_norm_per_chain)
+    
+    # Check for problematic ESS values
+    if min_ess_lp <= 0:
+        logger.warning(f"Non-positive ESS detected in log_posterior chains: {ess_log_posterior_per_chain}")
+    if min_ess_l2 <= 0:
+        logger.warning(f"Non-positive ESS detected in l2_norm chains: {ess_l2_norm_per_chain}")
+    
+    # Use actual minimum ESS (don't mask with 1)
+    mcmc_diagnostics['ess_log_posterior'] = min_ess_lp
+    mcmc_diagnostics['ess_l2_norm'] = min_ess_l2
     
     # Multimodal-specific diagnostics
     mcmc_diagnostics['avg_ess_log_posterior'] = np.mean(ess_log_posterior_per_chain)
@@ -471,6 +489,11 @@ def main():
     # Load SGLD samples
     logger.info("Loading SGLD samples...")
     sgld_samples = torch.load(args.sgld_samples_path, map_location=device)
+    if not isinstance(sgld_samples, list) or len(sgld_samples) == 0:
+        raise ValueError("Loaded SGLD samples are empty or not a list of state_dicts")
+    first_sample = sgld_samples[0]
+    if not isinstance(first_sample, dict):
+        raise ValueError("Each SGLD sample should be a dict of parameter tensors (state_dict)")
     
     # Setup datasets
     tokenizer = RobertaTokenizer.from_pretrained(config['model']['backbone'])
@@ -483,12 +506,24 @@ def main():
     logger.info("Evaluating MAP model...")
     map_accuracy, map_nll, map_ece = evaluate_map_model(map_model, eval_dataloader, device)
     
-    # Determine chain partitioning from config
-    num_chains = int(config['training']['sgld_lora']['chains'])
-    samples_total = int(config['training']['sgld_lora']['samples_to_retain'])
-    samples_per_chain = samples_total // num_chains
+    # Determine chain partitioning from config (support SGLD and SAM-SGLD)
+    training_cfg = config.get('training', {})
+    if 'sgld_lora' in training_cfg:
+        sampler_cfg = training_cfg['sgld_lora']
+    elif 'samsgld_rank1_lora' in training_cfg:
+        sampler_cfg = training_cfg['samsgld_rank1_lora']
+    else:
+        raise KeyError("training.sgld_lora or training.samsgld_rank1_lora not found in config")
+
+    num_chains = int(sampler_cfg['chains'])
+    samples_total = int(sampler_cfg['samples_to_retain'])
+    if samples_total % num_chains != 0:
+        logger.warning(
+            f"samples_to_retain ({samples_total}) not divisible by chains ({num_chains}); diagnostics may truncate"
+        )
+    samples_per_chain = max(1, samples_total // num_chains)
     sgld_accuracy, sgld_nll, sgld_ece, mcmc_diagnostics = evaluate_sgld_samples(
-        map_model, sgld_samples, eval_dataloader, device, num_chains, samples_per_chain
+        map_model, sgld_samples, eval_dataloader, device, num_chains, samples_per_chain, logger
     )
     
     # Print results

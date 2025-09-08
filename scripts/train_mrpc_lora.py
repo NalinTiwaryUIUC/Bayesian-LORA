@@ -215,7 +215,7 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
 
 
 def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
-                     config: Dict[str, Any], device: torch.device, logger):
+                     config: Dict[str, Any], device: torch.device, logger, output_dir: Path):
     """Train LoRA using SGLD or SAM-SGLD sampling."""
     
     # Determine which sampler to use based on config
@@ -263,19 +263,36 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
     for chain in range(sgld_config['chains']):
         logger.info(f"Running chain {chain + 1}/{sgld_config['chains']}")
         
+        # Per-chain seeding for independence
+        base_seed = int(config.get('seed', 1337))
+        chain_seed = base_seed + chain
+        import random
+        random.seed(chain_seed)
+        np.random.seed(chain_seed)
+        torch.manual_seed(chain_seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(chain_seed)
+
         # Reset model to MAP state for each chain
-        # Load MAP model state for fresh start (including chain 0)
-        map_state = torch.load(f"runs/mrpc_roberta_lora_sgld/map_model.pth", map_location=device)
+        # Load MAP model state for fresh start from current output directory
+        map_state_path = output_dir / "map_model.pth"
+        map_state = torch.load(map_state_path, map_location=device)
         model.load_state_dict(map_state)
         
         # Burn-in phase
         logger.info(f"Chain {chain + 1}: Burn-in phase ({sgld_config['burn_in_steps']} steps)")
+        # Persistent iterator over dataloader during burn-in
+        burn_iter = iter(train_dataloader)
         for step in range(sgld_config['burn_in_steps']):
             # Update step size according to schedule
             current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
             sampler.step_size = current_step_size
             
-            batch = next(iter(train_dataloader))
+            try:
+                batch = next(burn_iter)
+            except StopIteration:
+                burn_iter = iter(train_dataloader)
+                batch = next(burn_iter)
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             labels = batch['labels'].to(device)
@@ -299,16 +316,26 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         log_posterior_values = []
         l2_norm_values = []
         
+        # Calculate expected samples per chain
+        samples_per_chain = sgld_config['samples_to_retain'] // sgld_config['chains']
+        logger.info(f"Chain {chain + 1}: Will collect {samples_per_chain} samples")
+        
         # Use fixed step size during sampling for better sample independence
         # Calculate the step size at the end of burn-in
         burn_in_end_step_size = initial_step_size * (1 + sgld_config['burn_in_steps'] / decay_steps) ** (-decay_rate)
         sampler.step_size = burn_in_end_step_size
         
+        # Persistent iterator over dataloader during sampling
+        sample_iter = iter(train_dataloader)
         for step in range(sgld_config['sampling_steps']):
             # Keep step size constant during sampling for better sample independence
             # (No step size update during sampling phase)
             
-            batch = next(iter(train_dataloader))
+            try:
+                batch = next(sample_iter)
+            except StopIteration:
+                sample_iter = iter(train_dataloader)
+                batch = next(sample_iter)
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             labels = batch['labels'].to(device)
@@ -319,8 +346,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             if step % 50 == 0:
                 torch.cuda.empty_cache()
             
-            # Keep samples based on thinning
-            if step % sgld_config['thinning'] == 0:
+            # Keep samples based on thinning, but only if we haven't reached the limit
+            if step % sgld_config['thinning'] == 0 and sample_count < samples_per_chain:
                 # Save current model state
                 sample_state = sampler.get_current_state()
                 chain_samples.append(sample_state)
@@ -344,16 +371,23 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                     l2_norm_values.append(l2_norm)
                 model.train()
                 
-                if sample_count % 100 == 0:
-                    logger.info(f"Chain {chain + 1}: Collected {sample_count} samples")
+                if sample_count % 10 == 0:  # More frequent logging for smaller sample counts
+                    logger.info(f"Chain {chain + 1}: Collected {sample_count}/{samples_per_chain} samples")
+            
+            # Early termination if we've collected enough samples
+            if sample_count >= samples_per_chain:
+                logger.info(f"Chain {chain + 1}: Collected all {samples_per_chain} samples, stopping early at step {step}")
+                break
             
             if step % 1000 == 0:
                 logger.info(f"Sampling step {step}/{sgld_config['sampling_steps']}, "
-                           f"step_size: {current_step_size:.2e}")
+                           f"step_size: {sampler.step_size:.2e}, samples: {sample_count}/{samples_per_chain}")
         
-        # Keep only the specified number of samples per chain
-        samples_per_chain = sgld_config['samples_to_retain'] // sgld_config['chains']
-        chain_samples = chain_samples[-samples_per_chain:]
+        # Verify we have the correct number of samples
+        if len(chain_samples) != samples_per_chain:
+            logger.warning(f"Chain {chain + 1}: Expected {samples_per_chain} samples, got {len(chain_samples)}")
+        
+        # Samples are stored in chain order: [chain0_samples, chain1_samples, chain2_samples, chain3_samples]
         all_samples.extend(chain_samples)
         
         # Compute ESS for this chain
@@ -442,7 +476,7 @@ def main():
     torch.cuda.empty_cache()
     
     # Train SGLD LoRA
-    sgld_samples = train_sgld_lora(model, train_dataloader, config, device, logger)
+    sgld_samples = train_sgld_lora(model, train_dataloader, config, device, logger, output_dir)
     
     # Save SGLD samples
     samples_save_path = output_dir / "sgld_samples.pth"

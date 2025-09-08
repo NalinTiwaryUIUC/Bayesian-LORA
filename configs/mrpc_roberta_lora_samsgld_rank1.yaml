@@ -22,13 +22,12 @@ data:
 
 training:
   map_lora:
-    optimizer: "adamw"  # Back to AdamW for better convergence
-    learning_rate: 2e-5  # Standard AdamW learning rate for RoBERTa
+    optimizer: "sgd"  # Changed to SGD for apples-to-apples comparison with SGLD
+    learning_rate: 3e-3  # Optimal LR for SGD (tested and found to be best)
     weight_decay: 0.01
-    beta1: 0.9
-    beta2: 0.999
-    scheduler: "linear"  # Linear decay schedule
-    warmup_ratio: 0.1  # 10% warmup
+    momentum: 0.5  # Optimal momentum for SGD (tested and found to be best)
+    scheduler: "none"  # Disable scheduler to avoid LR decay
+    warmup_ratio: 0.0  # Disable warmup
   
   samsgld_rank1_lora:
     learning_rate: 1e-4  # Final adjustment to control parameter drift
