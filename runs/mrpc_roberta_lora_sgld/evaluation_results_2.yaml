@@ -1,0 +1,38 @@
+map_lora:
+  accuracy: 0.6838235294117647
+  nll: 0.6143701580854563
+  ece: 0.042047835302119176
+sgld_lora:
+  accuracy: 0.8700980392156863
+  nll: 0.2906043529510498
+  ece: 0.03530134494398153
+  mcmc_diagnostics:
+    r_hat_log_posterior: 1.3838058838133362
+    r_hat_l2_norm: 1.8230674994330422
+    ess_log_posterior_per_chain:
+    - 175
+    - 83
+    - 46
+    - 78
+    ess_l2_norm_per_chain:
+    - 6
+    - 6
+    - 6
+    - 6
+    ess_log_posterior: 46
+    ess_l2_norm: 6
+    avg_ess_log_posterior: 95.5
+    avg_ess_l2_norm: 6.0
+    ess_std_log_posterior: 48.04425043644661
+    ess_std_l2_norm: 0.0
+  min_ess: 6
+  pass_fail_criteria:
+    multimodal_r_hat_pass: true
+    within_mode_ess_pass: false
+    accuracy_pass: false
+    nll_pass: true
+    ece_pass: true
+    overall_multimodal_pass: false
+
+
+
