@@ -241,17 +241,17 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             gradient_clip_norm=sgld_config['gradient_clip_norm']
         )
     elif sampler_class == SAMSGLDRank1Sampler:
-            sampler = SAMSGLDRank1Sampler(
-                model=model,
-                temperature=sgld_config['temperature'],
-                step_size=sgld_config['learning_rate'],
-                noise_scale=sgld_config['noise_scale'],
-                rho=sgld_config['rho'],
-                lambd=sgld_config['lambd'],
-                sigma_dir=sgld_config['sigma_dir'],
-                gradient_clip_norm=sgld_config['gradient_clip_norm'],
-                prior_std=sgld_config['prior_std']
-            )
+        sampler = SAMSGLDRank1Sampler(
+            model=model,
+            temperature=sgld_config['temperature'],
+            step_size=sgld_config['learning_rate'],
+            noise_scale=sgld_config['noise_scale'],
+            rho=sgld_config['rho'],
+            lambd=sgld_config['lambd'],
+            sigma_dir=sgld_config['sigma_dir'],
+            gradient_clip_norm=sgld_config['gradient_clip_norm'],
+            prior_std=sgld_config['prior_std']
+        )
     
     # Step size schedule parameters
     initial_step_size = sgld_config['step_size_schedule']['initial']
