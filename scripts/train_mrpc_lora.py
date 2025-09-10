@@ -408,6 +408,16 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         else:
             logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
         
+        # Evaluate model metrics after each chain
+        logger.info(f"Chain {chain + 1}: Evaluating model metrics...")
+        try:
+            metrics = evaluate_model_metrics(model, train_dataloader, device, sgld_config['prior_std'], logger)
+            logger.info(f"Chain {chain + 1}: Loss = {metrics['loss']:.4f}")
+            logger.info(f"Chain {chain + 1}: Accuracy = {metrics['accuracy']:.4f}")
+            logger.info(f"Chain {chain + 1}: NLL = {metrics['nll']:.4f}")
+        except Exception as e:
+            logger.warning(f"Chain {chain + 1}: Failed to evaluate metrics: {e}")
+        
         # Clear GPU cache after each chain
         torch.cuda.empty_cache()
     
@@ -418,14 +428,68 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         logger.info("Computing overall MCMC diagnostics...")
         # Note: Full ESS computation will be done during evaluation
         # Here we just log that samples were collected successfully
-        logger.info(f"SGLD sampling completed with {len(all_samples)} total samples")
+        sampler_name = "SGLD" if sampler_class == SGLDSampler else "SAM-SGLD"
+        logger.info(f"{sampler_name} sampling completed with {len(all_samples)} total samples")
         logger.info("ESS and R-hat will be computed during evaluation phase")
     
     return all_samples
 
 
+def evaluate_model_metrics(model: LoRAModel, dataloader: DataLoader, device: torch.device, 
+                          prior_std: float, logger: logging.Logger) -> Dict[str, float]:
+    """Evaluate model and return loss, accuracy, and NLL metrics."""
+    model.eval()
+    total_loss = 0.0
+    total_accuracy = 0.0
+    total_nll = 0.0
+    total_samples = 0
+    
+    with torch.no_grad():
+        for batch in dataloader:
+            input_ids = batch['input_ids'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            labels = batch['labels'].to(device)
+            
+            # Forward pass
+            output = model(input_ids, attention_mask=attention_mask)
+            logits = output.logits
+            
+            # Compute likelihood loss (NLL)
+            likelihood_loss = F.cross_entropy(logits, labels, reduction='sum')
+            
+            # Compute prior loss
+            prior_loss = 0.0
+            for param in model.parameters():
+                if param.requires_grad:
+                    prior_loss += torch.sum(param ** 2) / (2 * prior_std ** 2)
+            
+            # Total loss (negative log posterior)
+            total_loss += likelihood_loss.item() + prior_loss.item()
+            
+            # NLL (negative log likelihood without prior)
+            total_nll += likelihood_loss.item()
+            
+            # Compute accuracy
+            predictions = torch.argmax(logits, dim=1)
+            accuracy = (predictions == labels).float().sum().item()
+            total_accuracy += accuracy
+            
+            total_samples += labels.size(0)
+    
+    # Average metrics
+    avg_loss = total_loss / total_samples
+    avg_accuracy = total_accuracy / total_samples
+    avg_nll = total_nll / total_samples
+    
+    return {
+        'loss': avg_loss,
+        'accuracy': avg_accuracy,
+        'nll': avg_nll
+    }
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Train MRPC LoRA with SGLD")
+    parser = argparse.ArgumentParser(description="Train MRPC LoRA with SGLD or SAM-SGLD")
     parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_sgld.yaml",
                        help="Path to configuration file")
     parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_sgld",
@@ -472,16 +536,27 @@ def main():
     torch.save(map_model.state_dict(), map_save_path)
     logger.info(f"MAP model saved to {map_save_path}")
     
-    # Clear GPU cache before SGLD training
+    # Clear GPU cache before sampling training
     torch.cuda.empty_cache()
     
-    # Train SGLD LoRA
-    sgld_samples = train_sgld_lora(model, train_dataloader, config, device, logger, output_dir)
+    # Determine sampler type for logging
+    if 'sgld_lora' in config['training']:
+        sampler_name = "SGLD"
+        samples_filename = "sgld_samples.pth"
+    elif 'samsgld_rank1_lora' in config['training']:
+        sampler_name = "SAM-SGLD"
+        samples_filename = "samsgld_samples.pth"
+    else:
+        sampler_name = "Unknown"
+        samples_filename = "samples.pth"
     
-    # Save SGLD samples
-    samples_save_path = output_dir / "sgld_samples.pth"
-    torch.save(sgld_samples, samples_save_path)
-    logger.info(f"SGLD samples saved to {samples_save_path}")
+    # Train sampler LoRA
+    samples = train_sgld_lora(model, train_dataloader, config, device, logger, output_dir)
+    
+    # Save samples
+    samples_save_path = output_dir / samples_filename
+    torch.save(samples, samples_save_path)
+    logger.info(f"{sampler_name} samples saved to {samples_save_path}")
     
     logger.info("Training completed successfully!")
 

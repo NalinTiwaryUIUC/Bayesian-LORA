@@ -30,15 +30,15 @@ training:
     warmup_ratio: 0.0  # Disable warmup
   
   samsgld_rank1_lora:
-    learning_rate: 2e-3  # Scaled up to match SGLD scale (was 1e-5, too small)
+    learning_rate: 5e-4
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
-    prior_std: 9.5  # Match working SGLD prior (was 10.0)
+    prior_std: 11.3  # Balanced for proper prior/likelihood ratio (0.3)
     step_size_schedule:
-      initial: 2e-3  # Match learning rate
+      initial: 5e-4
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule for stability
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.022361  # Proper noise scale for stable sampling
+    noise_scale: 0.001214  # Balance drift/noise ratio to match SGLD (0.19) - calculated from actual data
     # SAM-SGLD specific parameters
     rho: 0.05  # SAM perturbation radius (standard value)
     lambd: 0.00000001  # SAM regularization (1e-8)

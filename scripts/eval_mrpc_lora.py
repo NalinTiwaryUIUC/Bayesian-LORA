@@ -434,13 +434,13 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate MRPC LoRA with SGLD")
+    parser = argparse.ArgumentParser(description="Evaluate MRPC LoRA with SGLD or SAM-SGLD")
     parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_sgld.yaml",
                        help="Path to configuration file")
     parser.add_argument("--map_model_path", type=str, required=True,
                        help="Path to MAP model checkpoint")
     parser.add_argument("--sgld_samples_path", type=str, required=True,
-                       help="Path to SGLD samples checkpoint")
+                       help="Path to SGLD or SAM-SGLD samples checkpoint")
     parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_sgld",
                        help="Output directory for results")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu",
@@ -486,14 +486,14 @@ def main():
     map_model.load_state_dict(torch.load(args.map_model_path, map_location=device))
     map_model.to(device)
     
-    # Load SGLD samples
-    logger.info("Loading SGLD samples...")
-    sgld_samples = torch.load(args.sgld_samples_path, map_location=device)
-    if not isinstance(sgld_samples, list) or len(sgld_samples) == 0:
-        raise ValueError("Loaded SGLD samples are empty or not a list of state_dicts")
-    first_sample = sgld_samples[0]
+    # Load samples
+    logger.info("Loading samples...")
+    samples = torch.load(args.sgld_samples_path, map_location=device)
+    if not isinstance(samples, list) or len(samples) == 0:
+        raise ValueError("Loaded samples are empty or not a list of state_dicts")
+    first_sample = samples[0]
     if not isinstance(first_sample, dict):
-        raise ValueError("Each SGLD sample should be a dict of parameter tensors (state_dict)")
+        raise ValueError("Each sample should be a dict of parameter tensors (state_dict)")
     
     # Setup datasets
     tokenizer = RobertaTokenizer.from_pretrained(config['model']['backbone'])
@@ -525,7 +525,7 @@ def main():
         )
     samples_per_chain = max(1, samples_total // num_chains)
     sgld_accuracy, sgld_nll, sgld_ece, mcmc_diagnostics = evaluate_sgld_samples(
-        map_model, sgld_samples, eval_dataloader, device, num_chains, samples_per_chain, logger
+        map_model, samples, eval_dataloader, device, num_chains, samples_per_chain, logger
     )
     
     # Print results
@@ -535,7 +535,15 @@ def main():
     logger.info(f"{'Method':<15} {'Accuracy':<10} {'NLL':<10} {'ECE':<10}")
     logger.info("-" * 50)
     logger.info(f"{'MAP-LoRA':<15} {map_accuracy:<10.4f} {map_nll:<10.4f} {map_ece:<10.4f}")
-    logger.info(f"{'SGLD-LoRA':<15} {sgld_accuracy:<10.4f} {sgld_nll:<10.4f} {sgld_ece:<10.4f}")
+    # Determine sampler name for logging
+    if sampler_key == 'sgld_lora':
+        sampler_display_name = "SGLD-LoRA"
+    elif sampler_key == 'samsgld_rank1_lora':
+        sampler_display_name = "SAM-SGLD-LoRA"
+    else:
+        sampler_display_name = f"{sampler_key.upper()}-LoRA"
+    
+    logger.info(f"{sampler_display_name:<15} {sgld_accuracy:<10.4f} {sgld_nll:<10.4f} {sgld_ece:<10.4f}")
     logger.info("\nMCMC Diagnostics:")
     logger.info(f"R-hat (log posterior): {mcmc_diagnostics['r_hat_log_posterior']:.4f}")
     logger.info(f"R-hat (L2 norm): {mcmc_diagnostics['r_hat_l2_norm']:.4f}")
@@ -626,8 +634,8 @@ def main():
     # Criterion 4: NLL and ECE lower than MAP-LoRA
     nll_pass = bool(sgld_nll < map_nll)
     ece_pass = bool(sgld_ece < map_ece)
-    logger.info(f"  NLL lower than MAP: {'✅ PASS' if nll_pass else '❌ FAIL'} (SGLD: {sgld_nll:.4f}, MAP: {map_nll:.4f})")
-    logger.info(f"  ECE lower than MAP: {'✅ PASS' if ece_pass else '❌ FAIL'} (SGLD: {sgld_ece:.4f}, MAP: {map_ece:.4f})")
+    logger.info(f"  NLL lower than MAP: {'✅ PASS' if nll_pass else '❌ FAIL'} ({sampler_display_name}: {sgld_nll:.4f}, MAP: {map_nll:.4f})")
+    logger.info(f"  ECE lower than MAP: {'✅ PASS' if ece_pass else '❌ FAIL'} ({sampler_display_name}: {sgld_ece:.4f}, MAP: {map_ece:.4f})")
     
     # Overall multimodal pass/fail
     overall_pass = bool(r_hat_pass and ess_pass and accuracy_pass and nll_pass and ece_pass)
@@ -643,9 +651,9 @@ def main():
         if not ess_pass:
             logger.warning("  - Within-mode mixing is poor - reduce step size or increase sampling steps")
         if not accuracy_pass:
-            logger.warning("  - Check if SGLD is learning properly")
+            logger.warning(f"  - Check if {sampler_display_name} is learning properly")
         if not nll_pass or not ece_pass:
-            logger.warning("  - SGLD should outperform MAP - check implementation")
+            logger.warning(f"  - {sampler_display_name} should outperform MAP - check implementation")
     
     # Convert numpy values to Python native types for human-readable YAML
     def convert_numpy_to_python(obj):
