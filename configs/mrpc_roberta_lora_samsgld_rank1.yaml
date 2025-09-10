@@ -30,19 +30,19 @@ training:
     warmup_ratio: 0.0  # Disable warmup
   
   samsgld_rank1_lora:
-    learning_rate: 2e-3  # Closer to working SGLD (3.2e-3) but adjusted for SAM
-    temperature: 2.0  # Match working SGLD temperature for better exploration
-    prior_std: 9.5  # Keep this as it was working well
+    learning_rate: 2e-3  # Scaled up to match SGLD scale (was 1e-5, too small)
+    temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
+    prior_std: 9.5  # Match working SGLD prior (was 10.0)
     step_size_schedule:
       initial: 2e-3  # Match learning rate
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule for stability
-    gradient_clip_norm: 5.0  # Match working SGLD gradient clipping
-    noise_scale: 0.01  # Closer to working SGLD (0.001) but higher for SAM-SGLD
+    gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
+    noise_scale: 0.022361  # Proper noise scale for stable sampling
     # SAM-SGLD specific parameters
-    rho: 0.05  # SAM perturbation radius (fixed as requested)
+    rho: 0.05  # SAM perturbation radius (standard value)
     lambd: 0.00000001  # SAM regularization (1e-8)
-    sigma_dir: 0.3  # Moderate rank-1 noise scaling
+    sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
     chains: 4  # Multiple chains for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps

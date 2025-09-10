@@ -510,8 +510,10 @@ def main():
     training_cfg = config.get('training', {})
     if 'sgld_lora' in training_cfg:
         sampler_cfg = training_cfg['sgld_lora']
+        sampler_key = 'sgld_lora'
     elif 'samsgld_rank1_lora' in training_cfg:
         sampler_cfg = training_cfg['samsgld_rank1_lora']
+        sampler_key = 'samsgld_rank1_lora'
     else:
         raise KeyError("training.sgld_lora or training.samsgld_rank1_lora not found in config")
 
@@ -666,7 +668,7 @@ def main():
             'nll': map_nll,
             'ece': map_ece
         },
-        'sgld_lora': {
+        sampler_key: {
             'accuracy': sgld_accuracy,
             'nll': sgld_nll,
             'ece': sgld_ece,

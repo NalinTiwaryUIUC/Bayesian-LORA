@@ -284,8 +284,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         # Persistent iterator over dataloader during burn-in
         burn_iter = iter(train_dataloader)
         for step in range(sgld_config['burn_in_steps']):
-            # Update step size according to schedule
-            current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
+            # Update step size according to schedule using correct exponential decay
+            current_step_size = initial_step_size * (decay_rate ** (step / decay_steps))
             sampler.step_size = current_step_size
             
             try:
@@ -321,8 +321,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         logger.info(f"Chain {chain + 1}: Will collect {samples_per_chain} samples")
         
         # Use fixed step size during sampling for better sample independence
-        # Calculate the step size at the end of burn-in
-        burn_in_end_step_size = initial_step_size * (1 + sgld_config['burn_in_steps'] / decay_steps) ** (-decay_rate)
+        # Calculate the step size at the end of burn-in using correct exponential decay
+        burn_in_end_step_size = initial_step_size * (decay_rate ** (sgld_config['burn_in_steps'] / decay_steps))
         sampler.step_size = burn_in_end_step_size
         
         # Persistent iterator over dataloader during sampling
