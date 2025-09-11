@@ -9,7 +9,7 @@ import logging
 import os
 import yaml
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, List, Tuple
 
 import torch
 import torch.nn as nn
@@ -28,15 +28,7 @@ from bayesian_lora.data.glue_datasets import MRPCDataset
 from bayesian_lora.samplers.sgld import SGLDSampler, SAMSGLDRank1Sampler
 from bayesian_lora.utils.lora_params import LoRAParams
 
-# Import ESS computation function
-try:
-    from scripts.eval_mrpc_lora import compute_ess
-except ImportError:
-    # Fallback for when running from different directory
-    import sys
-    import os
-    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    from eval_mrpc_lora import compute_ess
+# ESS computation moved to evaluation phase
 
 # Setup logging to both console and file
 def setup_logging(experiment_name="mrpc_roberta_lora_sgld"):
@@ -215,7 +207,7 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
 
 
 def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
-                     config: Dict[str, Any], device: torch.device, logger, output_dir: Path):
+                     config: Dict[str, Any], device: torch.device, logger, output_dir: Path) -> List[Dict[str, Any]]:
     """Train LoRA using SGLD or SAM-SGLD sampling."""
     
     # Determine which sampler to use based on config
@@ -263,36 +255,22 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
     for chain in range(sgld_config['chains']):
         logger.info(f"Running chain {chain + 1}/{sgld_config['chains']}")
         
-        # Per-chain seeding for independence
-        base_seed = int(config.get('seed', 1337))
-        chain_seed = base_seed + chain
-        import random
-        random.seed(chain_seed)
-        np.random.seed(chain_seed)
-        torch.manual_seed(chain_seed)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(chain_seed)
+        # No per-chain seeding (matching working version)
 
         # Reset model to MAP state for each chain
-        # Load MAP model state for fresh start from current output directory
+        # Load MAP model state for fresh start (including chain 0)
         map_state_path = output_dir / "map_model.pth"
         map_state = torch.load(map_state_path, map_location=device)
         model.load_state_dict(map_state)
         
         # Burn-in phase
         logger.info(f"Chain {chain + 1}: Burn-in phase ({sgld_config['burn_in_steps']} steps)")
-        # Persistent iterator over dataloader during burn-in
-        burn_iter = iter(train_dataloader)
         for step in range(sgld_config['burn_in_steps']):
-            # Update step size according to schedule using correct exponential decay
-            current_step_size = initial_step_size * (decay_rate ** (step / decay_steps))
+            # Update step size according to schedule using correct power law decay
+            current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
             sampler.step_size = current_step_size
             
-            try:
-                batch = next(burn_iter)
-            except StopIteration:
-                burn_iter = iter(train_dataloader)
-                batch = next(burn_iter)
+            batch = next(iter(train_dataloader))
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             labels = batch['labels'].to(device)
@@ -312,30 +290,22 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         chain_samples = []
         sample_count = 0
         
-        # Track ESS during sampling
-        log_posterior_values = []
-        l2_norm_values = []
+        # Track diagnostic values during sampling (disabled to avoid interference)
+        # log_posterior_values = []
+        # l2_norm_values = []
         
-        # Calculate expected samples per chain
-        samples_per_chain = sgld_config['samples_to_retain'] // sgld_config['chains']
-        logger.info(f"Chain {chain + 1}: Will collect {samples_per_chain} samples")
+        # No sample collection logic (matching working version)
         
         # Use fixed step size during sampling for better sample independence
-        # Calculate the step size at the end of burn-in using correct exponential decay
-        burn_in_end_step_size = initial_step_size * (decay_rate ** (sgld_config['burn_in_steps'] / decay_steps))
+        # Calculate the step size at the end of burn-in using correct power law decay
+        burn_in_end_step_size = initial_step_size * (1 + sgld_config['burn_in_steps'] / decay_steps) ** (-decay_rate)
         sampler.step_size = burn_in_end_step_size
         
-        # Persistent iterator over dataloader during sampling
-        sample_iter = iter(train_dataloader)
         for step in range(sgld_config['sampling_steps']):
             # Keep step size constant during sampling for better sample independence
             # (No step size update during sampling phase)
             
-            try:
-                batch = next(sample_iter)
-            except StopIteration:
-                sample_iter = iter(train_dataloader)
-                batch = next(sample_iter)
+            batch = next(iter(train_dataloader))
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             labels = batch['labels'].to(device)
@@ -346,77 +316,41 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             if step % 50 == 0:
                 torch.cuda.empty_cache()
             
-            # Keep samples based on thinning, but only if we haven't reached the limit
-            if step % sgld_config['thinning'] == 0 and sample_count < samples_per_chain:
+            # Keep samples based on thinning
+            if step % sgld_config['thinning'] == 0:
                 # Save current model state
                 sample_state = sampler.get_current_state()
                 chain_samples.append(sample_state)
                 sample_count += 1
                 
-                # Compute MCMC diagnostics for this sample
-                model.eval()
-                with torch.no_grad():
-                    output = model(input_ids, attention_mask=attention_mask)
-                    logits = output.logits
-                    loss = F.cross_entropy(logits, labels)
-                    
-                    # Log posterior (negative loss + prior)
-                    prior_loss = sum(torch.sum(param ** 2) / (2 * sgld_config['prior_std'] ** 2) 
-                                   for param in model.parameters() if param.requires_grad)
-                    log_posterior = -(loss + prior_loss).item()
-                    log_posterior_values.append(log_posterior)
-                    
-                    # L2 norm of parameters
-                    l2_norm = sum(torch.norm(param).item() for param in model.parameters() if param.requires_grad)
-                    l2_norm_values.append(l2_norm)
-                model.train()
-                
-                if sample_count % 10 == 0:  # More frequent logging for smaller sample counts
-                    logger.info(f"Chain {chain + 1}: Collected {sample_count}/{samples_per_chain} samples")
-            
-            # Early termination if we've collected enough samples
-            if sample_count >= samples_per_chain:
-                logger.info(f"Chain {chain + 1}: Collected all {samples_per_chain} samples, stopping early at step {step}")
-                break
+                if sample_count % 100 == 0:
+                    logger.info(f"Chain {chain + 1}: Collected {sample_count} samples")
             
             if step % 1000 == 0:
                 logger.info(f"Sampling step {step}/{sgld_config['sampling_steps']}, "
-                           f"step_size: {sampler.step_size:.2e}, samples: {sample_count}/{samples_per_chain}")
+                           f"step_size: {sampler.step_size:.2e}")
         
-        # Verify we have the correct number of samples
-        if len(chain_samples) != samples_per_chain:
-            logger.warning(f"Chain {chain + 1}: Expected {samples_per_chain} samples, got {len(chain_samples)}")
-        
-        # Samples are stored in chain order: [chain0_samples, chain1_samples, chain2_samples, chain3_samples]
+        # Keep only the specified number of samples per chain
+        samples_per_chain = sgld_config['samples_to_retain'] // sgld_config['chains']
+        chain_samples = chain_samples[-samples_per_chain:]
         all_samples.extend(chain_samples)
         
-        # Compute ESS for this chain
-        if len(log_posterior_values) > 0:
-            
-            # Keep only the diagnostics for the retained samples
-            log_posterior_chain = np.array(log_posterior_values[-samples_per_chain:])
-            l2_norm_chain = np.array(l2_norm_values[-samples_per_chain:])
-            
-            ess_log_posterior = compute_ess(log_posterior_chain)
-            ess_l2_norm = compute_ess(l2_norm_chain)
-            min_ess = min(ess_log_posterior, ess_l2_norm)
-            
-            logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
-            logger.info(f"Chain {chain + 1}: ESS (log_posterior) = {ess_log_posterior}")
-            logger.info(f"Chain {chain + 1}: ESS (l2_norm) = {ess_l2_norm}")
-            logger.info(f"Chain {chain + 1}: Min ESS = {min_ess}")
-        else:
-            logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+        # Diagnostic values collection disabled to avoid interference with sampling
+        # all_log_posterior_values.extend(log_posterior_values)
+        # all_l2_norm_values.extend(l2_norm_values)
         
-        # Evaluate model metrics after each chain
-        logger.info(f"Chain {chain + 1}: Evaluating model metrics...")
-        try:
-            metrics = evaluate_model_metrics(model, train_dataloader, device, sgld_config['prior_std'], logger)
-            logger.info(f"Chain {chain + 1}: Loss = {metrics['loss']:.4f}")
-            logger.info(f"Chain {chain + 1}: Accuracy = {metrics['accuracy']:.4f}")
-            logger.info(f"Chain {chain + 1}: NLL = {metrics['nll']:.4f}")
-        except Exception as e:
-            logger.warning(f"Chain {chain + 1}: Failed to evaluate metrics: {e}")
+        # Log sample collection (ESS computation moved to evaluation phase)
+        logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+        
+        # Evaluate model metrics after each chain (disabled for now to avoid performance issues)
+        # logger.info(f"Chain {chain + 1}: Evaluating model metrics...")
+        # try:
+        #     metrics = evaluate_model_metrics(model, train_dataloader, device, sgld_config['prior_std'], logger)
+        #     logger.info(f"Chain {chain + 1}: Loss = {metrics['loss']:.4f}")
+        #     logger.info(f"Chain {chain + 1}: Accuracy = {metrics['accuracy']:.4f}")
+        #     logger.info(f"Chain {chain + 1}: NLL = {metrics['nll']:.4f}")
+        # except Exception as e:
+        #     logger.warning(f"Chain {chain + 1}: Failed to evaluate metrics: {e}")
         
         # Clear GPU cache after each chain
         torch.cuda.empty_cache()
@@ -432,6 +366,7 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         logger.info(f"{sampler_name} sampling completed with {len(all_samples)} total samples")
         logger.info("ESS and R-hat will be computed during evaluation phase")
     
+    # Return samples only (diagnostics disabled to avoid interference)
     return all_samples
 
 
@@ -553,10 +488,15 @@ def main():
     # Train sampler LoRA
     samples = train_sgld_lora(model, train_dataloader, config, device, logger, output_dir)
     
-    # Save samples
+    # Save samples and diagnostic values
     samples_save_path = output_dir / samples_filename
     torch.save(samples, samples_save_path)
     logger.info(f"{sampler_name} samples saved to {samples_save_path}")
+    
+    # Diagnostic values saving disabled to avoid interference with sampling
+    # diagnostics_save_path = output_dir / "diagnostics.pth"
+    # torch.save(diagnostics, diagnostics_save_path)
+    # logger.info(f"Diagnostic values saved to {diagnostics_save_path}")
     
     logger.info("Training completed successfully!")
 

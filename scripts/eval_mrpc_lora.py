@@ -199,10 +199,11 @@ def compute_ess(chain: np.ndarray) -> int:
     else:
         weighted_ess = (ess1 + ess2) / 2
     
-    # Scale back to original sample size
-    ess = weighted_ess * (n / half_length)
+    # ESS should not exceed the original sample size
+    # The weighted_ess is already computed on half-chains, so we don't need to scale it
+    ess = weighted_ess
     
-    return int(max(1, ess))
+    return int(max(1, min(ess, n)))
 
 
 def _compute_ess_single_chain(chain: np.ndarray) -> float:
@@ -359,27 +360,34 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
     # MCMC diagnostics
     mcmc_diagnostics = {}
     
-    # Use probe set for diagnostics (first 512 examples)
-    probe_size = min(512, len(all_labels))
-    probe_logits = all_logits[:, :probe_size, :]
-    
-    # Summary 1: Log posterior (simplified as negative log-likelihood)
-    # Collect per-sample scalar metric first, then partition by chains
-    log_posterior_values = []
-    for sample_logits in probe_logits:
-        sample_probs = F.softmax(torch.tensor(sample_logits), dim=1).numpy()
-        sample_nll = -np.mean([np.log(sample_probs[i, all_labels[i]]) 
-                              for i in range(probe_size)])
-        log_posterior_values.append(sample_nll)
-    
-    # Summary 2: L2 norm of LoRA parameters
-    l2_norm_values = []
-    for sample_state in samples:
-        l2_norm = 0
-        for param in sample_state.values():
-            if isinstance(param, torch.Tensor):
-                l2_norm += torch.norm(param).item() ** 2
-        l2_norm_values.append(np.sqrt(l2_norm))
+    if log_posterior_values is not None and l2_norm_values is not None:
+        # Use pre-computed diagnostic values from training
+        logger.info("Using pre-computed diagnostic values from training")
+        logger.info(f"Log posterior values: {len(log_posterior_values)}, L2 norm values: {len(l2_norm_values)}")
+    else:
+        # Recompute from samples (fallback)
+        logger.info("Recomputing diagnostic values from samples")
+        # Use probe set for diagnostics (first 512 examples)
+        probe_size = min(512, len(all_labels))
+        probe_logits = all_logits[:, :probe_size, :]
+        
+        # Summary 1: Log posterior (simplified as negative log-likelihood)
+        # Collect per-sample scalar metric first, then partition by chains
+        log_posterior_values = []
+        for sample_logits in probe_logits:
+            sample_probs = F.softmax(torch.tensor(sample_logits), dim=1).numpy()
+            sample_nll = -np.mean([np.log(sample_probs[i, all_labels[i]]) 
+                                  for i in range(probe_size)])
+            log_posterior_values.append(sample_nll)
+        
+        # Summary 2: L2 norm of LoRA parameters
+        l2_norm_values = []
+        for sample_state in samples:
+            l2_norm = 0
+            for param in sample_state.values():
+                if isinstance(param, torch.Tensor):
+                    l2_norm += torch.norm(param).item() ** 2
+            l2_norm_values.append(np.sqrt(l2_norm))
 
     # Partition metrics into chains
     def partition_into_chains(values: List[float], num_chains: int, samples_per_chain: int) -> List[np.ndarray]:
@@ -395,8 +403,19 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
             chains.append(np.array(values[start:end]))
         return chains
 
-    log_posterior_chains = partition_into_chains(log_posterior_values, num_chains, samples_per_chain)
-    l2_norm_chains = partition_into_chains(l2_norm_values, num_chains, samples_per_chain)
+    # Determine number of chains and samples per chain
+    if num_chains is not None and samples_per_chain is not None:
+        # Use values from diagnostics
+        actual_num_chains = num_chains
+        actual_samples_per_chain = samples_per_chain
+    else:
+        # Fallback: infer from samples
+        actual_num_chains = 4  # Default
+        actual_samples_per_chain = len(samples) // actual_num_chains
+        logger.warning(f"Using default values: {actual_num_chains} chains, {actual_samples_per_chain} samples per chain")
+    
+    log_posterior_chains = partition_into_chains(log_posterior_values, actual_num_chains, actual_samples_per_chain)
+    l2_norm_chains = partition_into_chains(l2_norm_values, actual_num_chains, actual_samples_per_chain)
     
     # Compute R-hat and ESS for each summary
     mcmc_diagnostics['r_hat_log_posterior'] = compute_r_hat(log_posterior_chains)
@@ -486,9 +505,26 @@ def main():
     map_model.load_state_dict(torch.load(args.map_model_path, map_location=device))
     map_model.to(device)
     
-    # Load samples
+    # Load samples and diagnostics
     logger.info("Loading samples...")
     samples = torch.load(args.sgld_samples_path, map_location=device)
+    
+    # Try to load diagnostic values if available
+    diagnostics_path = Path(args.sgld_samples_path).parent / "diagnostics.pth"
+    if diagnostics_path.exists():
+        logger.info("Loading diagnostic values...")
+        diagnostics = torch.load(diagnostics_path, map_location=device)
+        log_posterior_values = diagnostics['log_posterior_values']
+        l2_norm_values = diagnostics['l2_norm_values']
+        num_chains = diagnostics['num_chains']
+        samples_per_chain = diagnostics['samples_per_chain']
+        logger.info(f"Loaded diagnostics: {len(log_posterior_values)} log posterior values, {len(l2_norm_values)} L2 norm values")
+    else:
+        logger.warning("No diagnostic values found, will recompute from samples")
+        log_posterior_values = None
+        l2_norm_values = None
+        num_chains = None
+        samples_per_chain = None
     if not isinstance(samples, list) or len(samples) == 0:
         raise ValueError("Loaded samples are empty or not a list of state_dicts")
     first_sample = samples[0]
