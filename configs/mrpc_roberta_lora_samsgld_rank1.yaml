@@ -44,10 +44,10 @@ training:
     lambd: 0.00000001  # SAM regularization (1e-8)
     sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
     chains: 1  # Multiple chains for R-hat computation
-    burn_in_steps: 500  # Moderate burn-in for diagnostics
-    sampling_steps: 1000  # 100 samples per chain * 10 thinning = 1000 steps
+    burn_in_steps: 100  # Moderate burn-in for diagnostics
+    sampling_steps: 200  # 100 samples per chain * 10 thinning = 1000 steps
     thinning: 10  # Keep thinning at 10 for good sample independence
-    samples_to_retain: 100  # Good sample count for diagnostics
+    samples_to_retain: 20  # Good sample count for diagnostics
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

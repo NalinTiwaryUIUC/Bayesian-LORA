@@ -264,6 +264,31 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         map_state = torch.load(map_state_path, map_location=device)
         model.load_state_dict(map_state)
         
+        # Verify MAP model loading by checking a few parameter norms
+        param_norms = []
+        for name, param in model.named_parameters():
+            if param.requires_grad and 'lora' in name.lower():
+                param_norms.append(param.norm().item())
+                if len(param_norms) >= 3:  # Check first 3 LoRA parameters
+                    break
+        
+        logger.info(f"Chain {chain + 1}: MAP model loaded - LoRA param norms: {param_norms[:3]}")
+        
+        # Verify MAP model performance by testing on a small batch
+        model.eval()
+        with torch.no_grad():
+            test_batch = next(iter(train_dataloader))
+            test_input_ids = test_batch['input_ids'].to(device)
+            test_attention_mask = test_batch['attention_mask'].to(device)
+            test_labels = test_batch['labels'].to(device)
+            
+            test_outputs = model(test_input_ids, attention_mask=test_attention_mask)
+            test_loss = F.cross_entropy(test_outputs.logits, test_labels)
+            test_preds = torch.argmax(test_outputs.logits, dim=1)
+            test_acc = (test_preds == test_labels).float().mean()
+            
+            logger.info(f"Chain {chain + 1}: MAP model test - Loss: {test_loss:.4f}, Acc: {test_acc:.4f}")
+        
         # Log initial configuration for this chain
         logger.info(f"Chain {chain + 1}: Initial configuration:")
         logger.info(f"  Initial step size: {initial_step_size:.2e}")
@@ -432,6 +457,22 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         # Here we just log that samples were collected successfully
         sampler_name = "SGLD" if sampler_class == SGLDSampler else "SAM-SGLD"
         logger.info(f"{sampler_name} sampling completed with {len(all_samples)} total samples")
+        
+        # Check final model performance after sampling
+        model.eval()
+        with torch.no_grad():
+            test_batch = next(iter(train_dataloader))
+            test_input_ids = test_batch['input_ids'].to(device)
+            test_attention_mask = test_batch['attention_mask'].to(device)
+            test_labels = test_batch['labels'].to(device)
+            
+            test_outputs = model(test_input_ids, attention_mask=test_attention_mask)
+            test_loss = F.cross_entropy(test_outputs.logits, test_labels)
+            test_preds = torch.argmax(test_outputs.logits, dim=1)
+            test_acc = (test_preds == test_labels).float().mean()
+            
+            logger.info(f"Final model after sampling - Loss: {test_loss:.4f}, Acc: {test_acc:.4f}")
+        
         logger.info("ESS and R-hat will be computed during evaluation phase")
     
     # Return samples only (diagnostics disabled to avoid interference)
