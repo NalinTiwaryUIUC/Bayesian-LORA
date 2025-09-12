@@ -6,6 +6,7 @@ Implements both MAP training and SGLD sampling as described in the experiment ou
 
 import argparse
 import logging
+import math
 import os
 import yaml
 from pathlib import Path
@@ -263,6 +264,15 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         map_state = torch.load(map_state_path, map_location=device)
         model.load_state_dict(map_state)
         
+        # Log initial configuration for this chain
+        logger.info(f"Chain {chain + 1}: Initial configuration:")
+        logger.info(f"  Initial step size: {initial_step_size:.2e}")
+        logger.info(f"  Temperature: {sampler.temperature:.1f}")
+        logger.info(f"  Noise scale: {sampler.noise_scale:.2e}")
+        logger.info(f"  Prior std: {sampler.prior_std:.3f}")
+        logger.info(f"  SAM rho: {sampler.rho:.3f}")
+        logger.info(f"  Decay rate: {decay_rate:.3f}")
+        
         # Burn-in phase
         logger.info(f"Chain {chain + 1}: Burn-in phase ({sgld_config['burn_in_steps']} steps)")
         for step in range(sgld_config['burn_in_steps']):
@@ -282,8 +292,22 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 torch.cuda.empty_cache()
             
             if step % 500 == 0:
-                logger.info(f"Burn-in step {step}/{sgld_config['burn_in_steps']}, "
-                           f"step_size: {current_step_size:.2e}")
+                # Get actual drift and noise from last step
+                actual_drift_norm = sampler.last_drift_norm
+                actual_noise_norm = sampler.last_noise_norm
+                actual_drift_noise_ratio = actual_drift_norm / actual_noise_norm if actual_noise_norm > 0 else float('inf')
+                
+                # Calculate theoretical values for comparison
+                theoretical_noise_std = math.sqrt(2 * current_step_size / sampler.temperature) * sampler.noise_scale
+                theoretical_step_noise_ratio = current_step_size / theoretical_noise_std
+                prior_likelihood_ratio = (sampler.prior_std ** 2) / (2 * sampler.temperature)
+                
+                logger.info(f"Burn-in step {step}/{sgld_config['burn_in_steps']}:")
+                logger.info(f"  Actual drift norm: {actual_drift_norm:.2e}")
+                logger.info(f"  Actual noise norm: {actual_noise_norm:.2e}")
+                logger.info(f"  Actual drift/noise ratio: {actual_drift_noise_ratio:.3f}")
+                logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
+                logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
         
         # Sampling phase
         logger.info(f"Chain {chain + 1}: Sampling phase ({sgld_config['sampling_steps']} steps)")
@@ -301,6 +325,13 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         burn_in_end_step_size = initial_step_size * (1 + sgld_config['burn_in_steps'] / decay_steps) ** (-decay_rate)
         sampler.step_size = burn_in_end_step_size
         
+        # Log step size change
+        step_size_reduction = (initial_step_size - burn_in_end_step_size) / initial_step_size * 100
+        logger.info(f"Chain {chain + 1}: Step size after burn-in:")
+        logger.info(f"  Initial: {initial_step_size:.2e}")
+        logger.info(f"  Final: {burn_in_end_step_size:.2e}")
+        logger.info(f"  Reduction: {step_size_reduction:.1f}%")
+        
         for step in range(sgld_config['sampling_steps']):
             # Keep step size constant during sampling for better sample independence
             # (No step size update during sampling phase)
@@ -311,6 +342,43 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             labels = batch['labels'].to(device)
             
             sampler.step(input_ids, attention_mask, labels)
+            
+            # Log key diagnostic ratios every 100 steps
+            if step % 100 == 0:
+                # Get actual drift and noise from last step
+                actual_drift_norm = sampler.last_drift_norm
+                actual_noise_norm = sampler.last_noise_norm
+                actual_step_size = sampler.last_step_size
+                
+                # Calculate actual ratios
+                actual_drift_noise_ratio = actual_drift_norm / actual_noise_norm if actual_noise_norm > 0 else float('inf')
+                
+                # Calculate theoretical values for comparison
+                theoretical_noise_std = math.sqrt(2 * actual_step_size / sampler.temperature) * sampler.noise_scale
+                theoretical_step_noise_ratio = actual_step_size / theoretical_noise_std
+                
+                # Calculate prior/likelihood ratio (approximate)
+                # Get current model parameters for prior calculation
+                total_param_norm = 0
+                total_params = 0
+                for name, param in model.named_parameters():
+                    if param.requires_grad:
+                        total_param_norm += param.norm().item() ** 2
+                        total_params += param.numel()
+                
+                avg_param_norm = math.sqrt(total_param_norm / total_params) if total_params > 0 else 0
+                prior_likelihood_ratio = (sampler.prior_std ** 2) / (2 * sampler.temperature)
+                
+                # Log diagnostic information
+                logger.info(f"Chain {chain + 1}, Step {step}:")
+                logger.info(f"  Actual drift norm: {actual_drift_norm:.2e}")
+                logger.info(f"  Actual noise norm: {actual_noise_norm:.2e}")
+                logger.info(f"  Actual drift/noise ratio: {actual_drift_noise_ratio:.3f}")
+                logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
+                logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
+                logger.info(f"  SAM rho: {sampler.rho:.3f}")
+                logger.info(f"  Avg param norm: {avg_param_norm:.3f}")
+                logger.info(f"  Temperature: {sampler.temperature:.1f}")
             
             # Clear GPU cache more frequently to prevent memory issues
             if step % 50 == 0:

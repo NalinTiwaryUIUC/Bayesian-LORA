@@ -245,6 +245,10 @@ class SAMSGLDRank1Sampler(BaseSampler):
         self.sigma_dir = sigma_dir
         self.gradient_clip_norm = gradient_clip_norm
         self.prior_std = prior_std
+        # Store last step diagnostics
+        self.last_drift_norm = 0.0
+        self.last_noise_norm = 0.0
+        self.last_step_size = 0.0
     
     def step(self, *args):
         """
@@ -362,9 +366,16 @@ class SAMSGLDRank1Sampler(BaseSampler):
                         combined_grad[name] = combined_grad[name] * clip_coef
         
         # SGLD update with combined gradient and rank-1 noise (applied to original parameters)
+        total_drift_norm = 0.0
+        total_noise_norm = 0.0
+        
         with torch.no_grad():
             for name, param in self.model.named_parameters():
                 if combined_grad[name] is not None:
+                    # Calculate actual drift (step_size * gradient)
+                    drift = self.step_size * combined_grad[name]
+                    total_drift_norm += drift.norm().item() ** 2
+                    
                     # Rank-1 noise direction based on SAM gradient (corrected)
                     noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
                     z = torch.randn_like(param)
@@ -375,4 +386,11 @@ class SAMSGLDRank1Sampler(BaseSampler):
                     else:
                         noise = noise_std * z  # Fallback to isotropic noise
                     
-                    param.data = param.data - self.step_size * combined_grad[name] + noise
+                    total_noise_norm += noise.norm().item() ** 2
+                    
+                    param.data = param.data - drift + noise
+        
+        # Store diagnostics for logging
+        self.last_drift_norm = math.sqrt(total_drift_norm)
+        self.last_noise_norm = math.sqrt(total_noise_norm)
+        self.last_step_size = self.step_size

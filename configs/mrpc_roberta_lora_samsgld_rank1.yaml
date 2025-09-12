@@ -18,7 +18,7 @@ data:
   dataset: "mrpc"
   batch_size: 32  # Optimized for best convergence and GPU utilization
   gradient_accumulation_steps: 1  # No longer needed with larger batch size
-  max_epochs: 20
+  max_epochs: 5  # Quick test - reduced from 20
 
 training:
   map_lora:
@@ -38,16 +38,16 @@ training:
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule for stability
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.00001  # Balanced for step/noise ratio ~5-10
+    noise_scale: 0.0001  # Increased to restore MCMC exploration
     # SAM-SGLD specific parameters
     rho: 0.05  # SAM perturbation radius (standard value)
     lambd: 0.00000001  # SAM regularization (1e-8)
     sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
     chains: 1  # Multiple chains for R-hat computation
-    burn_in_steps: 8000  # Sufficient burn-in for convergence
-    sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
-    thinning: 50
-    samples_to_retain: 60  # Match total samples (4 chains * 60 samples per chain)
+    burn_in_steps: 100  # Quick test burn-in
+    sampling_steps: 200  # 20 samples per chain * 10 thinning = 200 steps
+    thinning: 10  # Reduced thinning for quick test
+    samples_to_retain: 20  # Quick test samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
