@@ -43,11 +43,11 @@ training:
     rho: 0.05  # SAM perturbation radius (standard value)
     lambd: 0.00000001  # SAM regularization (1e-8)
     sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
-    chains: 4  # Multiple chains for R-hat computation
+    chains: 1  # Multiple chains for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
     thinning: 50  # Good thinning for sample independence
-    samples_to_retain: 240  # Match total samples (4 chains * 60 samples per chain)
+    samples_to_retain: 60  # Match total samples (4 chains * 60 samples per chain)
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

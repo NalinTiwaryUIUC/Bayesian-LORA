@@ -284,6 +284,10 @@ def evaluate_map_model(model: LoRAModel, dataloader: torch.utils.data.DataLoader
 def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: torch.utils.data.DataLoader,
                          device: torch.device, num_chains: int, samples_per_chain: int, logger) -> Tuple[float, float, float, Dict]:
     """Evaluate SGLD samples and compute ensemble metrics."""
+    # Initialize diagnostic variables
+    log_posterior_values = None
+    l2_norm_values = None
+    
     all_predictions = []
     all_confidences = []
     all_labels = []
@@ -521,8 +525,6 @@ def main():
         logger.info(f"Loaded diagnostics: {len(log_posterior_values)} log posterior values, {len(l2_norm_values)} L2 norm values")
     else:
         logger.warning("No diagnostic values found, will recompute from samples")
-        log_posterior_values = None
-        l2_norm_values = None
         num_chains = None
         samples_per_chain = None
     if not isinstance(samples, list) or len(samples) == 0:
