@@ -23,8 +23,14 @@ def setup_logging():
 
 def load_config():
     """Load the SAM-SGLD configuration."""
-    with open('configs/mrpc_roberta_lora_samsgld_rank1.yaml', 'r') as f:
-        return yaml.safe_load(f)
+    config_path = 'configs/mrpc_roberta_lora_samsgld_rank1.yaml'
+    try:
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
+    except yaml.YAMLError as e:
+        raise ValueError(f"Error parsing YAML configuration: {e}")
 
 def create_model_and_data(config, device):
     """Create model and data for testing."""
@@ -44,14 +50,17 @@ def create_model_and_data(config, device):
         r=lora_config['rank'],
         alpha=lora_config['alpha'],
         dropout=lora_config['dropout'],
-        inject_into=lora_config['inject_into']
+        target_modules=lora_config['inject_into']
     )
     
     # Create dataset
-    dataset = MRPCDataset(tokenizer, max_length=config['model']['max_sequence_length'])
-    train_dataloader = torch.utils.data.DataLoader(
-        dataset, batch_size=config['data']['batch_size'], shuffle=True
-    )
+    try:
+        dataset = MRPCDataset("train", tokenizer, max_length=config['model']['max_sequence_length'])
+        train_dataloader = torch.utils.data.DataLoader(
+            dataset, batch_size=config['data']['batch_size'], shuffle=True
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to create dataset: {e}")
     
     return model, train_dataloader, tokenizer
 
@@ -67,15 +76,15 @@ def train_map_model(model, dataloader, config, device, logger):
     if map_config['optimizer'] == 'sgd':
         optimizer = torch.optim.SGD(
             model.parameters(),
-            lr=map_config['learning_rate'],
-            weight_decay=map_config['weight_decay'],
-            momentum=map_config['momentum']
+            lr=float(map_config['learning_rate']),
+            weight_decay=float(map_config['weight_decay']),
+            momentum=float(map_config['momentum'])
         )
     else:
         optimizer = torch.optim.AdamW(
             model.parameters(),
-            lr=map_config['learning_rate'],
-            weight_decay=map_config['weight_decay']
+            lr=float(map_config['learning_rate']),
+            weight_decay=float(map_config['weight_decay'])
         )
     
     # Training loop
@@ -137,10 +146,10 @@ def test_sam_perturbation(model, dataloader, config, device, logger):
     # Compute gradients
     loss.backward()
     
-    # Get gradient norm
+    # Get gradient norm for LoRA parameters only
     grad_norm = 0.0
-    for param in model.parameters():
-        if param.grad is not None:
+    for name, param in model.named_parameters():
+        if param.requires_grad and 'lora' in name.lower() and param.grad is not None:
             grad_norm += param.grad.norm().item() ** 2
     grad_norm = grad_norm ** 0.5
     
@@ -149,14 +158,14 @@ def test_sam_perturbation(model, dataloader, config, device, logger):
     logger.info(f"SAM rho: {rho:.3f}")
     
     # Compute SAM perturbation
-    # Normalize gradients
-    for param in model.parameters():
-        if param.grad is not None:
+    # Normalize gradients for LoRA parameters only
+    for name, param in model.named_parameters():
+        if param.requires_grad and 'lora' in name.lower() and param.grad is not None:
             param.grad.data = param.grad.data / grad_norm
     
     # Apply perturbation
     for name, param in model.named_parameters():
-        if param.requires_grad and 'lora' in name.lower():
+        if param.requires_grad and 'lora' in name.lower() and param.grad is not None:
             param.data = param.data + rho * param.grad.data
     
     # Check perturbation norm
@@ -202,14 +211,14 @@ def test_sgld_step(model, dataloader, config, device, logger):
     sgld_config = config['training']['samsgld_rank1_lora']
     sampler = SAMSGLDRank1Sampler(
         model=model,
-        temperature=sgld_config['temperature'],
-        step_size=sgld_config['learning_rate'],
-        noise_scale=sgld_config['noise_scale'],
-        rho=sgld_config['rho'],
-        lambd=sgld_config['lambd'],
-        sigma_dir=sgld_config['sigma_dir'],
-        gradient_clip_norm=sgld_config['gradient_clip_norm'],
-        prior_std=sgld_config['prior_std']
+        temperature=float(sgld_config['temperature']),
+        step_size=float(sgld_config['learning_rate']),
+        noise_scale=float(sgld_config['noise_scale']),
+        rho=float(sgld_config['rho']),
+        lambd=float(sgld_config['lambd']),
+        sigma_dir=float(sgld_config['sigma_dir']),
+        gradient_clip_norm=float(sgld_config['gradient_clip_norm']),
+        prior_std=float(sgld_config['prior_std'])
     )
     
     # Get initial parameters
@@ -228,9 +237,9 @@ def test_sgld_step(model, dataloader, config, device, logger):
     with torch.no_grad():
         # Prior term
         prior_loss = 0.0
-        for param in model.parameters():
-            if param.requires_grad and 'lora' in param.name.lower():
-                prior_loss += (param ** 2).sum() / (2 * sgld_config['prior_std'] ** 2)
+        for name, param in model.named_parameters():
+            if param.requires_grad and 'lora' in name.lower():
+                prior_loss += (param ** 2).sum() / (2 * float(sgld_config['prior_std']) ** 2)
         
         # Likelihood term
         outputs = model(input_ids, attention_mask=attention_mask)
@@ -294,14 +303,14 @@ def test_multiple_steps(model, dataloader, config, device, logger, num_steps=10)
     sgld_config = config['training']['samsgld_rank1_lora']
     sampler = SAMSGLDRank1Sampler(
         model=model,
-        temperature=sgld_config['temperature'],
-        step_size=sgld_config['learning_rate'],
-        noise_scale=sgld_config['noise_scale'],
-        rho=sgld_config['rho'],
-        lambd=sgld_config['lambd'],
-        sigma_dir=sgld_config['sigma_dir'],
-        gradient_clip_norm=sgld_config['gradient_clip_norm'],
-        prior_std=sgld_config['prior_std']
+        temperature=float(sgld_config['temperature']),
+        step_size=float(sgld_config['learning_rate']),
+        noise_scale=float(sgld_config['noise_scale']),
+        rho=float(sgld_config['rho']),
+        lambd=float(sgld_config['lambd']),
+        sigma_dir=float(sgld_config['sigma_dir']),
+        gradient_clip_norm=float(sgld_config['gradient_clip_norm']),
+        prior_std=float(sgld_config['prior_std'])
     )
     
     # Get initial parameters
@@ -326,9 +335,9 @@ def test_multiple_steps(model, dataloader, config, device, logger, num_steps=10)
         # Calculate prior/likelihood ratio before step
         with torch.no_grad():
             prior_loss = 0.0
-            for param in model.parameters():
-                if param.requires_grad and 'lora' in param.name.lower():
-                    prior_loss += (param ** 2).sum() / (2 * sgld_config['prior_std'] ** 2)
+            for name, param in model.named_parameters():
+                if param.requires_grad and 'lora' in name.lower():
+                    prior_loss += (param ** 2).sum() / (2 * float(sgld_config['prior_std']) ** 2)
             
             outputs = model(input_ids, attention_mask=attention_mask)
             likelihood_loss = F.cross_entropy(outputs.logits, labels)
@@ -379,68 +388,73 @@ def main():
     logger = setup_logging()
     logger.info("Starting systematic SAM-SGLD diagnostics...")
     
-    # Setup
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    config = load_config()
+    try:
+        # Setup
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        config = load_config()
+        
+        logger.info(f"Using device: {device}")
+        logger.info(f"Configuration: {config['experiment']['name']}")
+        
+        # Create model and data
+        model, dataloader, tokenizer = create_model_and_data(config, device)
+        
+        # Train MAP model first
+        map_model = train_map_model(model, dataloader, config, device, logger)
+        
+        # Test 1: SAM perturbation
+        sam_results = test_sam_perturbation(map_model, dataloader, config, device, logger)
+        
+        # Test 2: Single SGLD step
+        sgld_results = test_sgld_step(map_model, dataloader, config, device, logger)
+        
+        # Test 3: Multiple SGLD steps
+        multi_results = test_multiple_steps(map_model, dataloader, config, device, logger, num_steps=20)
+        
+        # Summary
+        logger.info("=== DIAGNOSTIC SUMMARY ===")
+        logger.info(f"SAM perturbation ratio: {sam_results['perturbation_ratio']:.3f} (should be ~1.0)")
+        logger.info(f"SAM loss change: {sam_results['loss_change']:.4f} (should be non-zero)")
+        logger.info(f"Single step movement: {sgld_results['total_movement']:.6f}")
+        logger.info(f"20-step movement: {multi_results['final_movement']:.6f}")
+        logger.info(f"Movement trend: {multi_results['movement_trend']:.6f} (should be positive)")
+        logger.info(f"Avg drift/noise ratio: {multi_results['avg_drift_norm'] / multi_results['avg_noise_norm']:.3f}")
+        logger.info(f"Prior/Likelihood ratio: {sgld_results['prior_likelihood_ratio']:.3f}")
+        logger.info(f"Avg Prior/Likelihood ratio (20 steps): {multi_results['avg_prior_likelihood_ratio']:.3f}")
+        logger.info(f"Prior/Likelihood ratio range: {multi_results['prior_likelihood_ratio_range'][0]:.3f} - {multi_results['prior_likelihood_ratio_range'][1]:.3f}")
+        
+        # Recommendations
+        logger.info("=== RECOMMENDATIONS ===")
+        if sam_results['perturbation_ratio'] < 0.5:
+            logger.info("❌ SAM perturbation too small - increase rho")
+        elif sam_results['perturbation_ratio'] > 2.0:
+            logger.info("❌ SAM perturbation too large - decrease rho")
+        else:
+            logger.info("✅ SAM perturbation looks good")
+        
+        if multi_results['movement_trend'] < 1e-6:
+            logger.info("❌ No cumulative movement - increase step size or noise scale")
+        else:
+            logger.info("✅ Cumulative movement detected")
+        
+        if multi_results['avg_drift_norm'] / multi_results['avg_noise_norm'] > 100:
+            logger.info("❌ Drift dominates noise - increase noise scale")
+        elif multi_results['avg_drift_norm'] / multi_results['avg_noise_norm'] < 0.1:
+            logger.info("❌ Noise dominates drift - decrease noise scale")
+        else:
+            logger.info("✅ Drift/noise ratio looks balanced")
+        
+        # Prior/Likelihood recommendations
+        if sgld_results['prior_likelihood_ratio'] > 1.0:
+            logger.info("❌ Prior dominates likelihood - reduce prior_std")
+        elif sgld_results['prior_likelihood_ratio'] < 0.1:
+            logger.info("❌ Likelihood dominates prior - increase prior_std")
+        else:
+            logger.info("✅ Prior/Likelihood ratio looks balanced")
     
-    logger.info(f"Using device: {device}")
-    logger.info(f"Configuration: {config['experiment']['name']}")
-    
-    # Create model and data
-    model, dataloader, tokenizer = create_model_and_data(config, device)
-    
-    # Train MAP model first
-    map_model = train_map_model(model, dataloader, config, device, logger)
-    
-    # Test 1: SAM perturbation
-    sam_results = test_sam_perturbation(map_model, dataloader, config, device, logger)
-    
-    # Test 2: Single SGLD step
-    sgld_results = test_sgld_step(map_model, dataloader, config, device, logger)
-    
-    # Test 3: Multiple SGLD steps
-    multi_results = test_multiple_steps(map_model, dataloader, config, device, logger, num_steps=20)
-    
-    # Summary
-    logger.info("=== DIAGNOSTIC SUMMARY ===")
-    logger.info(f"SAM perturbation ratio: {sam_results['perturbation_ratio']:.3f} (should be ~1.0)")
-    logger.info(f"SAM loss change: {sam_results['loss_change']:.4f} (should be non-zero)")
-    logger.info(f"Single step movement: {sgld_results['total_movement']:.6f}")
-    logger.info(f"20-step movement: {multi_results['final_movement']:.6f}")
-    logger.info(f"Movement trend: {multi_results['movement_trend']:.6f} (should be positive)")
-    logger.info(f"Avg drift/noise ratio: {multi_results['avg_drift_norm'] / multi_results['avg_noise_norm']:.3f}")
-    logger.info(f"Prior/Likelihood ratio: {sgld_results['prior_likelihood_ratio']:.3f}")
-    logger.info(f"Avg Prior/Likelihood ratio (20 steps): {multi_results['avg_prior_likelihood_ratio']:.3f}")
-    logger.info(f"Prior/Likelihood ratio range: {multi_results['prior_likelihood_ratio_range'][0]:.3f} - {multi_results['prior_likelihood_ratio_range'][1]:.3f}")
-    
-    # Recommendations
-    logger.info("=== RECOMMENDATIONS ===")
-    if sam_results['perturbation_ratio'] < 0.5:
-        logger.info("❌ SAM perturbation too small - increase rho")
-    elif sam_results['perturbation_ratio'] > 2.0:
-        logger.info("❌ SAM perturbation too large - decrease rho")
-    else:
-        logger.info("✅ SAM perturbation looks good")
-    
-    if multi_results['movement_trend'] < 1e-6:
-        logger.info("❌ No cumulative movement - increase step size or noise scale")
-    else:
-        logger.info("✅ Cumulative movement detected")
-    
-    if multi_results['avg_drift_norm'] / multi_results['avg_noise_norm'] > 100:
-        logger.info("❌ Drift dominates noise - increase noise scale")
-    elif multi_results['avg_drift_norm'] / multi_results['avg_noise_norm'] < 0.1:
-        logger.info("❌ Noise dominates drift - decrease noise scale")
-    else:
-        logger.info("✅ Drift/noise ratio looks balanced")
-    
-    # Prior/Likelihood recommendations
-    if sgld_results['prior_likelihood_ratio'] > 1.0:
-        logger.info("❌ Prior dominates likelihood - reduce prior_std")
-    elif sgld_results['prior_likelihood_ratio'] < 0.1:
-        logger.info("❌ Likelihood dominates prior - increase prior_std")
-    else:
-        logger.info("✅ Prior/Likelihood ratio looks balanced")
+    except Exception as e:
+        logger.error(f"Diagnostic failed with error: {e}")
+        raise
 
 if __name__ == "__main__":
     main()
