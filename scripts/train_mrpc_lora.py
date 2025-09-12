@@ -369,7 +369,7 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             sampler.step(input_ids, attention_mask, labels)
             
             # Log key diagnostic ratios every 100 steps
-            if step % 100 == 0:
+            if step % 1000 == 0:
                 # Get actual drift and noise from last step
                 actual_drift_norm = sampler.last_drift_norm
                 actual_noise_norm = sampler.last_noise_norm
