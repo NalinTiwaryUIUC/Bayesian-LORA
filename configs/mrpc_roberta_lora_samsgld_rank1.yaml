@@ -38,7 +38,7 @@ training:
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule for stability
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.00001  # Increased to restore MCMC exploration
+    noise_scale: 0.000002  # Increased to restore MCMC exploration
     # SAM-SGLD specific parameters
     rho: 0.05  # SAM perturbation radius (standard value)
     lambd: 0.00000001  # SAM regularization (1e-8)
