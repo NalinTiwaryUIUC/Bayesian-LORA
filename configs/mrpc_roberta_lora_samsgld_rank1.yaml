@@ -32,7 +32,7 @@ training:
   samsgld_rank1_lora:
     learning_rate: 5e-4
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
-    prior_std: 1.5  # Balanced for prior/likelihood ratio ~0.3
+    prior_std: 17.0  # Balanced for prior/likelihood ratio ~0.3
     step_size_schedule:
       initial: 5e-4
       decay_rate: 0.3  # Conservative decay for better convergence
