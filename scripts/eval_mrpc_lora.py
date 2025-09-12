@@ -22,7 +22,7 @@ from bayesian_lora.models.hf_lora import LoRAModel
 from bayesian_lora.data.glue_datasets import MRPCDataset
 
 # Setup logging to both console and file
-def setup_logging(experiment_name="mrpc_roberta_lora_sgld"):
+def setup_logging(experiment_name="mrpc_roberta_lora_samsgld_rank1"):
     """Setup logging to both console and file."""
     # Create logs directory with experiment-specific subfolder
     logs_dir = Path(f"logs/{experiment_name}")
@@ -464,7 +464,7 @@ def main():
                        help="Path to MAP model checkpoint")
     parser.add_argument("--sgld_samples_path", type=str, required=True,
                        help="Path to SGLD or SAM-SGLD samples checkpoint")
-    parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_sgld",
+    parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_samsgld_rank1",
                        help="Output directory for results")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu",
                        help="Device to use for evaluation")
@@ -511,7 +511,9 @@ def main():
     
     # Load samples and diagnostics
     logger.info("Loading samples...")
+    logger.info(f"Loading samples from: {args.sgld_samples_path}")
     samples = torch.load(args.sgld_samples_path, map_location=device)
+    logger.info(f"Loaded {len(samples)} samples from file")
     
     # Try to load diagnostic values if available
     diagnostics_path = Path(args.sgld_samples_path).parent / "diagnostics.pth"

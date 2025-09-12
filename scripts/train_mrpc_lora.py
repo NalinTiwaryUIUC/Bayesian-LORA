@@ -32,7 +32,7 @@ from bayesian_lora.utils.lora_params import LoRAParams
 # ESS computation moved to evaluation phase
 
 # Setup logging to both console and file
-def setup_logging(experiment_name="mrpc_roberta_lora_sgld"):
+def setup_logging(experiment_name="mrpc_roberta_lora_samsgld_rank1"):
     """Setup logging to both console and file."""
     # Create logs directory with experiment-specific subfolder
     logs_dir = Path(f"logs/{experiment_name}")
@@ -534,9 +534,9 @@ def evaluate_model_metrics(model: LoRAModel, dataloader: DataLoader, device: tor
 
 def main():
     parser = argparse.ArgumentParser(description="Train MRPC LoRA with SGLD or SAM-SGLD")
-    parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_sgld.yaml",
+    parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_samsgld_rank1.yaml",
                        help="Path to configuration file")
-    parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_sgld",
+    parser.add_argument("--output_dir", type=str, default="runs/mrpc_roberta_lora_samsgld_rank1",
                        help="Output directory for results")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu",
                        help="Device to use for training")
