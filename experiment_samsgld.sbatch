@@ -166,7 +166,7 @@ echo "=== Phase 2: Evaluating SAM-SGLD LoRA Results ==="
 python3 scripts/eval_mrpc_lora.py \
     --config configs/mrpc_roberta_lora_samsgld_rank1.yaml \
     --map_model_path runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth \
-    --sgld_samples_path runs/mrpc_roberta_lora_samsgld_rank1/sgld_samples.pth \
+    --sgld_samples_path runs/mrpc_roberta_lora_samsgld_rank1/samsgld_samples.pth \
     --output_dir runs/mrpc_roberta_lora_samsgld_rank1
 
 if [ $? -eq 0 ]; then

@@ -18,7 +18,7 @@ data:
   dataset: "mrpc"
   batch_size: 32  # Optimized for best convergence and GPU utilization
   gradient_accumulation_steps: 1  # No longer needed with larger batch size
-  max_epochs: 5  # Quick test - reduced from 20
+  max_epochs: 2  # Quick test - reduced from 20
 
 training:
   map_lora:
@@ -44,10 +44,10 @@ training:
     lambd: 0.00000001  # SAM regularization (1e-8)
     sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
     chains: 1  # Multiple chains for R-hat computation
-    burn_in_steps: 100  # Moderate burn-in for diagnostics
-    sampling_steps: 200  # 100 samples per chain * 10 thinning = 1000 steps
-    thinning: 10  # Keep thinning at 10 for good sample independence
-    samples_to_retain: 20  # Good sample count for diagnostics
+    burn_in_steps: 10  # Moderate burn-in for diagnostics
+    sampling_steps: 20  # 100 samples per chain * 10 thinning = 1000 steps
+    thinning: 5  # Keep thinning at 10 for good sample independence
+    samples_to_retain: 4  # Good sample count for diagnostics
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
