@@ -458,7 +458,7 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate MRPC LoRA with SGLD or SAM-SGLD")
-    parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_sgld.yaml",
+    parser.add_argument("--config", type=str, default="configs/mrpc_roberta_lora_samsgld_rank1.yaml",
                        help="Path to configuration file")
     parser.add_argument("--map_model_path", type=str, required=True,
                        help="Path to MAP model checkpoint")
