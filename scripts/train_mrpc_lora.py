@@ -207,7 +207,7 @@ def train_map_lora(model: LoRAModel, train_dataloader: DataLoader,
     return model
 
 
-def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
+def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader, val_dataloader: DataLoader,
                      config: Dict[str, Any], device: torch.device, logger, output_dir: Path) -> List[Dict[str, Any]]:
     """Train LoRA using SGLD or SAM-SGLD sampling."""
     
@@ -758,7 +758,7 @@ def main():
         samples_filename = "samples.pth"
     
     # Train sampler LoRA
-    samples = train_sgld_lora(model, train_dataloader, config, device, logger, output_dir)
+    samples = train_sgld_lora(model, train_dataloader, val_dataloader, config, device, logger, output_dir)
     
     # Save samples and diagnostic values
     samples_save_path = output_dir / samples_filename
