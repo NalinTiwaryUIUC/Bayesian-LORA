@@ -274,10 +274,10 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         
         logger.info(f"Chain {chain + 1}: MAP model loaded - LoRA param norms: {param_norms[:3]}")
         
-        # Verify MAP model performance by testing on a small batch
+        # Verify MAP model performance by testing on validation set (same as training validation)
         model.eval()
         with torch.no_grad():
-            test_batch = next(iter(train_dataloader))
+            test_batch = next(iter(val_dataloader))
             test_input_ids = test_batch['input_ids'].to(device)
             test_attention_mask = test_batch['attention_mask'].to(device)
             test_labels = test_batch['labels'].to(device)
@@ -624,7 +624,7 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         # Check final model performance after sampling
         model.eval()
         with torch.no_grad():
-            test_batch = next(iter(train_dataloader))
+            test_batch = next(iter(val_dataloader))
             test_input_ids = test_batch['input_ids'].to(device)
             test_attention_mask = test_batch['attention_mask'].to(device)
             test_labels = test_batch['labels'].to(device)

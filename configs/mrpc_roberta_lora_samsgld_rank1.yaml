@@ -34,11 +34,11 @@ training:
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
     prior_std: 17.0  # Will be properly balanced using correct ratio calculation
     step_size_schedule:
-      initial: 0.001  # FIXED: Reduced from 0.01 to balance drift/noise ratio
+      initial: 0.005  # INCREASED: From 0.001 to 0.005 to amplify gradient signal
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 1000  # Reduced for quick testing
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.0001  # FIXED: Reduced from 0.01 to balance drift/noise ratio
+    noise_scale: 0.00005  # REDUCED: From 0.0001 to 0.00005 to reduce noise dominance
     # SAM-SGLD specific parameters
     rho: 0.1  # Keep same - already reasonable
     lambd: 0.00000001  # SAM regularization (1e-8)
