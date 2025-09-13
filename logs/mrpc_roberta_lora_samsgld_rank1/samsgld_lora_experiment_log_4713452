@@ -1,0 +1,653 @@
+=== GPU Information ===
+Sat Sep 13 00:52:00 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A10                     Off |   00000000:C7:00.0 Off |                    0 |
+|  0%   32C    P8             15W /  150W |       0MiB /  23028MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Memory Information ===
+               total        used        free      shared  buff/cache   available
+Mem:           503Gi        27Gi       473Gi        16Gi        22Gi       476Gi
+Swap:             0B          0B          0B
+=== Current Directory ===
+/u/nalint2/scratch/Bayesian-LORA
+=== Python Version ===
+Python 3.9.18
+=== Setting up environment ===
+=== Upgrading pip to fix version issues ===
+Requirement already satisfied: pip in ./.venv/lib/python3.9/site-packages (25.2)
+=== Installing dependencies ===
+Installing package in editable mode...
+Obtaining file:///scratch/nalint2/Bayesian-LORA
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.8.0)
+Requirement already satisfied: torchvision in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.23.0)
+Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.0.2)
+Requirement already satisfied: tqdm in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.67.1)
+Requirement already satisfied: pyyaml in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.0.2)
+Requirement already satisfied: scikit-learn in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.6.1)
+Requirement already satisfied: scipy in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.13.1)
+Requirement already satisfied: matplotlib in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (3.9.4)
+Requirement already satisfied: transformers>=4.30.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.56.0)
+Requirement already satisfied: datasets>=2.12.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.0.0)
+Requirement already satisfied: tokenizers>=0.13.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.22.0)
+Requirement already satisfied: peft>=0.4.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.17.1)
+Requirement already satisfied: accelerate>=0.20.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.10.1)
+Requirement already satisfied: sentencepiece in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.2.1)
+Requirement already satisfied: protobuf in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.32.0)
+Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (25.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (7.0.0)
+Requirement already satisfied: huggingface_hub>=0.21.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.34.4)
+Requirement already satisfied: safetensors>=0.4.3 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.6.2)
+Requirement already satisfied: filelock in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.19.1)
+Requirement already satisfied: pyarrow>=15.0.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (21.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.8)
+Requirement already satisfied: pandas in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.3.2)
+Requirement already satisfied: requests>=2.32.2 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.32.5)
+Requirement already satisfied: xxhash in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.70.16)
+Requirement already satisfied: fsspec<=2025.3.0,>=2023.1.0 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.3.0)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.12.15)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (5.0.1)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (25.3.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.7.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (6.6.4)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.2)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.20.1)
+Requirement already satisfied: typing-extensions>=4.1.0 in ./.venv/lib/python3.9/site-packages (from multidict<7.0,>=4.5->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (4.15.0)
+Requirement already satisfied: idna>=2.0 in ./.venv/lib/python3.9/site-packages (from yarl<2.0,>=1.17.0->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.10)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in ./.venv/lib/python3.9/site-packages (from huggingface_hub>=0.21.0->accelerate>=0.20.0->Bayesian-LORA==0.1.0) (1.1.9)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.4.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.8.3)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.14.0)
+Requirement already satisfied: networkx in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.2.1)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (2.27.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.13.1.3)
+Requirement already satisfied: triton==3.4.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.4.0)
+Requirement already satisfied: setuptools>=40.8.0 in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (53.0.0)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (8.7.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy>=1.13.3->torch>=2.0.0->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: regex!=2019.12.17 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->Bayesian-LORA==0.1.0) (2025.9.1)
+Requirement already satisfied: zipp>=3.20 in ./.venv/lib/python3.9/site-packages (from importlib-metadata->triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.23.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.0.2)
+Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (4.59.2)
+Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.4.7)
+Requirement already satisfied: pillow>=8 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (11.3.0)
+Requirement already satisfied: pyparsing>=2.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (2.9.0.post0)
+Requirement already satisfied: importlib-resources>=3.2.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (6.5.2)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib->Bayesian-LORA==0.1.0) (1.17.0)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (1.5.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (3.6.0)
+Building wheels for collected packages: Bayesian-LORA
+  Building editable for Bayesian-LORA (pyproject.toml): started
+  Building editable for Bayesian-LORA (pyproject.toml): finished with status 'done'
+  Created wheel for Bayesian-LORA: filename=bayesian_lora-0.1.0-0.editable-py3-none-any.whl size=1457 sha256=32959b31c838b4f1ec8fdb956e7b19ccd783fa90b02d24174dc0a6d7999c88b7
+  Stored in directory: /tmp/pip-ephem-wheel-cache-t7tae4a0/wheels/e6/8c/54/9ced548b41650fdd37110b7a4079fec5aecbe008507cf13c8d
+Successfully built Bayesian-LORA
+Installing collected packages: Bayesian-LORA
+  Attempting uninstall: Bayesian-LORA
+    Found existing installation: Bayesian-LORA 0.1.0
+    Uninstalling Bayesian-LORA-0.1.0:
+      Successfully uninstalled Bayesian-LORA-0.1.0
+Successfully installed Bayesian-LORA-0.1.0
+=== Verifying pip installation ===
+Name: Bayesian-LORA
+Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
+Home-page: 
+Author: Bayesian LoRA Team
+Author-email: 
+License: 
+Location: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+Editable project location: /scratch/nalint2/Bayesian-LORA
+Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, scikit-learn, scipy, sentencepiece, tokenizers, torch, torchvision, tqdm, transformers
+Required-by: 
+=== Verifying installation ===
+Testing package installation status...
+=== Testing bayesian_lora import ===
+Python path: ['', '/usr/lib64/python39.zip', '/usr/lib64/python3.9']...
+✅ bayesian_lora module imported successfully!
+Version: 0.1.0
+Author: Bayesian LoRA Team
+Module location: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py
+✅ Package installation verified successfully!
+=== Installing additional requirements ===
+Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 2)) (2.8.0)
+Requirement already satisfied: torchvision in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 3)) (0.23.0)
+Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 4)) (2.0.2)
+Requirement already satisfied: tqdm in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 5)) (4.67.1)
+Requirement already satisfied: pyyaml in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 6)) (6.0.2)
+Requirement already satisfied: scikit-learn in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 7)) (1.6.1)
+Requirement already satisfied: scipy in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 8)) (1.13.1)
+Requirement already satisfied: matplotlib in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 9)) (3.9.4)
+Requirement already satisfied: transformers>=4.30.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 12)) (4.56.0)
+Requirement already satisfied: datasets>=2.12.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 13)) (4.0.0)
+Requirement already satisfied: tokenizers>=0.13.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 14)) (0.22.0)
+Requirement already satisfied: peft>=0.4.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 15)) (0.17.1)
+Requirement already satisfied: accelerate>=0.20.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 18)) (1.10.1)
+Requirement already satisfied: sentencepiece in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 19)) (0.2.1)
+Requirement already satisfied: protobuf in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 20)) (6.32.0)
+Requirement already satisfied: filelock in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.19.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (4.15.0)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.14.0)
+Requirement already satisfied: networkx in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.2.1)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.1.6)
+Requirement already satisfied: fsspec in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (2025.3.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (2.27.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.13.1.3)
+Requirement already satisfied: triton==3.4.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.4.0)
+Requirement already satisfied: setuptools>=40.8.0 in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->-r requirements_lora.txt (line 2)) (53.0.0)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->-r requirements_lora.txt (line 2)) (8.7.0)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in ./.venv/lib/python3.9/site-packages (from torchvision->-r requirements_lora.txt (line 3)) (11.3.0)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->-r requirements_lora.txt (line 7)) (1.5.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->-r requirements_lora.txt (line 7)) (3.6.0)
+Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (1.3.0)
+Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (4.59.2)
+Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (1.4.7)
+Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (25.0)
+Requirement already satisfied: pyparsing>=2.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (2.9.0.post0)
+Requirement already satisfied: importlib-resources>=3.2.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (6.5.2)
+Requirement already satisfied: huggingface-hub<1.0,>=0.34.0 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (0.34.4)
+Requirement already satisfied: regex!=2019.12.17 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2025.9.1)
+Requirement already satisfied: requests in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2.32.5)
+Requirement already satisfied: safetensors>=0.4.3 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (0.6.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in ./.venv/lib/python3.9/site-packages (from huggingface-hub<1.0,>=0.34.0->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (1.1.9)
+Requirement already satisfied: pyarrow>=15.0.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (21.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.3.8)
+Requirement already satisfied: pandas in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2.3.2)
+Requirement already satisfied: xxhash in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.70.16)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.12.15)
+Requirement already satisfied: psutil in ./.venv/lib/python3.9/site-packages (from peft>=0.4.0->-r requirements_lora.txt (line 15)) (7.0.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (5.0.1)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (25.3.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.7.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (6.6.4)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.3.2)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.20.1)
+Requirement already satisfied: idna>=2.0 in ./.venv/lib/python3.9/site-packages (from yarl<2.0,>=1.17.0->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.10)
+Requirement already satisfied: zipp>=3.1.0 in ./.venv/lib/python3.9/site-packages (from importlib-resources>=3.2.0->matplotlib->-r requirements_lora.txt (line 9)) (3.23.0)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib->-r requirements_lora.txt (line 9)) (1.17.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (3.4.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2025.8.3)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy>=1.13.3->torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.0.2)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2025.2)
+=== Environment setup complete ===
+Python executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/python3
+Pip executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/pip3
+Virtual environment: /scratch/nalint2/Bayesian-LORA/.venv
+=== Starting SAM-SGLD LoRA Experiment ===
+Configuration: configs/mrpc_roberta_lora_samsgld_rank1.yaml
+Output directory: runs/mrpc_roberta_lora_samsgld_rank1
+=== Phase 1: Training MAP LoRA and SAM-SGLD Sampling ===
+2025-09-13 00:52:50,302 - root - INFO - Using device: cuda
+Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2025-09-13 00:52:53,599 - root - INFO - Starting MAP LoRA training...
+2025-09-13 00:53:39,303 - root - INFO - Epoch 1: Train Loss: 0.7395, Val Loss: 0.7334, Val Acc: 0.3162
+2025-09-13 00:54:24,843 - root - INFO - Epoch 2: Train Loss: 0.7210, Val Loss: 0.7072, Val Acc: 0.3162
+2025-09-13 00:55:12,063 - root - INFO - Epoch 3: Train Loss: 0.6849, Val Loss: 0.6585, Val Acc: 0.6838
+2025-09-13 00:56:00,561 - root - INFO - Epoch 4: Train Loss: 0.6495, Val Loss: 0.6295, Val Acc: 0.6838
+2025-09-13 00:56:50,031 - root - INFO - Epoch 5: Train Loss: 0.6430, Val Loss: 0.6272, Val Acc: 0.6838
+2025-09-13 00:57:40,100 - root - INFO - Epoch 6: Train Loss: 0.6392, Val Loss: 0.6248, Val Acc: 0.6838
+2025-09-13 00:58:30,667 - root - INFO - Epoch 7: Train Loss: 0.6379, Val Loss: 0.6254, Val Acc: 0.6838
+2025-09-13 00:59:21,570 - root - INFO - Epoch 8: Train Loss: 0.6370, Val Loss: 0.6235, Val Acc: 0.6838
+2025-09-13 01:00:12,251 - root - INFO - Epoch 9: Train Loss: 0.6383, Val Loss: 0.6224, Val Acc: 0.6838
+2025-09-13 01:01:02,734 - root - INFO - Epoch 10: Train Loss: 0.6363, Val Loss: 0.6232, Val Acc: 0.6838
+2025-09-13 01:01:53,117 - root - INFO - Epoch 11: Train Loss: 0.6352, Val Loss: 0.6215, Val Acc: 0.6838
+2025-09-13 01:02:43,479 - root - INFO - Epoch 12: Train Loss: 0.6335, Val Loss: 0.6222, Val Acc: 0.6838
+2025-09-13 01:03:33,966 - root - INFO - Epoch 13: Train Loss: 0.6332, Val Loss: 0.6202, Val Acc: 0.6838
+2025-09-13 01:04:24,772 - root - INFO - Epoch 14: Train Loss: 0.6306, Val Loss: 0.6189, Val Acc: 0.6838
+2025-09-13 01:05:15,332 - root - INFO - Epoch 15: Train Loss: 0.6337, Val Loss: 0.6178, Val Acc: 0.6838
+2025-09-13 01:06:05,876 - root - INFO - Epoch 16: Train Loss: 0.6286, Val Loss: 0.6175, Val Acc: 0.6838
+2025-09-13 01:06:56,458 - root - INFO - Epoch 17: Train Loss: 0.6312, Val Loss: 0.6170, Val Acc: 0.6838
+2025-09-13 01:07:47,106 - root - INFO - Epoch 18: Train Loss: 0.6299, Val Loss: 0.6159, Val Acc: 0.6838
+2025-09-13 01:08:37,807 - root - INFO - Epoch 19: Train Loss: 0.6257, Val Loss: 0.6150, Val Acc: 0.6838
+2025-09-13 01:09:28,748 - root - INFO - Epoch 20: Train Loss: 0.6265, Val Loss: 0.6117, Val Acc: 0.6838
+2025-09-13 01:09:29,535 - root - INFO - MAP model saved to runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth
+2025-09-13 01:09:29,655 - root - INFO - Starting SAM-SGLD Rank-1 LoRA training...
+2025-09-13 01:09:29,655 - root - INFO - Running chain 1/1
+2025-09-13 01:09:29,985 - root - INFO - Chain 1: MAP model loaded - LoRA param norms: [1.4202017784118652, 0.0021736405324190855, 1.419960856437683]
+2025-09-13 01:09:30,216 - root - INFO - Chain 1: MAP model test - Loss: 0.5150, Acc: 0.8125
+2025-09-13 01:09:30,216 - root - INFO - Chain 1: Initial configuration:
+2025-09-13 01:09:30,217 - root - INFO -   Initial step size: 5.00e-04
+2025-09-13 01:09:30,217 - root - INFO -   Temperature: 2.0
+2025-09-13 01:09:30,217 - root - INFO -   Noise scale: 2.00e-06
+2025-09-13 01:09:30,217 - root - INFO -   Prior std: 17.000
+2025-09-13 01:09:30,217 - root - INFO -   SAM rho: 0.050
+2025-09-13 01:09:30,217 - root - INFO -   Decay rate: 0.300
+2025-09-13 01:09:30,217 - root - INFO - Chain 1: Burn-in phase (8000 steps)
+2025-09-13 01:09:31,487 - root - INFO - Burn-in step 0/8000:
+2025-09-13 01:09:31,487 - root - INFO -   Actual drift norm: 3.58e-04
+2025-09-13 01:09:31,488 - root - INFO -   Actual noise norm: 3.44e-05
+2025-09-13 01:09:31,488 - root - INFO -   Actual drift/noise ratio: 10.426
+2025-09-13 01:09:31,488 - root - INFO -   Theoretical step/noise ratio: 10954.718
+2025-09-13 01:09:31,488 - root - INFO -   Prior/Likelihood ratio: 0.260
+2025-09-13 01:09:31,488 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:09:31,488 - root - INFO -   SAM gradient norm: 7.15e-01
+2025-09-13 01:09:31,488 - root - INFO -   SAM perturbation/gradient ratio: 0.685
+2025-09-13 01:09:31,488 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:09:31,488 - root - INFO -   Loss change after SAM perturbation: 0.0177
+2025-09-13 01:16:49,723 - root - INFO - Burn-in step 500/8000:
+2025-09-13 01:16:49,726 - root - INFO -   Actual drift norm: 2.32e-04
+2025-09-13 01:16:49,726 - root - INFO -   Actual noise norm: 3.36e-05
+2025-09-13 01:16:49,726 - root - INFO -   Actual drift/noise ratio: 6.902
+2025-09-13 01:16:49,726 - root - INFO -   Theoretical step/noise ratio: 10704.322
+2025-09-13 01:16:49,726 - root - INFO -   Prior/Likelihood ratio: 0.284
+2025-09-13 01:16:49,726 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:16:49,726 - root - INFO -   SAM gradient norm: 4.86e-01
+2025-09-13 01:16:49,726 - root - INFO -   SAM perturbation/gradient ratio: 1.008
+2025-09-13 01:16:49,726 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:16:49,726 - root - INFO -   Loss change after SAM perturbation: 0.0584
+2025-09-13 01:24:07,842 - root - INFO - Burn-in step 1000/8000:
+2025-09-13 01:24:07,845 - root - INFO -   Actual drift norm: 4.46e-04
+2025-09-13 01:24:07,845 - root - INFO -   Actual noise norm: 3.29e-05
+2025-09-13 01:24:07,845 - root - INFO -   Actual drift/noise ratio: 13.535
+2025-09-13 01:24:07,845 - root - INFO -   Theoretical step/noise ratio: 10492.051
+2025-09-13 01:24:07,845 - root - INFO -   Prior/Likelihood ratio: 0.240
+2025-09-13 01:24:07,845 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:24:07,845 - root - INFO -   SAM gradient norm: 9.70e-01
+2025-09-13 01:24:07,845 - root - INFO -   SAM perturbation/gradient ratio: 0.505
+2025-09-13 01:24:07,845 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:24:07,846 - root - INFO -   Loss change after SAM perturbation: 0.0499
+2025-09-13 01:31:26,087 - root - INFO - Burn-in step 1500/8000:
+2025-09-13 01:31:26,089 - root - INFO -   Actual drift norm: 8.95e-05
+2025-09-13 01:31:26,089 - root - INFO -   Actual noise norm: 3.23e-05
+2025-09-13 01:31:26,089 - root - INFO -   Actual drift/noise ratio: 2.770
+2025-09-13 01:31:26,089 - root - INFO -   Theoretical step/noise ratio: 10308.311
+2025-09-13 01:31:26,089 - root - INFO -   Prior/Likelihood ratio: 0.261
+2025-09-13 01:31:26,089 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:31:26,090 - root - INFO -   SAM gradient norm: 2.00e-01
+2025-09-13 01:31:26,090 - root - INFO -   SAM perturbation/gradient ratio: 2.449
+2025-09-13 01:31:26,090 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:31:26,090 - root - INFO -   Loss change after SAM perturbation: 0.0177
+2025-09-13 01:38:43,348 - root - INFO - Burn-in step 2000/8000:
+2025-09-13 01:38:43,351 - root - INFO -   Actual drift norm: 1.35e-04
+2025-09-13 01:38:43,351 - root - INFO -   Actual noise norm: 3.18e-05
+2025-09-13 01:38:43,351 - root - INFO -   Actual drift/noise ratio: 4.247
+2025-09-13 01:38:43,351 - root - INFO -   Theoretical step/noise ratio: 10146.678
+2025-09-13 01:38:43,351 - root - INFO -   Prior/Likelihood ratio: 0.270
+2025-09-13 01:38:43,351 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:38:43,351 - root - INFO -   SAM gradient norm: 3.14e-01
+2025-09-13 01:38:43,351 - root - INFO -   SAM perturbation/gradient ratio: 1.559
+2025-09-13 01:38:43,351 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:38:43,351 - root - INFO -   Loss change after SAM perturbation: 0.0179
+2025-09-13 01:46:01,309 - root - INFO - Burn-in step 2500/8000:
+2025-09-13 01:46:01,311 - root - INFO -   Actual drift norm: 1.59e-04
+2025-09-13 01:46:01,312 - root - INFO -   Actual noise norm: 3.14e-05
+2025-09-13 01:46:01,312 - root - INFO -   Actual drift/noise ratio: 5.049
+2025-09-13 01:46:01,312 - root - INFO -   Theoretical step/noise ratio: 10002.648
+2025-09-13 01:46:01,312 - root - INFO -   Prior/Likelihood ratio: 0.249
+2025-09-13 01:46:01,312 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:46:01,312 - root - INFO -   SAM gradient norm: 3.78e-01
+2025-09-13 01:46:01,312 - root - INFO -   SAM perturbation/gradient ratio: 1.295
+2025-09-13 01:46:01,312 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 01:46:01,312 - root - INFO -   Loss change after SAM perturbation: 0.0107
+2025-09-13 01:53:18,734 - root - INFO - Burn-in step 3000/8000:
+2025-09-13 01:53:18,737 - root - INFO -   Actual drift norm: 1.72e-04
+2025-09-13 01:53:18,737 - root - INFO -   Actual noise norm: 3.09e-05
+2025-09-13 01:53:18,737 - root - INFO -   Actual drift/noise ratio: 5.562
+2025-09-13 01:53:18,737 - root - INFO -   Theoretical step/noise ratio: 9872.944
+2025-09-13 01:53:18,737 - root - INFO -   Prior/Likelihood ratio: 0.290
+2025-09-13 01:53:18,737 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 01:53:18,737 - root - INFO -   SAM gradient norm: 4.24e-01
+2025-09-13 01:53:18,737 - root - INFO -   SAM perturbation/gradient ratio: 1.155
+2025-09-13 01:53:18,737 - root - INFO -   Rank-1 noise contribution: 0.002
+2025-09-13 01:53:18,737 - root - INFO -   Loss change after SAM perturbation: 0.0477
+2025-09-13 02:00:36,008 - root - INFO - Burn-in step 3500/8000:
+2025-09-13 02:00:36,011 - root - INFO -   Actual drift norm: 1.01e-04
+2025-09-13 02:00:36,011 - root - INFO -   Actual noise norm: 3.06e-05
+2025-09-13 02:00:36,011 - root - INFO -   Actual drift/noise ratio: 3.294
+2025-09-13 02:00:36,011 - root - INFO -   Theoretical step/noise ratio: 9755.114
+2025-09-13 02:00:36,011 - root - INFO -   Prior/Likelihood ratio: 0.254
+2025-09-13 02:00:36,011 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:00:36,012 - root - INFO -   SAM gradient norm: 2.53e-01
+2025-09-13 02:00:36,012 - root - INFO -   SAM perturbation/gradient ratio: 1.933
+2025-09-13 02:00:36,012 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:00:36,012 - root - INFO -   Loss change after SAM perturbation: 0.0390
+2025-09-13 02:07:52,940 - root - INFO - Burn-in step 4000/8000:
+2025-09-13 02:07:52,942 - root - INFO -   Actual drift norm: 2.30e-04
+2025-09-13 02:07:52,942 - root - INFO -   Actual noise norm: 3.02e-05
+2025-09-13 02:07:52,942 - root - INFO -   Actual drift/noise ratio: 7.629
+2025-09-13 02:07:52,942 - root - INFO -   Theoretical step/noise ratio: 9647.275
+2025-09-13 02:07:52,943 - root - INFO -   Prior/Likelihood ratio: 0.306
+2025-09-13 02:07:52,943 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:07:52,943 - root - INFO -   SAM gradient norm: 5.94e-01
+2025-09-13 02:07:52,943 - root - INFO -   SAM perturbation/gradient ratio: 0.824
+2025-09-13 02:07:52,943 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:07:52,943 - root - INFO -   Loss change after SAM perturbation: 0.0624
+2025-09-13 02:15:10,435 - root - INFO - Burn-in step 4500/8000:
+2025-09-13 02:15:10,438 - root - INFO -   Actual drift norm: 2.07e-04
+2025-09-13 02:15:10,438 - root - INFO -   Actual noise norm: 2.99e-05
+2025-09-13 02:15:10,438 - root - INFO -   Actual drift/noise ratio: 6.912
+2025-09-13 02:15:10,438 - root - INFO -   Theoretical step/noise ratio: 9547.951
+2025-09-13 02:15:10,438 - root - INFO -   Prior/Likelihood ratio: 0.243
+2025-09-13 02:15:10,438 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:15:10,438 - root - INFO -   SAM gradient norm: 5.43e-01
+2025-09-13 02:15:10,438 - root - INFO -   SAM perturbation/gradient ratio: 0.903
+2025-09-13 02:15:10,438 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:15:10,438 - root - INFO -   Loss change after SAM perturbation: 0.0298
+2025-09-13 02:22:28,179 - root - INFO - Burn-in step 5000/8000:
+2025-09-13 02:22:28,182 - root - INFO -   Actual drift norm: 7.80e-05
+2025-09-13 02:22:28,182 - root - INFO -   Actual noise norm: 2.97e-05
+2025-09-13 02:22:28,182 - root - INFO -   Actual drift/noise ratio: 2.629
+2025-09-13 02:22:28,182 - root - INFO -   Theoretical step/noise ratio: 9455.965
+2025-09-13 02:22:28,182 - root - INFO -   Prior/Likelihood ratio: 0.261
+2025-09-13 02:22:28,182 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:22:28,182 - root - INFO -   SAM gradient norm: 2.08e-01
+2025-09-13 02:22:28,182 - root - INFO -   SAM perturbation/gradient ratio: 2.357
+2025-09-13 02:22:28,182 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:22:28,182 - root - INFO -   Loss change after SAM perturbation: 0.0061
+2025-09-13 02:29:45,040 - root - INFO - Burn-in step 5500/8000:
+2025-09-13 02:29:45,043 - root - INFO -   Actual drift norm: 1.07e-04
+2025-09-13 02:29:45,043 - root - INFO -   Actual noise norm: 2.93e-05
+2025-09-13 02:29:45,043 - root - INFO -   Actual drift/noise ratio: 3.638
+2025-09-13 02:29:45,043 - root - INFO -   Theoretical step/noise ratio: 9370.366
+2025-09-13 02:29:45,043 - root - INFO -   Prior/Likelihood ratio: 0.263
+2025-09-13 02:29:45,043 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:29:45,043 - root - INFO -   SAM gradient norm: 2.89e-01
+2025-09-13 02:29:45,043 - root - INFO -   SAM perturbation/gradient ratio: 1.693
+2025-09-13 02:29:45,043 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:29:45,044 - root - INFO -   Loss change after SAM perturbation: 0.0437
+2025-09-13 02:37:02,686 - root - INFO - Burn-in step 6000/8000:
+2025-09-13 02:37:02,689 - root - INFO -   Actual drift norm: 1.90e-04
+2025-09-13 02:37:02,689 - root - INFO -   Actual noise norm: 2.91e-05
+2025-09-13 02:37:02,689 - root - INFO -   Actual drift/noise ratio: 6.516
+2025-09-13 02:37:02,689 - root - INFO -   Theoretical step/noise ratio: 9290.370
+2025-09-13 02:37:02,689 - root - INFO -   Prior/Likelihood ratio: 0.244
+2025-09-13 02:37:02,689 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:37:02,689 - root - INFO -   SAM gradient norm: 5.26e-01
+2025-09-13 02:37:02,689 - root - INFO -   SAM perturbation/gradient ratio: 0.931
+2025-09-13 02:37:02,689 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:37:02,689 - root - INFO -   Loss change after SAM perturbation: 0.0176
+2025-09-13 02:44:19,596 - root - INFO - Burn-in step 6500/8000:
+2025-09-13 02:44:19,599 - root - INFO -   Actual drift norm: 3.39e-04
+2025-09-13 02:44:19,599 - root - INFO -   Actual noise norm: 2.89e-05
+2025-09-13 02:44:19,599 - root - INFO -   Actual drift/noise ratio: 11.716
+2025-09-13 02:44:19,599 - root - INFO -   Theoretical step/noise ratio: 9215.329
+2025-09-13 02:44:19,599 - root - INFO -   Prior/Likelihood ratio: 0.229
+2025-09-13 02:44:19,599 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:44:19,599 - root - INFO -   SAM gradient norm: 9.56e-01
+2025-09-13 02:44:19,599 - root - INFO -   SAM perturbation/gradient ratio: 0.513
+2025-09-13 02:44:19,599 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:44:19,600 - root - INFO -   Loss change after SAM perturbation: 0.0117
+2025-09-13 02:51:37,154 - root - INFO - Burn-in step 7000/8000:
+2025-09-13 02:51:37,157 - root - INFO -   Actual drift norm: 7.73e-05
+2025-09-13 02:51:37,157 - root - INFO -   Actual noise norm: 2.87e-05
+2025-09-13 02:51:37,157 - root - INFO -   Actual drift/noise ratio: 2.690
+2025-09-13 02:51:37,157 - root - INFO -   Theoretical step/noise ratio: 9144.698
+2025-09-13 02:51:37,157 - root - INFO -   Prior/Likelihood ratio: 0.258
+2025-09-13 02:51:37,157 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:51:37,157 - root - INFO -   SAM gradient norm: 2.19e-01
+2025-09-13 02:51:37,157 - root - INFO -   SAM perturbation/gradient ratio: 2.232
+2025-09-13 02:51:37,157 - root - INFO -   Rank-1 noise contribution: 0.002
+2025-09-13 02:51:37,157 - root - INFO -   Loss change after SAM perturbation: 0.0238
+2025-09-13 02:58:54,897 - root - INFO - Burn-in step 7500/8000:
+2025-09-13 02:58:54,900 - root - INFO -   Actual drift norm: 9.88e-05
+2025-09-13 02:58:54,900 - root - INFO -   Actual noise norm: 2.85e-05
+2025-09-13 02:58:54,900 - root - INFO -   Actual drift/noise ratio: 3.470
+2025-09-13 02:58:54,900 - root - INFO -   Theoretical step/noise ratio: 9078.017
+2025-09-13 02:58:54,900 - root - INFO -   Prior/Likelihood ratio: 0.264
+2025-09-13 02:58:54,900 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 02:58:54,900 - root - INFO -   SAM gradient norm: 2.86e-01
+2025-09-13 02:58:54,900 - root - INFO -   SAM perturbation/gradient ratio: 1.715
+2025-09-13 02:58:54,900 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 02:58:54,900 - root - INFO -   Loss change after SAM perturbation: 0.0071
+2025-09-13 03:06:10,361 - root - INFO - Chain 1: Sampling phase (3000 steps)
+2025-09-13 03:06:10,364 - root - INFO - Chain 1: Step size after burn-in:
+2025-09-13 03:06:10,364 - root - INFO -   Initial: 5.00e-04
+2025-09-13 03:06:10,364 - root - INFO -   Final: 3.39e-04
+2025-09-13 03:06:10,364 - root - INFO -   Reduction: 32.3%
+2025-09-13 03:06:11,440 - root - INFO - Chain 1, Step 0:
+2025-09-13 03:06:11,440 - root - INFO -   Actual drift norm: 1.22e-04
+2025-09-13 03:06:11,440 - root - INFO -   Actual noise norm: 2.83e-05
+2025-09-13 03:06:11,440 - root - INFO -   Actual drift/noise ratio: 4.295
+2025-09-13 03:06:11,440 - root - INFO -   Theoretical step/noise ratio: 9014.891
+2025-09-13 03:06:11,441 - root - INFO -   Prior/Likelihood ratio: 0.291
+2025-09-13 03:06:11,441 - root - INFO -   SAM rho: 0.050
+2025-09-13 03:06:11,441 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 03:06:11,441 - root - INFO -   SAM gradient norm: 3.59e-01
+2025-09-13 03:06:11,441 - root - INFO -   SAM perturbation/gradient ratio: 1.366
+2025-09-13 03:06:11,441 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 03:06:11,441 - root - INFO -   Loss change after SAM perturbation: 0.0103
+2025-09-13 03:06:11,441 - root - INFO -   Temperature: 2.0
+2025-09-13 03:06:11,569 - root - INFO - Sampling step 0/3000, step_size: 3.39e-04
+2025-09-13 03:20:45,215 - root - INFO - Chain 1, Step 1000:
+2025-09-13 03:20:45,218 - root - INFO -   Actual drift norm: 1.06e-04
+2025-09-13 03:20:45,218 - root - INFO -   Actual noise norm: 2.83e-05
+2025-09-13 03:20:45,218 - root - INFO -   Actual drift/noise ratio: 3.761
+2025-09-13 03:20:45,218 - root - INFO -   Theoretical step/noise ratio: 9014.891
+2025-09-13 03:20:45,218 - root - INFO -   Prior/Likelihood ratio: 0.240
+2025-09-13 03:20:45,218 - root - INFO -   SAM rho: 0.050
+2025-09-13 03:20:45,219 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 03:20:45,219 - root - INFO -   SAM gradient norm: 3.11e-01
+2025-09-13 03:20:45,219 - root - INFO -   SAM perturbation/gradient ratio: 1.574
+2025-09-13 03:20:45,219 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 03:20:45,219 - root - INFO -   Loss change after SAM perturbation: 0.0167
+2025-09-13 03:20:45,219 - root - INFO -   Temperature: 2.0
+2025-09-13 03:20:45,348 - root - INFO - Sampling step 1000/3000, step_size: 3.39e-04
+2025-09-13 03:35:20,005 - root - INFO - Chain 1, Step 2000:
+2025-09-13 03:35:20,008 - root - INFO -   Actual drift norm: 1.28e-04
+2025-09-13 03:35:20,008 - root - INFO -   Actual noise norm: 2.82e-05
+2025-09-13 03:35:20,008 - root - INFO -   Actual drift/noise ratio: 4.548
+2025-09-13 03:35:20,008 - root - INFO -   Theoretical step/noise ratio: 9014.891
+2025-09-13 03:35:20,008 - root - INFO -   Prior/Likelihood ratio: 0.289
+2025-09-13 03:35:20,008 - root - INFO -   SAM rho: 0.050
+2025-09-13 03:35:20,009 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-13 03:35:20,009 - root - INFO -   SAM gradient norm: 3.79e-01
+2025-09-13 03:35:20,009 - root - INFO -   SAM perturbation/gradient ratio: 1.292
+2025-09-13 03:35:20,009 - root - INFO -   Rank-1 noise contribution: 0.003
+2025-09-13 03:35:20,009 - root - INFO -   Loss change after SAM perturbation: 0.0275
+2025-09-13 03:35:20,009 - root - INFO -   Temperature: 2.0
+2025-09-13 03:35:20,136 - root - INFO - Sampling step 2000/3000, step_size: 3.39e-04
+2025-09-13 03:49:54,568 - root - INFO - Chain 1: Collected 60 samples
+2025-09-13 03:49:54,683 - root - INFO - Total samples collected: 60
+2025-09-13 03:49:54,683 - root - INFO - Computing overall MCMC diagnostics...
+2025-09-13 03:49:54,684 - root - INFO - SAM-SGLD sampling completed with 60 total samples
+2025-09-13 03:49:54,882 - root - INFO - Final model after sampling - Loss: 0.6177, Acc: 0.6875
+2025-09-13 03:49:54,882 - root - INFO - ESS and R-hat will be computed during evaluation phase
+2025-09-13 03:49:55,713 - root - INFO - SAM-SGLD samples saved to runs/mrpc_roberta_lora_samsgld_rank1/samsgld_samples.pth
+2025-09-13 03:49:55,714 - root - INFO - Training completed successfully!
+Total parameters: 125,829,124
+Trainable (LoRA) parameters: 589,824
+Frozen (base) parameters: 125,239,300
+LoRA ratio: 0.47%
+✅ SAM-SGLD LoRA training completed successfully!
+=== Phase 2: Evaluating SAM-SGLD LoRA Results ===
+2025-09-13 03:50:23,170 - root - INFO - Using device: cuda
+2025-09-13 03:50:23,171 - root - INFO - Loading MAP model...
+Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2025-09-13 03:50:24,683 - root - INFO - Loading samples...
+2025-09-13 03:50:24,684 - root - INFO - Loading samples from: runs/mrpc_roberta_lora_samsgld_rank1/samsgld_samples.pth
+2025-09-13 03:50:25,767 - root - INFO - Loaded 60 samples from file
+2025-09-13 03:50:25,768 - root - WARNING - No diagnostic values found, will recompute from samples
+2025-09-13 03:50:27,396 - root - INFO - Evaluating MAP model...
+2025-09-13 03:50:30,199 - root - INFO - Config: chains=1, samples_to_retain=60
+2025-09-13 03:50:30,199 - root - INFO - Actual: 60 samples loaded
+2025-09-13 03:50:30,199 - root - INFO - Single chain mode: using all 60 samples
+2025-09-13 03:50:30,434 - root - INFO - Evaluating sample 1/60
+2025-09-13 03:50:32,799 - root - INFO - Evaluating sample 2/60
+2025-09-13 03:50:35,188 - root - INFO - Evaluating sample 3/60
+2025-09-13 03:50:37,606 - root - INFO - Evaluating sample 4/60
+2025-09-13 03:50:40,046 - root - INFO - Evaluating sample 5/60
+2025-09-13 03:50:42,517 - root - INFO - Evaluating sample 6/60
+2025-09-13 03:50:45,010 - root - INFO - Evaluating sample 7/60
+2025-09-13 03:50:47,524 - root - INFO - Evaluating sample 8/60
+2025-09-13 03:50:50,063 - root - INFO - Evaluating sample 9/60
+2025-09-13 03:50:52,586 - root - INFO - Evaluating sample 10/60
+2025-09-13 03:50:55,097 - root - INFO - Evaluating sample 11/60
+2025-09-13 03:50:57,621 - root - INFO - Evaluating sample 12/60
+2025-09-13 03:51:00,122 - root - INFO - Evaluating sample 13/60
+2025-09-13 03:51:02,638 - root - INFO - Evaluating sample 14/60
+2025-09-13 03:51:05,132 - root - INFO - Evaluating sample 15/60
+2025-09-13 03:51:07,631 - root - INFO - Evaluating sample 16/60
+2025-09-13 03:51:10,125 - root - INFO - Evaluating sample 17/60
+2025-09-13 03:51:12,616 - root - INFO - Evaluating sample 18/60
+2025-09-13 03:51:15,100 - root - INFO - Evaluating sample 19/60
+2025-09-13 03:51:17,580 - root - INFO - Evaluating sample 20/60
+2025-09-13 03:51:20,065 - root - INFO - Evaluating sample 21/60
+2025-09-13 03:51:22,555 - root - INFO - Evaluating sample 22/60
+2025-09-13 03:51:25,038 - root - INFO - Evaluating sample 23/60
+2025-09-13 03:51:27,527 - root - INFO - Evaluating sample 24/60
+2025-09-13 03:51:30,027 - root - INFO - Evaluating sample 25/60
+2025-09-13 03:51:32,522 - root - INFO - Evaluating sample 26/60
+2025-09-13 03:51:35,021 - root - INFO - Evaluating sample 27/60
+2025-09-13 03:51:37,521 - root - INFO - Evaluating sample 28/60
+2025-09-13 03:51:40,016 - root - INFO - Evaluating sample 29/60
+2025-09-13 03:51:42,520 - root - INFO - Evaluating sample 30/60
+2025-09-13 03:51:45,018 - root - INFO - Evaluating sample 31/60
+2025-09-13 03:51:47,519 - root - INFO - Evaluating sample 32/60
+2025-09-13 03:51:50,018 - root - INFO - Evaluating sample 33/60
+2025-09-13 03:51:52,517 - root - INFO - Evaluating sample 34/60
+2025-09-13 03:51:55,019 - root - INFO - Evaluating sample 35/60
+2025-09-13 03:51:57,513 - root - INFO - Evaluating sample 36/60
+2025-09-13 03:52:00,014 - root - INFO - Evaluating sample 37/60
+2025-09-13 03:52:02,515 - root - INFO - Evaluating sample 38/60
+2025-09-13 03:52:05,023 - root - INFO - Evaluating sample 39/60
+2025-09-13 03:52:07,529 - root - INFO - Evaluating sample 40/60
+2025-09-13 03:52:10,032 - root - INFO - Evaluating sample 41/60
+2025-09-13 03:52:12,534 - root - INFO - Evaluating sample 42/60
+2025-09-13 03:52:15,047 - root - INFO - Evaluating sample 43/60
+2025-09-13 03:52:17,568 - root - INFO - Evaluating sample 44/60
+2025-09-13 03:52:20,092 - root - INFO - Evaluating sample 45/60
+2025-09-13 03:52:22,603 - root - INFO - Evaluating sample 46/60
+2025-09-13 03:52:25,112 - root - INFO - Evaluating sample 47/60
+2025-09-13 03:52:27,627 - root - INFO - Evaluating sample 48/60
+2025-09-13 03:52:30,149 - root - INFO - Evaluating sample 49/60
+2025-09-13 03:52:32,669 - root - INFO - Evaluating sample 50/60
+2025-09-13 03:52:35,187 - root - INFO - Evaluating sample 51/60
+2025-09-13 03:52:37,732 - root - INFO - Evaluating sample 52/60
+2025-09-13 03:52:40,266 - root - INFO - Evaluating sample 53/60
+2025-09-13 03:52:42,805 - root - INFO - Evaluating sample 54/60
+2025-09-13 03:52:45,347 - root - INFO - Evaluating sample 55/60
+2025-09-13 03:52:47,882 - root - INFO - Evaluating sample 56/60
+2025-09-13 03:52:50,424 - root - INFO - Evaluating sample 57/60
+2025-09-13 03:52:52,964 - root - INFO - Evaluating sample 58/60
+2025-09-13 03:52:55,501 - root - INFO - Evaluating sample 59/60
+2025-09-13 03:52:58,039 - root - INFO - Evaluating sample 60/60
+2025-09-13 03:53:00,600 - root - INFO - Recomputing diagnostic values from samples
+2025-09-13 03:53:00,829 - root - INFO - 
+==================================================
+2025-09-13 03:53:00,830 - root - INFO - EVALUATION RESULTS
+2025-09-13 03:53:00,830 - root - INFO - ==================================================
+2025-09-13 03:53:00,830 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-13 03:53:00,830 - root - INFO - --------------------------------------------------
+2025-09-13 03:53:00,830 - root - INFO - MAP-LoRA        0.6838     0.6117     0.0825    
+2025-09-13 03:53:00,830 - root - INFO - SAM-SGLD-LoRA   0.6838     0.6215     0.0323    
+2025-09-13 03:53:00,830 - root - INFO - 
+MCMC Diagnostics:
+2025-09-13 03:53:00,830 - root - INFO - R-hat (log posterior): 1.0000
+2025-09-13 03:53:00,830 - root - INFO - R-hat (L2 norm): 1.0000
+2025-09-13 03:53:00,830 - root - INFO - ESS (log posterior): 4
+2025-09-13 03:53:00,830 - root - INFO - ESS (L2 norm): 3
+2025-09-13 03:53:00,830 - root - INFO - Min ESS: 3
+2025-09-13 03:53:00,830 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-13 03:53:00,831 - root - INFO - R-hat (log posterior): 1.000
+2025-09-13 03:53:00,831 - root - INFO - R-hat (L2 norm): 1.000
+2025-09-13 03:53:00,831 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ⚠️  CHECK
+2025-09-13 03:53:00,831 - root - INFO - 
+Within-mode mixing:
+2025-09-13 03:53:00,831 - root - INFO - Avg ESS (log posterior): 4.0 ± 0.0
+2025-09-13 03:53:00,831 - root - INFO - Avg ESS (L2 norm): 3.0 ± 0.0
+2025-09-13 03:53:00,831 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-13 03:53:00,831 - root - INFO - 
+ESS Statistics Summary:
+2025-09-13 03:53:00,831 - root - INFO -   Log Posterior ESS: 4 (min), 4.0 ± 0.0 (mean ± std)
+2025-09-13 03:53:00,831 - root - INFO -   L2 Norm ESS: 3 (min), 3.0 ± 0.0 (mean ± std)
+2025-09-13 03:53:00,831 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-13 03:53:00,831 - root - INFO -   • Log posterior ESS is consistent across modes (std=0.0) - uniform mixing quality
+2025-09-13 03:53:00,831 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-13 03:53:00,832 - root - INFO - 
+Per-chain ESS details:
+2025-09-13 03:53:00,832 - root - INFO -   Chain 1: ESS(log_posterior)=4, ESS(l2_norm)=3
+2025-09-13 03:53:00,832 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-13 03:53:00,832 - root - WARNING - R-hat values suggest chains may be in the same mode (not multimodal)
+2025-09-13 03:53:00,832 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-13 03:53:00,832 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-13 03:53:00,832 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ❌ FAIL
+2025-09-13 03:53:00,832 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-13 03:53:00,832 - root - INFO -   Accuracy within ±0.3% of MAP: ✅ PASS (diff: 0.0000)
+2025-09-13 03:53:00,832 - root - INFO -   NLL lower than MAP: ❌ FAIL (SAM-SGLD-LoRA: 0.6215, MAP: 0.6117)
+2025-09-13 03:53:00,832 - root - INFO -   ECE lower than MAP: ✅ PASS (SAM-SGLD-LoRA: 0.0323, MAP: 0.0825)
+2025-09-13 03:53:00,832 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-13 03:53:00,832 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-13 03:53:00,832 - root - WARNING -   - Chains are in same mode - increase step size or reduce prior strength
+2025-09-13 03:53:00,833 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-13 03:53:00,833 - root - WARNING -   - SAM-SGLD-LoRA should outperform MAP - check implementation
+2025-09-13 03:53:00,836 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_samsgld_rank1/evaluation_results.yaml
+Total parameters: 125,829,124
+Trainable (LoRA) parameters: 589,824
+Frozen (base) parameters: 125,239,300
+LoRA ratio: 0.47%
+✅ SAM-SGLD LoRA evaluation completed successfully!
+=== SAM-SGLD LoRA experiment completed successfully! ===
+Results saved to: runs/mrpc_roberta_lora_samsgld_rank1/
+Job completed at: Sat Sep 13 03:53:01 CDT 2025
