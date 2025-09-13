@@ -32,7 +32,7 @@ training:
   samsgld_rank1_lora:
     learning_rate: 5e-4
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
-    prior_std: 260.0  # Balanced for prior/likelihood ratio ~0.3 (fully trained model)
+    prior_std: 17.0  # Will be properly balanced using correct ratio calculation
     step_size_schedule:
       initial: 5e-4
       decay_rate: 0.3  # Conservative decay for better convergence
@@ -47,7 +47,7 @@ training:
     burn_in_steps: 8000  # Full burn-in for proper convergence
     sampling_steps: 3000  # Full sampling for proper MCMC diagnostics
     thinning: 50  # Standard thinning for sample independence
-    samples_to_retain: 240  # 1 chain * 240 samples = 240 total samples
+    samples_to_retain: 240  # 4 chain * 240 samples = 240 total samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

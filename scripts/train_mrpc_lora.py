@@ -323,9 +323,32 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 actual_drift_noise_ratio = actual_drift_norm / actual_noise_norm if actual_noise_norm > 0 else float('inf')
                 
                 # Calculate theoretical values for comparison
-                theoretical_noise_std = math.sqrt(2 * current_step_size / sampler.temperature) * sampler.noise_scale
+                # Base noise std (isotropic component)
+                base_noise_std = math.sqrt(2 * current_step_size / sampler.temperature) * sampler.noise_scale
+                
+                # For rank-1 noise, account for sigma_dir contribution
+                if hasattr(sampler, 'sigma_dir'):
+                    rank1_factor = math.sqrt(1 + sampler.sigma_dir ** 2)
+                    theoretical_noise_std = base_noise_std * rank1_factor
+                else:
+                    theoretical_noise_std = base_noise_std
+                
                 theoretical_step_noise_ratio = current_step_size / theoretical_noise_std
-                prior_likelihood_ratio = (sampler.prior_std ** 2) / (2 * sampler.temperature)
+                
+                # Calculate prior/likelihood ratio (correct calculation)
+                with torch.no_grad():
+                    # Compute actual prior loss
+                    prior_loss = 0.0
+                    for name, param in model.named_parameters():
+                        if param.requires_grad:
+                            prior_loss += (param ** 2).sum() / (2 * sampler.prior_std ** 2)
+                    
+                    # Compute actual likelihood loss using current batch
+                    outputs = model(input_ids, attention_mask=attention_mask)
+                    likelihood_loss = F.cross_entropy(outputs.logits, labels)
+                    
+                    # Calculate correct ratio
+                    prior_likelihood_ratio = prior_loss.item() / likelihood_loss.item() if likelihood_loss.item() > 0 else float('inf')
                 
                 logger.info(f"Burn-in step {step}/{sgld_config['burn_in_steps']}:")
                 logger.info(f"  Actual drift norm: {actual_drift_norm:.2e}")
@@ -379,20 +402,36 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 actual_drift_noise_ratio = actual_drift_norm / actual_noise_norm if actual_noise_norm > 0 else float('inf')
                 
                 # Calculate theoretical values for comparison
-                theoretical_noise_std = math.sqrt(2 * actual_step_size / sampler.temperature) * sampler.noise_scale
+                # Base noise std (isotropic component)
+                base_noise_std = math.sqrt(2 * actual_step_size / sampler.temperature) * sampler.noise_scale
+                
+                # For rank-1 noise, the theoretical norm is approximately:
+                # ||noise_std * (z + sigma_dir * z_proj * u_hat)||
+                # ≈ noise_std * sqrt(||z||^2 + sigma_dir^2 * z_proj^2)
+                # ≈ noise_std * sqrt(d + sigma_dir^2) where d is parameter dimension
+                # For typical LoRA parameters, this gives a factor of ~sqrt(1 + sigma_dir^2)
+                if hasattr(sampler, 'sigma_dir'):
+                    rank1_factor = math.sqrt(1 + sampler.sigma_dir ** 2)
+                    theoretical_noise_std = base_noise_std * rank1_factor
+                else:
+                    theoretical_noise_std = base_noise_std
+                
                 theoretical_step_noise_ratio = actual_step_size / theoretical_noise_std
                 
-                # Calculate prior/likelihood ratio (approximate)
-                # Get current model parameters for prior calculation
-                total_param_norm = 0
-                total_params = 0
-                for name, param in model.named_parameters():
-                    if param.requires_grad:
-                        total_param_norm += param.norm().item() ** 2
-                        total_params += param.numel()
-                
-                avg_param_norm = math.sqrt(total_param_norm / total_params) if total_params > 0 else 0
-                prior_likelihood_ratio = (sampler.prior_std ** 2) / (2 * sampler.temperature)
+                # Calculate prior/likelihood ratio (correct calculation)
+                with torch.no_grad():
+                    # Compute actual prior loss
+                    prior_loss = 0.0
+                    for name, param in model.named_parameters():
+                        if param.requires_grad:
+                            prior_loss += (param ** 2).sum() / (2 * sampler.prior_std ** 2)
+                    
+                    # Compute actual likelihood loss using current batch
+                    outputs = model(input_ids, attention_mask=attention_mask)
+                    likelihood_loss = F.cross_entropy(outputs.logits, labels)
+                    
+                    # Calculate correct ratio
+                    prior_likelihood_ratio = prior_loss.item() / likelihood_loss.item() if likelihood_loss.item() > 0 else float('inf')
                 
                 # Log diagnostic information
                 logger.info(f"Chain {chain + 1}, Step {step}:")
