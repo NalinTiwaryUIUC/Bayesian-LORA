@@ -22,7 +22,7 @@ data:
 
 training:
   map_lora:
-    optimizer: "adam"  # JUSTIFIED: Adam achieves 82% vs SGD's 68% MAP accuracy
+    optimizer: "adamw"  # JUSTIFIED: AdamW achieves 82% vs SGD's 68% MAP accuracy
     learning_rate: 2e-4  # Standard Adam learning rate
     weight_decay: 0.01
     beta1: 0.9  # Adam momentum decay
