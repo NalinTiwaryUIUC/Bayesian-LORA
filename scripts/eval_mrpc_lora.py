@@ -414,9 +414,11 @@ def evaluate_sgld_samples(model: LoRAModel, samples: List[Dict], dataloader: tor
         actual_samples_per_chain = samples_per_chain
     else:
         # Fallback: infer from samples
-        actual_num_chains = 4  # Default
-        actual_samples_per_chain = len(samples) // actual_num_chains
-        logger.warning(f"Using default values: {actual_num_chains} chains, {actual_samples_per_chain} samples per chain")
+        # For single chain, we can't compute R-hat, so use single chain
+        actual_num_chains = 1
+        actual_samples_per_chain = len(samples)
+        logger.warning(f"No diagnostics found, using single chain: {actual_num_chains} chain, {actual_samples_per_chain} samples")
+        logger.warning("R-hat cannot be computed with single chain - will show as 1.0")
     
     log_posterior_chains = partition_into_chains(log_posterior_values, actual_num_chains, actual_samples_per_chain)
     l2_norm_chains = partition_into_chains(l2_norm_values, actual_num_chains, actual_samples_per_chain)
@@ -557,13 +559,29 @@ def main():
     else:
         raise KeyError("training.sgld_lora or training.samsgld_rank1_lora not found in config")
 
+    # Use actual number of samples loaded, not config values
+    actual_samples_loaded = len(samples)
     num_chains = int(sampler_cfg['chains'])
     samples_total = int(sampler_cfg['samples_to_retain'])
-    if samples_total % num_chains != 0:
-        logger.warning(
-            f"samples_to_retain ({samples_total}) not divisible by chains ({num_chains}); diagnostics may truncate"
-        )
-    samples_per_chain = max(1, samples_total // num_chains)
+    
+    logger.info(f"Config: chains={num_chains}, samples_to_retain={samples_total}")
+    logger.info(f"Actual: {actual_samples_loaded} samples loaded")
+    
+    # Use actual samples for evaluation
+    if actual_samples_loaded != samples_total:
+        logger.warning(f"Config samples_to_retain ({samples_total}) != actual samples loaded ({actual_samples_loaded})")
+        logger.warning("Using actual samples loaded for evaluation")
+    
+    # For single chain, use all samples
+    if num_chains == 1:
+        samples_per_chain = actual_samples_loaded
+        logger.info(f"Single chain mode: using all {samples_per_chain} samples")
+    else:
+        # For multiple chains, check if samples are divisible
+        if actual_samples_loaded % num_chains != 0:
+            logger.warning(f"Actual samples ({actual_samples_loaded}) not divisible by chains ({num_chains}); diagnostics may truncate")
+        samples_per_chain = max(1, actual_samples_loaded // num_chains)
+    
     sgld_accuracy, sgld_nll, sgld_ece, mcmc_diagnostics = evaluate_sgld_samples(
         map_model, samples, eval_dataloader, device, num_chains, samples_per_chain, logger
     )

@@ -356,6 +356,11 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 logger.info(f"  Actual drift/noise ratio: {actual_drift_noise_ratio:.3f}")
                 logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
                 logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
+                logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
+                logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
+                logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
+                logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
+                logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
         
         # Sampling phase
         logger.info(f"Chain {chain + 1}: Sampling phase ({sgld_config['sampling_steps']} steps)")
@@ -441,7 +446,11 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
                 logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
                 logger.info(f"  SAM rho: {sampler.rho:.3f}")
-                logger.info(f"  Avg param norm: {avg_param_norm:.3f}")
+                logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
+                logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
+                logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
+                logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
+                logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
                 logger.info(f"  Temperature: {sampler.temperature:.1f}")
             
             # Clear GPU cache more frequently to prevent memory issues

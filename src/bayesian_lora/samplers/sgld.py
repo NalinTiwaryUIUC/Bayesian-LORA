@@ -200,10 +200,7 @@ class SAMSGLDSampler(BaseSampler):
                     param.data = param.data + delta
         
         # Second forward pass
-        if data is not None:
-            output2 = self.model(data)
-        else:
-            output2 = self.model(input_ids, attention_mask=attention_mask)
+        output2 = self.model(data)
         
         # Handle different output formats
         if hasattr(output2, 'logits'):
@@ -394,3 +391,51 @@ class SAMSGLDRank1Sampler(BaseSampler):
         self.last_drift_norm = math.sqrt(total_drift_norm)
         self.last_noise_norm = math.sqrt(total_noise_norm)
         self.last_step_size = self.step_size
+        
+        # SAM-specific diagnostics
+        self.last_sam_perturbation_norm = 0.0
+        self.last_sam_gradient_norm = 0.0
+        self.last_rank1_noise_contribution = 0.0
+        self.last_loss_change = 0.0
+        
+        # Calculate SAM perturbation norm
+        sam_perturbation_norm = 0.0
+        for name, param in self.model.named_parameters():
+            if grad1[name] is not None:
+                grad_norm = grad1[name].norm() + self.lambd
+                delta = self.rho * grad1[name] / grad_norm
+                sam_perturbation_norm += delta.norm().item() ** 2
+        self.last_sam_perturbation_norm = math.sqrt(sam_perturbation_norm)
+        
+        # Calculate SAM gradient norm
+        sam_gradient_norm = 0.0
+        for grad in sam_grad.values():
+            if grad is not None:
+                sam_gradient_norm += grad.norm().item() ** 2
+        self.last_sam_gradient_norm = math.sqrt(sam_gradient_norm)
+        
+        # Calculate rank-1 noise contribution
+        rank1_noise_norm = 0.0
+        isotropic_noise_norm = 0.0
+        for name, param in self.model.named_parameters():
+            if combined_grad[name] is not None:
+                noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
+                z = torch.randn_like(param)
+                u_hat = sam_grad[name] / (sam_grad[name].norm() + self.lambd) if sam_grad[name] is not None else None
+                if u_hat is not None:
+                    z_proj = torch.dot(z.flatten(), u_hat.flatten())
+                    rank1_component = self.sigma_dir * z_proj * u_hat
+                    rank1_noise_norm += (noise_std * rank1_component).norm().item() ** 2
+                    isotropic_noise_norm += (noise_std * z).norm().item() ** 2
+                else:
+                    isotropic_noise_norm += (noise_std * z).norm().item() ** 2
+        
+        total_rank1_noise_norm = math.sqrt(rank1_noise_norm)
+        total_isotropic_noise_norm = math.sqrt(isotropic_noise_norm)
+        if total_rank1_noise_norm + total_isotropic_noise_norm > 0:
+            self.last_rank1_noise_contribution = total_rank1_noise_norm / (total_rank1_noise_norm + total_isotropic_noise_norm)
+        else:
+            self.last_rank1_noise_contribution = 0.0
+        
+        # Calculate loss change (approximate)
+        self.last_loss_change = abs(loss2.item() - loss1.item())
