@@ -34,15 +34,15 @@ training:
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
     prior_std: 17.0  # Will be properly balanced using correct ratio calculation
     step_size_schedule:
-      initial: 5e-4
+      initial: 0.01  # TESTING: Increased from 5e-4 to test hyperparameter scaling hypothesis
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 3000  # Longer decay schedule for stability
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.000002  # Increased to restore MCMC exploration
+    noise_scale: 0.01  # TESTING: Increased from 0.000002 to test hyperparameter scaling hypothesis
     # SAM-SGLD specific parameters
-    rho: 0.05  # SAM perturbation radius (standard value)
+    rho: 0.1  # TESTING: Increased from 0.05 to test hyperparameter scaling hypothesis
     lambd: 0.00000001  # SAM regularization (1e-8)
-    sigma_dir: 0.204  # Balanced for 20% rank-1 noise contribution
+    sigma_dir: 0.5  # TESTING: Increased from 0.204 to test hyperparameter scaling hypothesis
     chains: 1  # Single chain for testing (R-hat will be 1.0)
     burn_in_steps: 8000  # Full burn-in for proper convergence
     sampling_steps: 3000  # Full sampling for proper MCMC diagnostics

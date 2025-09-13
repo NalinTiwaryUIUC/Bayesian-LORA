@@ -300,6 +300,10 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         
         # Burn-in phase
         logger.info(f"Chain {chain + 1}: Burn-in phase ({sgld_config['burn_in_steps']} steps)")
+        
+        # DIAGNOSTIC: Store initial state for burn-in tracking
+        burn_in_initial_state = sampler.get_current_state()
+        
         for step in range(sgld_config['burn_in_steps']):
             # Update step size according to schedule using correct power law decay
             current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
@@ -362,10 +366,44 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
                 logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
         
+        # DIAGNOSTIC: Check burn-in movement
+        burn_in_movement = 0.0
+        burn_in_param_count = 0
+        for name, param in model.named_parameters():
+            if param.requires_grad and name in burn_in_initial_state:
+                movement = torch.norm(param.data - burn_in_initial_state[name]).item()
+                burn_in_movement += movement
+                burn_in_param_count += 1
+        avg_burn_in_movement = burn_in_movement / burn_in_param_count if burn_in_param_count > 0 else 0.0
+        
+        logger.info(f"  DIAGNOSTIC - Burn-in completed:")
+        logger.info(f"    Avg parameter movement: {avg_burn_in_movement:.6f}")
+        logger.info(f"    Total parameters moved: {burn_in_param_count}")
+        
         # Sampling phase
         logger.info(f"Chain {chain + 1}: Sampling phase ({sgld_config['sampling_steps']} steps)")
         chain_samples = []
         sample_count = 0
+        
+        # DIAGNOSTIC: Store initial state and prediction for movement tracking
+        sampler._initial_state = sampler.get_current_state()
+        
+        # Get initial prediction for comparison
+        model.eval()
+        with torch.no_grad():
+            test_batch = next(iter(train_dataloader))
+            test_input_ids = test_batch['input_ids'][:2]  # Just 2 samples
+            test_attention_mask = test_batch['attention_mask'][:2]
+            
+            initial_output = model(test_input_ids, attention_mask=test_attention_mask)
+            sampler._initial_pred = torch.argmax(initial_output.logits, dim=-1)
+            sampler._initial_confidence = torch.softmax(initial_output.logits, dim=-1)
+            
+            logger.info(f"  DIAGNOSTIC - Initial state:")
+            logger.info(f"    Initial prediction: {sampler._initial_pred.tolist()}")
+            logger.info(f"    Initial confidence: {sampler._initial_confidence[0].tolist()}")
+        
+        model.train()  # Back to training mode
         
         # Track diagnostic values during sampling (disabled to avoid interference)
         # log_posterior_values = []
@@ -464,6 +502,48 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                 chain_samples.append(sample_state)
                 sample_count += 1
                 
+                # DIAGNOSTIC: Track parameter movement and prediction changes
+                if sample_count <= 5 or sample_count % 10 == 0:  # Log first 5 samples and every 10th
+                    # Calculate parameter movement from initial state
+                    if hasattr(sampler, '_initial_state'):
+                        param_movement = 0.0
+                        param_count = 0
+                        for name, param in model.named_parameters():
+                            if param.requires_grad and name in sampler._initial_state:
+                                movement = torch.norm(param.data - sampler._initial_state[name]).item()
+                                param_movement += movement
+                                param_count += 1
+                        avg_param_movement = param_movement / param_count if param_count > 0 else 0.0
+                        
+                        # Test prediction on a small batch
+                        model.eval()
+                        with torch.no_grad():
+                            # Use first batch for consistency
+                            test_batch = next(iter(train_dataloader))
+                            test_input_ids = test_batch['input_ids'][:2]  # Just 2 samples
+                            test_attention_mask = test_batch['attention_mask'][:2]
+                            
+                            test_output = model(test_input_ids, attention_mask=test_attention_mask)
+                            test_pred = torch.argmax(test_output.logits, dim=-1)
+                            test_confidence = torch.softmax(test_output.logits, dim=-1)
+                            
+                            # Compare with initial prediction
+                            if hasattr(sampler, '_initial_pred'):
+                                pred_changed = not torch.equal(test_pred, sampler._initial_pred)
+                                conf_change = torch.norm(test_confidence - sampler._initial_confidence).item()
+                            else:
+                                pred_changed = False
+                                conf_change = 0.0
+                        
+                        model.train()  # Back to training mode
+                        
+                        logger.info(f"  DIAGNOSTIC - Sample {sample_count}:")
+                        logger.info(f"    Avg parameter movement: {avg_param_movement:.6f}")
+                        logger.info(f"    Prediction changed: {pred_changed}")
+                        logger.info(f"    Confidence change: {conf_change:.6f}")
+                        logger.info(f"    Current prediction: {test_pred.tolist()}")
+                        logger.info(f"    Current confidence: {test_confidence[0].tolist()}")
+                
                 if sample_count % 100 == 0:
                     logger.info(f"Chain {chain + 1}: Collected {sample_count} samples")
             
@@ -482,6 +562,41 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         
         # Log sample collection (ESS computation moved to evaluation phase)
         logger.info(f"Chain {chain + 1}: Collected {len(chain_samples)} samples")
+        
+        # DIAGNOSTIC: Final chain summary
+        if len(chain_samples) > 0:
+            # Check final parameter movement
+            final_movement = 0.0
+            final_param_count = 0
+            for name, param in model.named_parameters():
+                if param.requires_grad and name in sampler._initial_state:
+                    movement = torch.norm(param.data - sampler._initial_state[name]).item()
+                    final_movement += movement
+                    final_param_count += 1
+            avg_final_movement = final_movement / final_param_count if final_param_count > 0 else 0.0
+            
+            # Check final prediction
+            model.eval()
+            with torch.no_grad():
+                test_batch = next(iter(train_dataloader))
+                test_input_ids = test_batch['input_ids'][:2]
+                test_attention_mask = test_batch['attention_mask'][:2]
+                
+                final_output = model(test_input_ids, attention_mask=test_attention_mask)
+                final_pred = torch.argmax(final_output.logits, dim=-1)
+                final_confidence = torch.softmax(final_output.logits, dim=-1)
+                
+                pred_changed = not torch.equal(final_pred, sampler._initial_pred)
+                conf_change = torch.norm(final_confidence - sampler._initial_confidence).item()
+            
+            model.train()
+            
+            logger.info(f"  DIAGNOSTIC - Chain {chain + 1} summary:")
+            logger.info(f"    Final avg parameter movement: {avg_final_movement:.6f}")
+            logger.info(f"    Final prediction changed: {pred_changed}")
+            logger.info(f"    Final confidence change: {conf_change:.6f}")
+            logger.info(f"    Final prediction: {final_pred.tolist()}")
+            logger.info(f"    Final confidence: {final_confidence[0].tolist()}")
         
         # Evaluate model metrics after each chain (disabled for now to avoid performance issues)
         # logger.info(f"Chain {chain + 1}: Evaluating model metrics...")
