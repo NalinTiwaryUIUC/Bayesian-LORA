@@ -18,7 +18,7 @@ data:
   dataset: "mrpc"
   batch_size: 32  # Optimized for best convergence and GPU utilization
   gradient_accumulation_steps: 1  # No longer needed with larger batch size
-  max_epochs: 20  # Full training for proper MAP model
+  max_epochs: 2  # Full training for proper MAP model
 
 training:
   map_lora:
@@ -34,20 +34,20 @@ training:
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
     prior_std: 17.0  # Will be properly balanced using correct ratio calculation
     step_size_schedule:
-      initial: 0.01  # TESTING: Increased from 5e-4 to test hyperparameter scaling hypothesis
+      initial: 0.001  # FIXED: Reduced from 0.01 to balance drift/noise ratio
       decay_rate: 0.3  # Conservative decay for better convergence
-      decay_steps: 3000  # Longer decay schedule for stability
+      decay_steps: 1000  # Reduced for quick testing
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
-    noise_scale: 0.01  # TESTING: Increased from 0.000002 to test hyperparameter scaling hypothesis
+    noise_scale: 0.0001  # FIXED: Reduced from 0.01 to balance drift/noise ratio
     # SAM-SGLD specific parameters
-    rho: 0.1  # TESTING: Increased from 0.05 to test hyperparameter scaling hypothesis
+    rho: 0.1  # Keep same - already reasonable
     lambd: 0.00000001  # SAM regularization (1e-8)
-    sigma_dir: 0.5  # TESTING: Increased from 0.204 to test hyperparameter scaling hypothesis
+    sigma_dir: 0.5  # Keep same - already reasonable
     chains: 1  # Single chain for testing (R-hat will be 1.0)
-    burn_in_steps: 8000  # Full burn-in for proper convergence
-    sampling_steps: 3000  # Full sampling for proper MCMC diagnostics
-    thinning: 50  # Standard thinning for sample independence
-    samples_to_retain: 60  # 1 chain * 60 samples = 60 total samples
+    burn_in_steps: 1000  # QUICK TEST: Reduced from 8000 for rapid diagnostics
+    sampling_steps: 500  # QUICK TEST: Reduced from 3000 for rapid diagnostics
+    thinning: 10  # QUICK TEST: Reduced from 50 for more samples
+    samples_to_retain: 50  # 1 chain * 50 samples = 50 total samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

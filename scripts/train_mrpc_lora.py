@@ -392,8 +392,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
         model.eval()
         with torch.no_grad():
             test_batch = next(iter(train_dataloader))
-            test_input_ids = test_batch['input_ids'][:2]  # Just 2 samples
-            test_attention_mask = test_batch['attention_mask'][:2]
+            test_input_ids = test_batch['input_ids'][:2].to(device)  # Move to GPU
+            test_attention_mask = test_batch['attention_mask'][:2].to(device)  # Move to GPU
             
             initial_output = model(test_input_ids, attention_mask=test_attention_mask)
             sampler._initial_pred = torch.argmax(initial_output.logits, dim=-1)
@@ -520,8 +520,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
                         with torch.no_grad():
                             # Use first batch for consistency
                             test_batch = next(iter(train_dataloader))
-                            test_input_ids = test_batch['input_ids'][:2]  # Just 2 samples
-                            test_attention_mask = test_batch['attention_mask'][:2]
+                            test_input_ids = test_batch['input_ids'][:2].to(device)  # Move to GPU
+                            test_attention_mask = test_batch['attention_mask'][:2].to(device)  # Move to GPU
                             
                             test_output = model(test_input_ids, attention_mask=test_attention_mask)
                             test_pred = torch.argmax(test_output.logits, dim=-1)
@@ -579,8 +579,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader,
             model.eval()
             with torch.no_grad():
                 test_batch = next(iter(train_dataloader))
-                test_input_ids = test_batch['input_ids'][:2]
-                test_attention_mask = test_batch['attention_mask'][:2]
+                test_input_ids = test_batch['input_ids'][:2].to(device)  # Move to GPU
+                test_attention_mask = test_batch['attention_mask'][:2].to(device)  # Move to GPU
                 
                 final_output = model(test_input_ids, attention_mask=test_attention_mask)
                 final_pred = torch.argmax(final_output.logits, dim=-1)
