@@ -32,24 +32,24 @@ training:
     warmup_ratio: 0.0  # Disable warmup
   
   samsgld_rank1_lora:
-    learning_rate: 5e-4
+    learning_rate: 0.002  # Matches initial step size for consistency
     temperature: 2.0  # Increased to balance step/noise ratio (was 1.5, too low)
     prior_std: 17.0  # Will be properly balanced using correct ratio calculation
     step_size_schedule:
       initial: 0.002  # JUSTIFIED: Drift/noise ratio 0.115 is too low, need smaller step size
       decay_rate: 0.3  # Conservative decay for better convergence
-      decay_steps: 1000  # Reduced for quick testing
+      decay_steps: 4000  # Match burn-in steps for proper decay schedule
     gradient_clip_norm: 5.0  # Match SGLD clipping (was 1.0)
     noise_scale: 0.00005  # JUSTIFIED: Reduce noise to improve drift/noise ratio from 0.115
     # SAM-SGLD specific parameters
     rho: 0.05  # Slightly reduced to prevent excessive SAM perturbation
     lambd: 0.00000001  # SAM regularization (1e-8)
-    sigma_dir: 2.0  # JUSTIFIED: Current 1.3% contribution too low, increase from 1.0 to 1.5 for higher contribution
+    sigma_dir: 4.0  # JUSTIFIED: Increase from 2.0 to achieve ~10% rank-1 noise contribution
     chains: 1  # Single chain for testing (R-hat will be 1.0)
-    burn_in_steps: 1500  # QUICK TEST: Reduced from 8000 for rapid diagnostics
-    sampling_steps: 500  # QUICK TEST: Reduced from 3000 for rapid diagnostics
-    thinning: 10  # QUICK TEST: Reduced from 50 for more samples
-    samples_to_retain: 50  # 1 chain * 50 samples = 50 total samples
+    burn_in_steps: 8000  # Full experiment: Restored from 1500 for proper burn-in
+    sampling_steps: 3000  # Full experiment: Restored from 500 for adequate sampling
+    thinning: 50  # Full experiment: Restored from 10 for proper thinning
+    samples_to_retain: 60  # 1 chain * 60 samples = 60 total samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

@@ -39,11 +39,11 @@ training:
       decay_steps: 3000  # Longer decay schedule
     gradient_clip_norm: 5.0  # Match MAP training for consistency
     noise_scale: 0.001  # Increased noise scale for better parameter space exploration
-    chains: 4  # Restored for R-hat computation
+    chains: 1  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
     thinning: 50  # Good thinning for sample independence
-    samples_to_retain: 240  # Match total samples (4 chains * 60 samples per chain)
+    samples_to_retain: 60  # Match total samples (4 chains * 60 samples per chain)
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
