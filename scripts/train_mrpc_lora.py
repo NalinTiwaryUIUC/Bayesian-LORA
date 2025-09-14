@@ -295,7 +295,8 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader, val_dataload
         logger.info(f"  Temperature: {sampler.temperature:.1f}")
         logger.info(f"  Noise scale: {sampler.noise_scale:.2e}")
         logger.info(f"  Prior std: {sampler.prior_std:.3f}")
-        logger.info(f"  SAM rho: {sampler.rho:.3f}")
+        if hasattr(sampler, 'rho'):
+            logger.info(f"  SAM rho: {sampler.rho:.3f}")
         logger.info(f"  Decay rate: {decay_rate:.3f}")
         
         # Burn-in phase
@@ -360,11 +361,12 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader, val_dataload
                 logger.info(f"  Actual drift/noise ratio: {actual_drift_noise_ratio:.3f}")
                 logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
                 logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
-                logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
-                logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
-                logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
-                logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
-                logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
+                if hasattr(sampler, 'last_sam_perturbation_norm'):
+                    logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
+                    logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
+                    logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
+                    logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
+                    logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
         
         # DIAGNOSTIC: Check burn-in movement
         burn_in_movement = 0.0
@@ -483,12 +485,13 @@ def train_sgld_lora(model: LoRAModel, train_dataloader: DataLoader, val_dataload
                 logger.info(f"  Actual drift/noise ratio: {actual_drift_noise_ratio:.3f}")
                 logger.info(f"  Theoretical step/noise ratio: {theoretical_step_noise_ratio:.3f}")
                 logger.info(f"  Prior/Likelihood ratio: {prior_likelihood_ratio:.3f}")
-                logger.info(f"  SAM rho: {sampler.rho:.3f}")
-                logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
-                logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
-                logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
-                logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
-                logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
+                if hasattr(sampler, 'rho'):
+                    logger.info(f"  SAM rho: {sampler.rho:.3f}")
+                    logger.info(f"  SAM perturbation norm: {sampler.last_sam_perturbation_norm:.2e}")
+                    logger.info(f"  SAM gradient norm: {sampler.last_sam_gradient_norm:.2e}")
+                    logger.info(f"  SAM perturbation/gradient ratio: {sampler.last_sam_perturbation_norm / sampler.last_sam_gradient_norm if sampler.last_sam_gradient_norm > 0 else 0:.3f}")
+                    logger.info(f"  Rank-1 noise contribution: {sampler.last_rank1_noise_contribution:.3f}")
+                    logger.info(f"  Loss change after SAM perturbation: {sampler.last_loss_change:.4f}")
                 logger.info(f"  Temperature: {sampler.temperature:.1f}")
             
             # Clear GPU cache more frequently to prevent memory issues
