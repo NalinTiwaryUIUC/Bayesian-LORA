@@ -18,7 +18,7 @@ data:
   dataset: "mrpc"
   batch_size: 32  # Optimized for best convergence and GPU utilization
   gradient_accumulation_steps: 1  # No longer needed with larger batch size
-  max_epochs: 15  # Full training for proper MAP model
+  max_epochs: 20  # Full training for proper MAP model
 
 training:
   map_lora:
