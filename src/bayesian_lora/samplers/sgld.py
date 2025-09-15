@@ -42,6 +42,11 @@ class SGLDSampler(BaseSampler):
         self.prior_std = prior_std
         self.gradient_clip_norm = gradient_clip_norm
         self.noise_scale = noise_scale  # Store noise scale for use in step function
+        
+        # Initialize diagnostic attributes
+        self.last_drift_norm = 0.0
+        self.last_noise_norm = 0.0
+        self.last_step_size = 0.0
     
     def step(self, *args):
         """
@@ -91,18 +96,31 @@ class SGLDSampler(BaseSampler):
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
         
         # SGLD update
+        total_drift_norm = 0.0
+        total_noise_norm = 0.0
+        
         with torch.no_grad():
             for param in self.model.parameters():
                 if param.grad is not None and param.requires_grad:
                     # SGLD update: θ ← θ - η∇L(θ) + √(2η/τ)ξ
                     # where L(θ) = NLL + prior
-                    param.data = param.data - self.step_size * param.grad
+                    drift = self.step_size * param.grad
+                    param.data = param.data - drift
                     
                     # Add noise: √(2η/τ)ξ
                     # Use configurable noise scaling for stability
                     noise_std = math.sqrt(2 * self.step_size / self.temperature) * self.noise_scale
                     noise = torch.randn_like(param) * noise_std
                     param.data = param.data + noise
+                    
+                    # Track norms for diagnostics
+                    total_drift_norm += drift.norm().item() ** 2
+                    total_noise_norm += noise.norm().item() ** 2
+        
+        # Store diagnostic information
+        self.last_drift_norm = math.sqrt(total_drift_norm)
+        self.last_noise_norm = math.sqrt(total_noise_norm)
+        self.last_step_size = self.step_size
 
 
 class ASGLDSampler(BaseSampler):
