@@ -1,0 +1,1627 @@
+2025-09-14 18:27:42,506 - root - INFO - Using device: cuda
+2025-09-14 18:27:45,309 - root - INFO - Starting MAP LoRA training...
+2025-09-14 18:28:31,402 - root - INFO - Epoch 1: Train Loss: 0.5831, Val Loss: 0.4465, Val Acc: 0.7696
+2025-09-14 18:29:17,369 - root - INFO - Epoch 2: Train Loss: 0.4535, Val Loss: 0.3868, Val Acc: 0.8260
+2025-09-14 18:30:04,167 - root - INFO - Epoch 3: Train Loss: 0.3930, Val Loss: 0.3186, Val Acc: 0.8627
+2025-09-14 18:30:51,671 - root - INFO - Epoch 4: Train Loss: 0.3472, Val Loss: 0.3133, Val Acc: 0.8725
+2025-09-14 18:31:39,769 - root - INFO - Epoch 5: Train Loss: 0.3016, Val Loss: 0.3242, Val Acc: 0.8848
+2025-09-14 18:32:27,980 - root - INFO - Epoch 6: Train Loss: 0.2711, Val Loss: 0.2964, Val Acc: 0.8652
+2025-09-14 18:33:15,856 - root - INFO - Epoch 7: Train Loss: 0.2396, Val Loss: 0.3133, Val Acc: 0.8775
+2025-09-14 18:34:03,941 - root - INFO - Epoch 8: Train Loss: 0.2217, Val Loss: 0.3062, Val Acc: 0.8701
+2025-09-14 18:34:52,168 - root - INFO - Epoch 9: Train Loss: 0.1832, Val Loss: 0.3498, Val Acc: 0.8652
+2025-09-14 18:35:40,398 - root - INFO - Epoch 10: Train Loss: 0.1558, Val Loss: 0.3834, Val Acc: 0.8676
+2025-09-14 18:36:28,626 - root - INFO - Epoch 11: Train Loss: 0.1351, Val Loss: 0.3991, Val Acc: 0.8848
+2025-09-14 18:37:17,405 - root - INFO - Epoch 12: Train Loss: 0.1183, Val Loss: 0.3689, Val Acc: 0.8750
+2025-09-14 18:38:05,739 - root - INFO - Epoch 13: Train Loss: 0.1007, Val Loss: 0.3839, Val Acc: 0.8799
+2025-09-14 18:38:54,101 - root - INFO - Epoch 14: Train Loss: 0.0855, Val Loss: 0.4078, Val Acc: 0.8775
+2025-09-14 18:39:42,460 - root - INFO - Epoch 15: Train Loss: 0.0843, Val Loss: 0.3846, Val Acc: 0.8897
+2025-09-14 18:40:30,847 - root - INFO - Epoch 16: Train Loss: 0.0814, Val Loss: 0.4051, Val Acc: 0.8848
+2025-09-14 18:41:19,236 - root - INFO - Epoch 17: Train Loss: 0.0638, Val Loss: 0.4504, Val Acc: 0.8701
+2025-09-14 18:42:07,969 - root - INFO - Epoch 18: Train Loss: 0.0703, Val Loss: 0.5252, Val Acc: 0.8676
+2025-09-14 18:42:56,458 - root - INFO - Epoch 19: Train Loss: 0.0456, Val Loss: 0.4740, Val Acc: 0.8676
+2025-09-14 18:43:44,853 - root - INFO - Epoch 20: Train Loss: 0.0548, Val Loss: 0.5030, Val Acc: 0.8603
+2025-09-14 18:43:45,650 - root - INFO - MAP model saved to runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth
+2025-09-14 18:43:45,770 - root - INFO - Starting SAM-SGLD Rank-1 LoRA training...
+2025-09-14 18:43:45,770 - root - INFO - Running chain 1/1
+2025-09-14 18:43:46,091 - root - INFO - Chain 1: MAP model loaded - LoRA param norms: [2.429481267929077, 1.4358419179916382, 2.4619674682617188]
+2025-09-14 18:43:46,311 - root - INFO - Chain 1: MAP model test - Loss: 0.2944, Acc: 0.9062
+2025-09-14 18:43:46,311 - root - INFO - Chain 1: Initial configuration:
+2025-09-14 18:43:46,311 - root - INFO -   Initial step size: 2.00e-03
+2025-09-14 18:43:46,311 - root - INFO -   Temperature: 2.0
+2025-09-14 18:43:46,311 - root - INFO -   Noise scale: 5.00e-05
+2025-09-14 18:43:46,311 - root - INFO -   Prior std: 17.000
+2025-09-14 18:43:46,311 - root - INFO -   SAM rho: 0.050
+2025-09-14 18:43:46,311 - root - INFO -   Decay rate: 0.300
+2025-09-14 18:43:46,311 - root - INFO - Chain 1: Burn-in phase (8000 steps)
+2025-09-14 18:43:47,550 - root - INFO - Burn-in step 0/8000:
+2025-09-14 18:43:47,550 - root - INFO -   Actual drift norm: 1.00e-02
+2025-09-14 18:43:47,550 - root - INFO -   Actual noise norm: 1.72e-03
+2025-09-14 18:43:47,550 - root - INFO -   Actual drift/noise ratio: 5.810
+2025-09-14 18:43:47,550 - root - INFO -   Theoretical step/noise ratio: 216.930
+2025-09-14 18:43:47,550 - root - INFO -   Prior/Likelihood ratio: 2.368
+2025-09-14 18:43:47,551 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 18:43:47,551 - root - INFO -   SAM gradient norm: 1.68e+01
+2025-09-14 18:43:47,551 - root - INFO -   SAM perturbation/gradient ratio: 0.029
+2025-09-14 18:43:47,551 - root - INFO -   Rank-1 noise contribution: 0.049
+2025-09-14 18:43:47,551 - root - INFO -   Loss change after SAM perturbation: 1.6081
+2025-09-14 18:50:50,479 - root - INFO - Burn-in step 500/8000:
+2025-09-14 18:50:50,482 - root - INFO -   Actual drift norm: 8.74e-03
+2025-09-14 18:50:50,482 - root - INFO -   Actual noise norm: 1.69e-03
+2025-09-14 18:50:50,482 - root - INFO -   Actual drift/noise ratio: 5.166
+2025-09-14 18:50:50,482 - root - INFO -   Theoretical step/noise ratio: 213.132
+2025-09-14 18:50:50,482 - root - INFO -   Prior/Likelihood ratio: 8.469
+2025-09-14 18:50:50,482 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 18:50:50,482 - root - INFO -   SAM gradient norm: 4.53e+00
+2025-09-14 18:50:50,482 - root - INFO -   SAM perturbation/gradient ratio: 0.108
+2025-09-14 18:50:50,482 - root - INFO -   Rank-1 noise contribution: 0.051
+2025-09-14 18:50:50,482 - root - INFO -   Loss change after SAM perturbation: 0.5628
+2025-09-14 18:57:59,599 - root - INFO - Burn-in step 1000/8000:
+2025-09-14 18:57:59,601 - root - INFO -   Actual drift norm: 2.36e-03
+2025-09-14 18:57:59,601 - root - INFO -   Actual noise norm: 1.66e-03
+2025-09-14 18:57:59,601 - root - INFO -   Actual drift/noise ratio: 1.420
+2025-09-14 18:57:59,602 - root - INFO -   Theoretical step/noise ratio: 209.790
+2025-09-14 18:57:59,602 - root - INFO -   Prior/Likelihood ratio: 10.601
+2025-09-14 18:57:59,602 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 18:57:59,602 - root - INFO -   SAM gradient norm: 1.26e+00
+2025-09-14 18:57:59,602 - root - INFO -   SAM perturbation/gradient ratio: 0.387
+2025-09-14 18:57:59,602 - root - INFO -   Rank-1 noise contribution: 0.048
+2025-09-14 18:57:59,602 - root - INFO -   Loss change after SAM perturbation: 0.2241
+2025-09-14 19:05:03,366 - root - INFO - Burn-in step 1500/8000:
+2025-09-14 19:05:03,390 - root - INFO -   Actual drift norm: 8.47e-03
+2025-09-14 19:05:03,391 - root - INFO -   Actual noise norm: 1.64e-03
+2025-09-14 19:05:03,391 - root - INFO -   Actual drift/noise ratio: 5.169
+2025-09-14 19:05:03,391 - root - INFO -   Theoretical step/noise ratio: 206.812
+2025-09-14 19:05:03,391 - root - INFO -   Prior/Likelihood ratio: 2.343
+2025-09-14 19:05:03,391 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:05:03,391 - root - INFO -   SAM gradient norm: 4.66e+00
+2025-09-14 19:05:03,391 - root - INFO -   SAM perturbation/gradient ratio: 0.105
+2025-09-14 19:05:03,391 - root - INFO -   Rank-1 noise contribution: 0.053
+2025-09-14 19:05:03,391 - root - INFO -   Loss change after SAM perturbation: 0.6180
+2025-09-14 19:12:03,268 - root - INFO - Burn-in step 2000/8000:
+2025-09-14 19:12:03,270 - root - INFO -   Actual drift norm: 2.99e-03
+2025-09-14 19:12:03,270 - root - INFO -   Actual noise norm: 1.62e-03
+2025-09-14 19:12:03,270 - root - INFO -   Actual drift/noise ratio: 1.850
+2025-09-14 19:12:03,270 - root - INFO -   Theoretical step/noise ratio: 204.130
+2025-09-14 19:12:03,270 - root - INFO -   Prior/Likelihood ratio: 7.881
+2025-09-14 19:12:03,270 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:12:03,270 - root - INFO -   SAM gradient norm: 1.69e+00
+2025-09-14 19:12:03,270 - root - INFO -   SAM perturbation/gradient ratio: 0.290
+2025-09-14 19:12:03,271 - root - INFO -   Rank-1 noise contribution: 0.049
+2025-09-14 19:12:03,271 - root - INFO -   Loss change after SAM perturbation: 0.3420
+2025-09-14 19:19:05,740 - root - INFO - Burn-in step 2500/8000:
+2025-09-14 19:19:05,742 - root - INFO -   Actual drift norm: 3.04e-03
+2025-09-14 19:19:05,742 - root - INFO -   Actual noise norm: 1.60e-03
+2025-09-14 19:19:05,742 - root - INFO -   Actual drift/noise ratio: 1.903
+2025-09-14 19:19:05,742 - root - INFO -   Theoretical step/noise ratio: 201.694
+2025-09-14 19:19:05,742 - root - INFO -   Prior/Likelihood ratio: 11.240
+2025-09-14 19:19:05,743 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:19:05,743 - root - INFO -   SAM gradient norm: 1.76e+00
+2025-09-14 19:19:05,743 - root - INFO -   SAM perturbation/gradient ratio: 0.278
+2025-09-14 19:19:05,743 - root - INFO -   Rank-1 noise contribution: 0.051
+2025-09-14 19:19:05,743 - root - INFO -   Loss change after SAM perturbation: 0.1695
+2025-09-14 19:26:15,627 - root - INFO - Burn-in step 3000/8000:
+2025-09-14 19:26:15,629 - root - INFO -   Actual drift norm: 2.23e-03
+2025-09-14 19:26:15,629 - root - INFO -   Actual noise norm: 1.58e-03
+2025-09-14 19:26:15,629 - root - INFO -   Actual drift/noise ratio: 1.409
+2025-09-14 19:26:15,629 - root - INFO -   Theoretical step/noise ratio: 199.464
+2025-09-14 19:26:15,630 - root - INFO -   Prior/Likelihood ratio: 4.616
+2025-09-14 19:26:15,630 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:26:15,630 - root - INFO -   SAM gradient norm: 1.32e+00
+2025-09-14 19:26:15,630 - root - INFO -   SAM perturbation/gradient ratio: 0.372
+2025-09-14 19:26:15,630 - root - INFO -   Rank-1 noise contribution: 0.055
+2025-09-14 19:26:15,630 - root - INFO -   Loss change after SAM perturbation: 0.1851
+2025-09-14 19:33:24,738 - root - INFO - Burn-in step 3500/8000:
+2025-09-14 19:33:24,741 - root - INFO -   Actual drift norm: 6.69e-03
+2025-09-14 19:33:24,741 - root - INFO -   Actual noise norm: 1.57e-03
+2025-09-14 19:33:24,741 - root - INFO -   Actual drift/noise ratio: 4.272
+2025-09-14 19:33:24,741 - root - INFO -   Theoretical step/noise ratio: 197.411
+2025-09-14 19:33:24,741 - root - INFO -   Prior/Likelihood ratio: 4.502
+2025-09-14 19:33:24,741 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:33:24,741 - root - INFO -   SAM gradient norm: 4.04e+00
+2025-09-14 19:33:24,741 - root - INFO -   SAM perturbation/gradient ratio: 0.121
+2025-09-14 19:33:24,741 - root - INFO -   Rank-1 noise contribution: 0.048
+2025-09-14 19:33:24,741 - root - INFO -   Loss change after SAM perturbation: 0.2691
+2025-09-14 19:40:32,770 - root - INFO - Burn-in step 4000/8000:
+2025-09-14 19:40:32,772 - root - INFO -   Actual drift norm: 4.81e-03
+2025-09-14 19:40:32,772 - root - INFO -   Actual noise norm: 1.55e-03
+2025-09-14 19:40:32,773 - root - INFO -   Actual drift/noise ratio: 3.099
+2025-09-14 19:40:32,773 - root - INFO -   Theoretical step/noise ratio: 195.509
+2025-09-14 19:40:32,773 - root - INFO -   Prior/Likelihood ratio: 3.052
+2025-09-14 19:40:32,773 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:40:32,773 - root - INFO -   SAM gradient norm: 2.96e+00
+2025-09-14 19:40:32,773 - root - INFO -   SAM perturbation/gradient ratio: 0.166
+2025-09-14 19:40:32,773 - root - INFO -   Rank-1 noise contribution: 0.043
+2025-09-14 19:40:32,773 - root - INFO -   Loss change after SAM perturbation: 0.1939
+2025-09-14 19:47:41,432 - root - INFO - Burn-in step 4500/8000:
+2025-09-14 19:47:41,434 - root - INFO -   Actual drift norm: 6.14e-03
+2025-09-14 19:47:41,434 - root - INFO -   Actual noise norm: 1.54e-03
+2025-09-14 19:47:41,434 - root - INFO -   Actual drift/noise ratio: 3.995
+2025-09-14 19:47:41,434 - root - INFO -   Theoretical step/noise ratio: 193.739
+2025-09-14 19:47:41,434 - root - INFO -   Prior/Likelihood ratio: 2.631
+2025-09-14 19:47:41,434 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:47:41,435 - root - INFO -   SAM gradient norm: 3.85e+00
+2025-09-14 19:47:41,435 - root - INFO -   SAM perturbation/gradient ratio: 0.127
+2025-09-14 19:47:41,435 - root - INFO -   Rank-1 noise contribution: 0.056
+2025-09-14 19:47:41,435 - root - INFO -   Loss change after SAM perturbation: 0.3567
+2025-09-14 19:54:49,956 - root - INFO - Burn-in step 5000/8000:
+2025-09-14 19:54:49,958 - root - INFO -   Actual drift norm: 4.65e-03
+2025-09-14 19:54:49,958 - root - INFO -   Actual noise norm: 1.52e-03
+2025-09-14 19:54:49,958 - root - INFO -   Actual drift/noise ratio: 3.053
+2025-09-14 19:54:49,958 - root - INFO -   Theoretical step/noise ratio: 192.085
+2025-09-14 19:54:49,959 - root - INFO -   Prior/Likelihood ratio: 9.931
+2025-09-14 19:54:49,959 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 19:54:49,959 - root - INFO -   SAM gradient norm: 2.96e+00
+2025-09-14 19:54:49,959 - root - INFO -   SAM perturbation/gradient ratio: 0.165
+2025-09-14 19:54:49,959 - root - INFO -   Rank-1 noise contribution: 0.048
+2025-09-14 19:54:49,959 - root - INFO -   Loss change after SAM perturbation: 0.3482
+2025-09-14 20:01:58,258 - root - INFO - Burn-in step 5500/8000:
+2025-09-14 20:01:58,260 - root - INFO -   Actual drift norm: 3.67e-03
+2025-09-14 20:01:58,260 - root - INFO -   Actual noise norm: 1.51e-03
+2025-09-14 20:01:58,260 - root - INFO -   Actual drift/noise ratio: 2.429
+2025-09-14 20:01:58,260 - root - INFO -   Theoretical step/noise ratio: 190.533
+2025-09-14 20:01:58,260 - root - INFO -   Prior/Likelihood ratio: 6.021
+2025-09-14 20:01:58,260 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:01:58,261 - root - INFO -   SAM gradient norm: 2.38e+00
+2025-09-14 20:01:58,261 - root - INFO -   SAM perturbation/gradient ratio: 0.206
+2025-09-14 20:01:58,261 - root - INFO -   Rank-1 noise contribution: 0.055
+2025-09-14 20:01:58,261 - root - INFO -   Loss change after SAM perturbation: 0.3251
+2025-09-14 20:09:06,474 - root - INFO - Burn-in step 6000/8000:
+2025-09-14 20:09:06,477 - root - INFO -   Actual drift norm: 5.47e-03
+2025-09-14 20:09:06,477 - root - INFO -   Actual noise norm: 1.50e-03
+2025-09-14 20:09:06,477 - root - INFO -   Actual drift/noise ratio: 3.644
+2025-09-14 20:09:06,477 - root - INFO -   Theoretical step/noise ratio: 189.073
+2025-09-14 20:09:06,477 - root - INFO -   Prior/Likelihood ratio: 9.356
+2025-09-14 20:09:06,477 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:09:06,477 - root - INFO -   SAM gradient norm: 3.60e+00
+2025-09-14 20:09:06,477 - root - INFO -   SAM perturbation/gradient ratio: 0.136
+2025-09-14 20:09:06,477 - root - INFO -   Rank-1 noise contribution: 0.045
+2025-09-14 20:09:06,477 - root - INFO -   Loss change after SAM perturbation: 0.5874
+2025-09-14 20:16:09,758 - root - INFO - Burn-in step 6500/8000:
+2025-09-14 20:16:09,761 - root - INFO -   Actual drift norm: 2.09e-03
+2025-09-14 20:16:09,761 - root - INFO -   Actual noise norm: 1.49e-03
+2025-09-14 20:16:09,761 - root - INFO -   Actual drift/noise ratio: 1.405
+2025-09-14 20:16:09,761 - root - INFO -   Theoretical step/noise ratio: 187.694
+2025-09-14 20:16:09,761 - root - INFO -   Prior/Likelihood ratio: 11.729
+2025-09-14 20:16:09,761 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:16:09,761 - root - INFO -   SAM gradient norm: 1.40e+00
+2025-09-14 20:16:09,761 - root - INFO -   SAM perturbation/gradient ratio: 0.351
+2025-09-14 20:16:09,761 - root - INFO -   Rank-1 noise contribution: 0.044
+2025-09-14 20:16:09,761 - root - INFO -   Loss change after SAM perturbation: 0.1453
+2025-09-14 20:23:05,401 - root - INFO - Burn-in step 7000/8000:
+2025-09-14 20:23:05,404 - root - INFO -   Actual drift norm: 7.38e-03
+2025-09-14 20:23:05,404 - root - INFO -   Actual noise norm: 1.48e-03
+2025-09-14 20:23:05,404 - root - INFO -   Actual drift/noise ratio: 4.989
+2025-09-14 20:23:05,404 - root - INFO -   Theoretical step/noise ratio: 186.389
+2025-09-14 20:23:05,404 - root - INFO -   Prior/Likelihood ratio: 4.366
+2025-09-14 20:23:05,404 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:23:05,404 - root - INFO -   SAM gradient norm: 6.61e+00
+2025-09-14 20:23:05,404 - root - INFO -   SAM perturbation/gradient ratio: 0.074
+2025-09-14 20:23:05,404 - root - INFO -   Rank-1 noise contribution: 0.039
+2025-09-14 20:23:05,404 - root - INFO -   Loss change after SAM perturbation: 0.4885
+2025-09-14 20:30:01,226 - root - INFO - Burn-in step 7500/8000:
+2025-09-14 20:30:01,229 - root - INFO -   Actual drift norm: 2.40e-03
+2025-09-14 20:30:01,229 - root - INFO -   Actual noise norm: 1.47e-03
+2025-09-14 20:30:01,229 - root - INFO -   Actual drift/noise ratio: 1.630
+2025-09-14 20:30:01,229 - root - INFO -   Theoretical step/noise ratio: 185.150
+2025-09-14 20:30:01,229 - root - INFO -   Prior/Likelihood ratio: 3.170
+2025-09-14 20:30:01,229 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:30:01,229 - root - INFO -   SAM gradient norm: 1.65e+00
+2025-09-14 20:30:01,229 - root - INFO -   SAM perturbation/gradient ratio: 0.298
+2025-09-14 20:30:01,229 - root - INFO -   Rank-1 noise contribution: 0.047
+2025-09-14 20:30:01,229 - root - INFO -   Loss change after SAM perturbation: 0.1180
+2025-09-14 20:36:56,250 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-14 20:36:56,253 - root - INFO -     Avg parameter movement: 0.132881
+2025-09-14 20:36:56,253 - root - INFO -     Total parameters moved: 96
+2025-09-14 20:36:56,253 - root - INFO - Chain 1: Sampling phase (3000 steps)
+2025-09-14 20:36:56,446 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-14 20:36:56,447 - root - INFO -     Initial prediction: [0, 1]
+2025-09-14 20:36:56,447 - root - INFO -     Initial confidence: [0.929100513458252, 0.07089942693710327]
+2025-09-14 20:36:56,451 - root - INFO - Chain 1: Step size after burn-in:
+2025-09-14 20:36:56,451 - root - INFO -   Initial: 2.00e-03
+2025-09-14 20:36:56,451 - root - INFO -   Final: 1.44e-03
+2025-09-14 20:36:56,451 - root - INFO -   Reduction: 28.1%
+2025-09-14 20:36:57,468 - root - INFO - Chain 1, Step 0:
+2025-09-14 20:36:57,468 - root - INFO -   Actual drift norm: 1.96e-03
+2025-09-14 20:36:57,468 - root - INFO -   Actual noise norm: 1.46e-03
+2025-09-14 20:36:57,468 - root - INFO -   Actual drift/noise ratio: 1.345
+2025-09-14 20:36:57,468 - root - INFO -   Theoretical step/noise ratio: 183.972
+2025-09-14 20:36:57,468 - root - INFO -   Prior/Likelihood ratio: 4.354
+2025-09-14 20:36:57,468 - root - INFO -   SAM rho: 0.050
+2025-09-14 20:36:57,468 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:36:57,468 - root - INFO -   SAM gradient norm: 1.36e+00
+2025-09-14 20:36:57,468 - root - INFO -   SAM perturbation/gradient ratio: 0.359
+2025-09-14 20:36:57,469 - root - INFO -   Rank-1 noise contribution: 0.051
+2025-09-14 20:36:57,469 - root - INFO -   Loss change after SAM perturbation: 0.1560
+2025-09-14 20:36:57,469 - root - INFO -   Temperature: 2.0
+2025-09-14 20:36:57,643 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-14 20:36:57,643 - root - INFO -     Avg parameter movement: 0.000234
+2025-09-14 20:36:57,643 - root - INFO -     Prediction changed: False
+2025-09-14 20:36:57,643 - root - INFO -     Confidence change: 0.031967
+2025-09-14 20:36:57,643 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 20:36:57,643 - root - INFO -     Current confidence: [0.9512489438056946, 0.04875104874372482]
+2025-09-14 20:36:57,643 - root - INFO - Sampling step 0/3000, step_size: 1.44e-03
+2025-09-14 20:37:39,185 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-14 20:37:39,186 - root - INFO -     Avg parameter movement: 0.002171
+2025-09-14 20:37:39,186 - root - INFO -     Prediction changed: True
+2025-09-14 20:37:39,186 - root - INFO -     Confidence change: 1.306839
+2025-09-14 20:37:39,186 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 20:37:39,186 - root - INFO -     Current confidence: [0.9325401186943054, 0.06745987385511398]
+2025-09-14 20:38:20,729 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-14 20:38:20,729 - root - INFO -     Avg parameter movement: 0.002974
+2025-09-14 20:38:20,730 - root - INFO -     Prediction changed: True
+2025-09-14 20:38:20,730 - root - INFO -     Confidence change: 1.307311
+2025-09-14 20:38:20,730 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 20:38:20,730 - root - INFO -     Current confidence: [0.004696367774158716, 0.9953036308288574]
+2025-09-14 20:39:02,280 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-14 20:39:02,281 - root - INFO -     Avg parameter movement: 0.003636
+2025-09-14 20:39:02,281 - root - INFO -     Prediction changed: True
+2025-09-14 20:39:02,281 - root - INFO -     Confidence change: 1.297097
+2025-09-14 20:39:02,281 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 20:39:02,281 - root - INFO -     Current confidence: [0.011924557387828827, 0.9880753755569458]
+2025-09-14 20:39:43,817 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-14 20:39:43,818 - root - INFO -     Avg parameter movement: 0.004424
+2025-09-14 20:39:43,818 - root - INFO -     Prediction changed: True
+2025-09-14 20:39:43,818 - root - INFO -     Confidence change: 1.308030
+2025-09-14 20:39:43,818 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 20:39:43,818 - root - INFO -     Current confidence: [0.004193061497062445, 0.9958069324493408]
+2025-09-14 20:43:11,486 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-14 20:43:11,488 - root - INFO -     Avg parameter movement: 0.007246
+2025-09-14 20:43:11,488 - root - INFO -     Prediction changed: False
+2025-09-14 20:43:11,488 - root - INFO -     Confidence change: 0.023232
+2025-09-14 20:43:11,489 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 20:43:11,489 - root - INFO -     Current confidence: [0.9454495310783386, 0.05455049127340317]
+2025-09-14 20:50:06,093 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-14 20:50:06,095 - root - INFO -     Avg parameter movement: 0.012421
+2025-09-14 20:50:06,095 - root - INFO -     Prediction changed: True
+2025-09-14 20:50:06,095 - root - INFO -     Confidence change: 1.331077
+2025-09-14 20:50:06,095 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 20:50:06,096 - root - INFO -     Current confidence: [0.9492864608764648, 0.050713568925857544]
+2025-09-14 20:50:47,639 - root - INFO - Chain 1, Step 1000:
+2025-09-14 20:50:47,641 - root - INFO -   Actual drift norm: 3.99e-03
+2025-09-14 20:50:47,641 - root - INFO -   Actual noise norm: 1.46e-03
+2025-09-14 20:50:47,641 - root - INFO -   Actual drift/noise ratio: 2.735
+2025-09-14 20:50:47,641 - root - INFO -   Theoretical step/noise ratio: 183.972
+2025-09-14 20:50:47,641 - root - INFO -   Prior/Likelihood ratio: 8.754
+2025-09-14 20:50:47,641 - root - INFO -   SAM rho: 0.050
+2025-09-14 20:50:47,641 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 20:50:47,641 - root - INFO -   SAM gradient norm: 2.77e+00
+2025-09-14 20:50:47,641 - root - INFO -   SAM perturbation/gradient ratio: 0.177
+2025-09-14 20:50:47,641 - root - INFO -   Rank-1 noise contribution: 0.045
+2025-09-14 20:50:47,641 - root - INFO -   Loss change after SAM perturbation: 0.3809
+2025-09-14 20:50:47,641 - root - INFO -   Temperature: 2.0
+2025-09-14 20:50:47,772 - root - INFO - Sampling step 1000/3000, step_size: 1.44e-03
+2025-09-14 20:57:00,598 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-14 20:57:00,600 - root - INFO -     Avg parameter movement: 0.017299
+2025-09-14 20:57:00,600 - root - INFO -     Prediction changed: True
+2025-09-14 20:57:00,600 - root - INFO -     Confidence change: 1.843824
+2025-09-14 20:57:00,601 - root - INFO -     Current prediction: [1, 0]
+2025-09-14 20:57:00,601 - root - INFO -     Current confidence: [0.006875212304294109, 0.993124783039093]
+2025-09-14 21:03:55,117 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-14 21:03:55,120 - root - INFO -     Avg parameter movement: 0.022004
+2025-09-14 21:03:55,120 - root - INFO -     Prediction changed: True
+2025-09-14 21:03:55,120 - root - INFO -     Confidence change: 1.307923
+2025-09-14 21:03:55,120 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 21:03:55,120 - root - INFO -     Current confidence: [0.004283076152205467, 0.9957168698310852]
+2025-09-14 21:04:36,648 - root - INFO - Chain 1, Step 2000:
+2025-09-14 21:04:36,649 - root - INFO -   Actual drift norm: 3.37e-03
+2025-09-14 21:04:36,649 - root - INFO -   Actual noise norm: 1.46e-03
+2025-09-14 21:04:36,649 - root - INFO -   Actual drift/noise ratio: 2.305
+2025-09-14 21:04:36,649 - root - INFO -   Theoretical step/noise ratio: 183.972
+2025-09-14 21:04:36,649 - root - INFO -   Prior/Likelihood ratio: 6.001
+2025-09-14 21:04:36,649 - root - INFO -   SAM rho: 0.050
+2025-09-14 21:04:36,649 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 21:04:36,649 - root - INFO -   SAM gradient norm: 2.34e+00
+2025-09-14 21:04:36,649 - root - INFO -   SAM perturbation/gradient ratio: 0.209
+2025-09-14 21:04:36,649 - root - INFO -   Rank-1 noise contribution: 0.048
+2025-09-14 21:04:36,649 - root - INFO -   Loss change after SAM perturbation: 0.3156
+2025-09-14 21:04:36,649 - root - INFO -   Temperature: 2.0
+2025-09-14 21:04:36,778 - root - INFO - Sampling step 2000/3000, step_size: 1.44e-03
+2025-09-14 21:10:49,669 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-14 21:10:49,671 - root - INFO -     Avg parameter movement: 0.026647
+2025-09-14 21:10:49,671 - root - INFO -     Prediction changed: True
+2025-09-14 21:10:49,671 - root - INFO -     Confidence change: 1.329795
+2025-09-14 21:10:49,672 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 21:10:49,672 - root - INFO -     Current confidence: [0.004492334555834532, 0.9955077171325684]
+2025-09-14 21:17:44,613 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-14 21:17:44,615 - root - INFO -     Avg parameter movement: 0.031310
+2025-09-14 21:17:44,615 - root - INFO -     Prediction changed: True
+2025-09-14 21:17:44,615 - root - INFO -     Confidence change: 1.307242
+2025-09-14 21:17:44,616 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 21:17:44,616 - root - INFO -     Current confidence: [0.004742894321680069, 0.9952570796012878]
+2025-09-14 21:18:25,151 - root - INFO - Chain 1: Collected 60 samples
+2025-09-14 21:18:25,195 - root - INFO -   DIAGNOSTIC - Chain 1 summary:
+2025-09-14 21:18:25,195 - root - INFO -     Final avg parameter movement: 0.031714
+2025-09-14 21:18:25,195 - root - INFO -     Final prediction changed: False
+2025-09-14 21:18:25,195 - root - INFO -     Final confidence change: 0.028808
+2025-09-14 21:18:25,196 - root - INFO -     Final prediction: [0, 1]
+2025-09-14 21:18:25,196 - root - INFO -     Final confidence: [0.9490178823471069, 0.050982169806957245]
+2025-09-14 21:18:25,307 - root - INFO - Total samples collected: 60
+2025-09-14 21:18:25,308 - root - INFO - Computing overall MCMC diagnostics...
+2025-09-14 21:18:25,308 - root - INFO - SAM-SGLD sampling completed with 60 total samples
+2025-09-14 21:18:25,495 - root - INFO - Final model after sampling - Loss: 0.1652, Acc: 0.9062
+2025-09-14 21:18:25,495 - root - INFO - ESS and R-hat will be computed during evaluation phase
+2025-09-14 21:18:26,306 - root - INFO - SAM-SGLD samples saved to runs/mrpc_roberta_lora_samsgld_rank1/samsgld_samples.pth
+2025-09-14 21:18:26,307 - root - INFO - Training completed successfully!
+2025-09-14 21:45:10,749 - root - INFO - Using device: cuda
+2025-09-14 21:45:14,238 - root - INFO - Starting MAP LoRA training...
+2025-09-14 21:46:00,681 - root - INFO - Epoch 1: Train Loss: 0.6010, Val Loss: 0.4962, Val Acc: 0.7574
+2025-09-14 21:46:46,974 - root - INFO - Epoch 2: Train Loss: 0.4606, Val Loss: 0.3591, Val Acc: 0.8333
+2025-09-14 21:47:34,486 - root - INFO - Epoch 3: Train Loss: 0.3795, Val Loss: 0.3159, Val Acc: 0.8627
+2025-09-14 21:48:22,903 - root - INFO - Epoch 4: Train Loss: 0.3231, Val Loss: 0.3172, Val Acc: 0.8627
+2025-09-14 21:49:12,239 - root - INFO - Epoch 5: Train Loss: 0.2959, Val Loss: 0.3103, Val Acc: 0.8701
+2025-09-14 21:50:02,016 - root - INFO - Epoch 6: Train Loss: 0.2541, Val Loss: 0.2845, Val Acc: 0.8848
+2025-09-14 21:50:52,196 - root - INFO - Epoch 7: Train Loss: 0.2258, Val Loss: 0.3171, Val Acc: 0.8775
+2025-09-14 21:51:42,599 - root - INFO - Epoch 8: Train Loss: 0.2017, Val Loss: 0.3035, Val Acc: 0.8799
+2025-09-14 21:52:32,772 - root - INFO - Epoch 9: Train Loss: 0.1962, Val Loss: 0.3162, Val Acc: 0.8824
+2025-09-14 21:53:22,925 - root - INFO - Epoch 10: Train Loss: 0.1501, Val Loss: 0.3371, Val Acc: 0.8725
+2025-09-14 21:54:13,009 - root - INFO - Epoch 11: Train Loss: 0.1287, Val Loss: 0.3075, Val Acc: 0.8946
+2025-09-14 21:55:03,136 - root - INFO - Epoch 12: Train Loss: 0.1116, Val Loss: 0.4158, Val Acc: 0.8750
+2025-09-14 21:55:53,382 - root - INFO - Epoch 13: Train Loss: 0.1078, Val Loss: 0.3623, Val Acc: 0.8824
+2025-09-14 21:56:43,865 - root - INFO - Epoch 14: Train Loss: 0.0911, Val Loss: 0.3801, Val Acc: 0.8701
+2025-09-14 21:57:33,927 - root - INFO - Epoch 15: Train Loss: 0.0797, Val Loss: 0.4194, Val Acc: 0.8824
+2025-09-14 21:58:24,029 - root - INFO - Epoch 16: Train Loss: 0.0731, Val Loss: 0.3875, Val Acc: 0.8897
+2025-09-14 21:59:14,130 - root - INFO - Epoch 17: Train Loss: 0.0629, Val Loss: 0.3596, Val Acc: 0.8946
+2025-09-14 22:00:04,257 - root - INFO - Epoch 18: Train Loss: 0.0711, Val Loss: 0.3468, Val Acc: 0.9020
+2025-09-14 22:00:54,499 - root - INFO - Epoch 19: Train Loss: 0.0459, Val Loss: 0.3913, Val Acc: 0.8971
+2025-09-14 22:01:45,024 - root - INFO - Epoch 20: Train Loss: 0.0458, Val Loss: 0.4215, Val Acc: 0.8701
+2025-09-14 22:01:45,794 - root - INFO - MAP model saved to runs/mrpc_roberta_lora_samsgld_rank1/map_model.pth
+2025-09-14 22:01:45,914 - root - INFO - Starting SAM-SGLD Rank-1 LoRA training...
+2025-09-14 22:01:45,914 - root - INFO - Running chain 1/4
+2025-09-14 22:01:46,195 - root - INFO - Chain 1: MAP model loaded - LoRA param norms: [2.3472883701324463, 1.2312262058258057, 2.283034324645996]
+2025-09-14 22:01:46,421 - root - INFO - Chain 1: MAP model test - Loss: 0.3996, Acc: 0.7812
+2025-09-14 22:01:46,421 - root - INFO - Chain 1: Initial configuration:
+2025-09-14 22:01:46,421 - root - INFO -   Initial step size: 2.00e-03
+2025-09-14 22:01:46,421 - root - INFO -   Temperature: 2.0
+2025-09-14 22:01:46,421 - root - INFO -   Noise scale: 1.00e-04
+2025-09-14 22:01:46,421 - root - INFO -   Prior std: 17.000
+2025-09-14 22:01:46,421 - root - INFO -   SAM rho: 0.050
+2025-09-14 22:01:46,421 - root - INFO -   Decay rate: 0.300
+2025-09-14 22:01:46,421 - root - INFO - Chain 1: Burn-in phase (8000 steps)
+2025-09-14 22:01:47,687 - root - INFO - Burn-in step 0/8000:
+2025-09-14 22:01:47,687 - root - INFO -   Actual drift norm: 1.00e-02
+2025-09-14 22:01:47,687 - root - INFO -   Actual noise norm: 3.46e-03
+2025-09-14 22:01:47,687 - root - INFO -   Actual drift/noise ratio: 2.890
+2025-09-14 22:01:47,687 - root - INFO -   Theoretical step/noise ratio: 55.470
+2025-09-14 22:01:47,687 - root - INFO -   Prior/Likelihood ratio: 32.177
+2025-09-14 22:01:47,687 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:01:47,688 - root - INFO -   SAM gradient norm: 8.74e+00
+2025-09-14 22:01:47,688 - root - INFO -   SAM perturbation/gradient ratio: 0.056
+2025-09-14 22:01:47,688 - root - INFO -   Rank-1 noise contribution: 0.095
+2025-09-14 22:01:47,688 - root - INFO -   Loss change after SAM perturbation: 1.2270
+2025-09-14 22:09:01,104 - root - INFO - Burn-in step 500/8000:
+2025-09-14 22:09:01,107 - root - INFO -   Actual drift norm: 7.95e-03
+2025-09-14 22:09:01,107 - root - INFO -   Actual noise norm: 3.40e-03
+2025-09-14 22:09:01,107 - root - INFO -   Actual drift/noise ratio: 2.339
+2025-09-14 22:09:01,107 - root - INFO -   Theoretical step/noise ratio: 54.499
+2025-09-14 22:09:01,107 - root - INFO -   Prior/Likelihood ratio: 3.611
+2025-09-14 22:09:01,107 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:09:01,107 - root - INFO -   SAM gradient norm: 4.12e+00
+2025-09-14 22:09:01,107 - root - INFO -   SAM perturbation/gradient ratio: 0.119
+2025-09-14 22:09:01,108 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-14 22:09:01,108 - root - INFO -   Loss change after SAM perturbation: 0.2987
+2025-09-14 22:16:09,268 - root - INFO - Burn-in step 1000/8000:
+2025-09-14 22:16:09,271 - root - INFO -   Actual drift norm: 8.69e-03
+2025-09-14 22:16:09,271 - root - INFO -   Actual noise norm: 3.34e-03
+2025-09-14 22:16:09,271 - root - INFO -   Actual drift/noise ratio: 2.598
+2025-09-14 22:16:09,271 - root - INFO -   Theoretical step/noise ratio: 53.644
+2025-09-14 22:16:09,271 - root - INFO -   Prior/Likelihood ratio: 3.541
+2025-09-14 22:16:09,271 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:16:09,272 - root - INFO -   SAM gradient norm: 4.64e+00
+2025-09-14 22:16:09,272 - root - INFO -   SAM perturbation/gradient ratio: 0.106
+2025-09-14 22:16:09,272 - root - INFO -   Rank-1 noise contribution: 0.103
+2025-09-14 22:16:09,272 - root - INFO -   Loss change after SAM perturbation: 0.3899
+2025-09-14 22:23:18,064 - root - INFO - Burn-in step 1500/8000:
+2025-09-14 22:23:18,067 - root - INFO -   Actual drift norm: 5.46e-03
+2025-09-14 22:23:18,067 - root - INFO -   Actual noise norm: 3.30e-03
+2025-09-14 22:23:18,067 - root - INFO -   Actual drift/noise ratio: 1.653
+2025-09-14 22:23:18,067 - root - INFO -   Theoretical step/noise ratio: 52.883
+2025-09-14 22:23:18,068 - root - INFO -   Prior/Likelihood ratio: 5.067
+2025-09-14 22:23:18,068 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:23:18,068 - root - INFO -   SAM gradient norm: 3.01e+00
+2025-09-14 22:23:18,068 - root - INFO -   SAM perturbation/gradient ratio: 0.163
+2025-09-14 22:23:18,068 - root - INFO -   Rank-1 noise contribution: 0.083
+2025-09-14 22:23:18,068 - root - INFO -   Loss change after SAM perturbation: 0.4283
+2025-09-14 22:30:29,077 - root - INFO - Burn-in step 2000/8000:
+2025-09-14 22:30:29,080 - root - INFO -   Actual drift norm: 8.13e-03
+2025-09-14 22:30:29,080 - root - INFO -   Actual noise norm: 3.25e-03
+2025-09-14 22:30:29,080 - root - INFO -   Actual drift/noise ratio: 2.497
+2025-09-14 22:30:29,080 - root - INFO -   Theoretical step/noise ratio: 52.197
+2025-09-14 22:30:29,080 - root - INFO -   Prior/Likelihood ratio: 2.905
+2025-09-14 22:30:29,080 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:30:29,080 - root - INFO -   SAM gradient norm: 4.59e+00
+2025-09-14 22:30:29,080 - root - INFO -   SAM perturbation/gradient ratio: 0.107
+2025-09-14 22:30:29,080 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-14 22:30:29,080 - root - INFO -   Loss change after SAM perturbation: 0.4881
+2025-09-14 22:37:40,337 - root - INFO - Burn-in step 2500/8000:
+2025-09-14 22:37:40,340 - root - INFO -   Actual drift norm: 7.18e-03
+2025-09-14 22:37:40,340 - root - INFO -   Actual noise norm: 3.22e-03
+2025-09-14 22:37:40,340 - root - INFO -   Actual drift/noise ratio: 2.230
+2025-09-14 22:37:40,340 - root - INFO -   Theoretical step/noise ratio: 51.574
+2025-09-14 22:37:40,340 - root - INFO -   Prior/Likelihood ratio: 4.196
+2025-09-14 22:37:40,340 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:37:40,341 - root - INFO -   SAM gradient norm: 4.15e+00
+2025-09-14 22:37:40,341 - root - INFO -   SAM perturbation/gradient ratio: 0.118
+2025-09-14 22:37:40,341 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-14 22:37:40,341 - root - INFO -   Loss change after SAM perturbation: 0.6534
+2025-09-14 22:44:51,751 - root - INFO - Burn-in step 3000/8000:
+2025-09-14 22:44:51,754 - root - INFO -   Actual drift norm: 3.32e-03
+2025-09-14 22:44:51,754 - root - INFO -   Actual noise norm: 3.18e-03
+2025-09-14 22:44:51,754 - root - INFO -   Actual drift/noise ratio: 1.043
+2025-09-14 22:44:51,754 - root - INFO -   Theoretical step/noise ratio: 51.004
+2025-09-14 22:44:51,754 - root - INFO -   Prior/Likelihood ratio: 7.196
+2025-09-14 22:44:51,754 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:44:51,754 - root - INFO -   SAM gradient norm: 1.96e+00
+2025-09-14 22:44:51,754 - root - INFO -   SAM perturbation/gradient ratio: 0.250
+2025-09-14 22:44:51,755 - root - INFO -   Rank-1 noise contribution: 0.097
+2025-09-14 22:44:51,755 - root - INFO -   Loss change after SAM perturbation: 0.2401
+2025-09-14 22:52:03,377 - root - INFO - Burn-in step 3500/8000:
+2025-09-14 22:52:03,380 - root - INFO -   Actual drift norm: 2.15e-03
+2025-09-14 22:52:03,380 - root - INFO -   Actual noise norm: 3.14e-03
+2025-09-14 22:52:03,380 - root - INFO -   Actual drift/noise ratio: 0.684
+2025-09-14 22:52:03,380 - root - INFO -   Theoretical step/noise ratio: 50.479
+2025-09-14 22:52:03,380 - root - INFO -   Prior/Likelihood ratio: 4.483
+2025-09-14 22:52:03,380 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:52:03,380 - root - INFO -   SAM gradient norm: 1.30e+00
+2025-09-14 22:52:03,380 - root - INFO -   SAM perturbation/gradient ratio: 0.378
+2025-09-14 22:52:03,381 - root - INFO -   Rank-1 noise contribution: 0.097
+2025-09-14 22:52:03,381 - root - INFO -   Loss change after SAM perturbation: 0.1875
+2025-09-14 22:59:14,133 - root - INFO - Burn-in step 4000/8000:
+2025-09-14 22:59:14,136 - root - INFO -   Actual drift norm: 1.77e-03
+2025-09-14 22:59:14,136 - root - INFO -   Actual noise norm: 3.12e-03
+2025-09-14 22:59:14,136 - root - INFO -   Actual drift/noise ratio: 0.567
+2025-09-14 22:59:14,136 - root - INFO -   Theoretical step/noise ratio: 49.992
+2025-09-14 22:59:14,136 - root - INFO -   Prior/Likelihood ratio: 4.202
+2025-09-14 22:59:14,137 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 22:59:14,137 - root - INFO -   SAM gradient norm: 1.09e+00
+2025-09-14 22:59:14,137 - root - INFO -   SAM perturbation/gradient ratio: 0.450
+2025-09-14 22:59:14,137 - root - INFO -   Rank-1 noise contribution: 0.094
+2025-09-14 22:59:14,137 - root - INFO -   Loss change after SAM perturbation: 0.1922
+2025-09-14 23:06:23,599 - root - INFO - Burn-in step 4500/8000:
+2025-09-14 23:06:23,602 - root - INFO -   Actual drift norm: 3.11e-03
+2025-09-14 23:06:23,602 - root - INFO -   Actual noise norm: 3.08e-03
+2025-09-14 23:06:23,602 - root - INFO -   Actual drift/noise ratio: 1.008
+2025-09-14 23:06:23,602 - root - INFO -   Theoretical step/noise ratio: 49.540
+2025-09-14 23:06:23,603 - root - INFO -   Prior/Likelihood ratio: 5.439
+2025-09-14 23:06:23,603 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:06:23,603 - root - INFO -   SAM gradient norm: 1.95e+00
+2025-09-14 23:06:23,603 - root - INFO -   SAM perturbation/gradient ratio: 0.251
+2025-09-14 23:06:23,603 - root - INFO -   Rank-1 noise contribution: 0.089
+2025-09-14 23:06:23,603 - root - INFO -   Loss change after SAM perturbation: 0.2338
+2025-09-14 23:13:32,915 - root - INFO - Burn-in step 5000/8000:
+2025-09-14 23:13:32,918 - root - INFO -   Actual drift norm: 3.16e-03
+2025-09-14 23:13:32,918 - root - INFO -   Actual noise norm: 3.06e-03
+2025-09-14 23:13:32,918 - root - INFO -   Actual drift/noise ratio: 1.031
+2025-09-14 23:13:32,919 - root - INFO -   Theoretical step/noise ratio: 49.117
+2025-09-14 23:13:32,919 - root - INFO -   Prior/Likelihood ratio: 4.807
+2025-09-14 23:13:32,919 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:13:32,919 - root - INFO -   SAM gradient norm: 2.01e+00
+2025-09-14 23:13:32,919 - root - INFO -   SAM perturbation/gradient ratio: 0.243
+2025-09-14 23:13:32,919 - root - INFO -   Rank-1 noise contribution: 0.086
+2025-09-14 23:13:32,919 - root - INFO -   Loss change after SAM perturbation: 0.2878
+2025-09-14 23:20:42,005 - root - INFO - Burn-in step 5500/8000:
+2025-09-14 23:20:42,008 - root - INFO -   Actual drift norm: 3.93e-03
+2025-09-14 23:20:42,008 - root - INFO -   Actual noise norm: 3.03e-03
+2025-09-14 23:20:42,008 - root - INFO -   Actual drift/noise ratio: 1.294
+2025-09-14 23:20:42,008 - root - INFO -   Theoretical step/noise ratio: 48.720
+2025-09-14 23:20:42,008 - root - INFO -   Prior/Likelihood ratio: 5.179
+2025-09-14 23:20:42,008 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:20:42,008 - root - INFO -   SAM gradient norm: 2.54e+00
+2025-09-14 23:20:42,008 - root - INFO -   SAM perturbation/gradient ratio: 0.193
+2025-09-14 23:20:42,008 - root - INFO -   Rank-1 noise contribution: 0.101
+2025-09-14 23:20:42,009 - root - INFO -   Loss change after SAM perturbation: 0.2645
+2025-09-14 23:27:51,540 - root - INFO - Burn-in step 6000/8000:
+2025-09-14 23:27:51,543 - root - INFO -   Actual drift norm: 7.03e-03
+2025-09-14 23:27:51,543 - root - INFO -   Actual noise norm: 3.01e-03
+2025-09-14 23:27:51,543 - root - INFO -   Actual drift/noise ratio: 2.333
+2025-09-14 23:27:51,543 - root - INFO -   Theoretical step/noise ratio: 48.347
+2025-09-14 23:27:51,543 - root - INFO -   Prior/Likelihood ratio: 6.662
+2025-09-14 23:27:51,543 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:27:51,543 - root - INFO -   SAM gradient norm: 4.63e+00
+2025-09-14 23:27:51,544 - root - INFO -   SAM perturbation/gradient ratio: 0.106
+2025-09-14 23:27:51,544 - root - INFO -   Rank-1 noise contribution: 0.091
+2025-09-14 23:27:51,544 - root - INFO -   Loss change after SAM perturbation: 0.5015
+2025-09-14 23:35:00,969 - root - INFO - Burn-in step 6500/8000:
+2025-09-14 23:35:00,972 - root - INFO -   Actual drift norm: 3.62e-03
+2025-09-14 23:35:00,972 - root - INFO -   Actual noise norm: 2.99e-03
+2025-09-14 23:35:00,972 - root - INFO -   Actual drift/noise ratio: 1.213
+2025-09-14 23:35:00,972 - root - INFO -   Theoretical step/noise ratio: 47.994
+2025-09-14 23:35:00,972 - root - INFO -   Prior/Likelihood ratio: 3.453
+2025-09-14 23:35:00,972 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:35:00,972 - root - INFO -   SAM gradient norm: 2.42e+00
+2025-09-14 23:35:00,972 - root - INFO -   SAM perturbation/gradient ratio: 0.203
+2025-09-14 23:35:00,972 - root - INFO -   Rank-1 noise contribution: 0.084
+2025-09-14 23:35:00,972 - root - INFO -   Loss change after SAM perturbation: 0.3233
+2025-09-14 23:42:11,115 - root - INFO - Burn-in step 7000/8000:
+2025-09-14 23:42:11,118 - root - INFO -   Actual drift norm: 3.12e-03
+2025-09-14 23:42:11,118 - root - INFO -   Actual noise norm: 2.97e-03
+2025-09-14 23:42:11,118 - root - INFO -   Actual drift/noise ratio: 1.051
+2025-09-14 23:42:11,118 - root - INFO -   Theoretical step/noise ratio: 47.660
+2025-09-14 23:42:11,118 - root - INFO -   Prior/Likelihood ratio: 3.702
+2025-09-14 23:42:11,118 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:42:11,118 - root - INFO -   SAM gradient norm: 2.11e+00
+2025-09-14 23:42:11,118 - root - INFO -   SAM perturbation/gradient ratio: 0.232
+2025-09-14 23:42:11,118 - root - INFO -   Rank-1 noise contribution: 0.091
+2025-09-14 23:42:11,118 - root - INFO -   Loss change after SAM perturbation: 0.2638
+2025-09-14 23:49:21,003 - root - INFO - Burn-in step 7500/8000:
+2025-09-14 23:49:21,006 - root - INFO -   Actual drift norm: 4.52e-03
+2025-09-14 23:49:21,006 - root - INFO -   Actual noise norm: 2.95e-03
+2025-09-14 23:49:21,006 - root - INFO -   Actual drift/noise ratio: 1.533
+2025-09-14 23:49:21,006 - root - INFO -   Theoretical step/noise ratio: 47.344
+2025-09-14 23:49:21,006 - root - INFO -   Prior/Likelihood ratio: 4.265
+2025-09-14 23:49:21,006 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:49:21,006 - root - INFO -   SAM gradient norm: 3.10e+00
+2025-09-14 23:49:21,006 - root - INFO -   SAM perturbation/gradient ratio: 0.158
+2025-09-14 23:49:21,006 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-14 23:49:21,007 - root - INFO -   Loss change after SAM perturbation: 0.3270
+2025-09-14 23:56:29,728 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-14 23:56:29,731 - root - INFO -     Avg parameter movement: 0.135267
+2025-09-14 23:56:29,731 - root - INFO -     Total parameters moved: 96
+2025-09-14 23:56:29,731 - root - INFO - Chain 1: Sampling phase (3000 steps)
+2025-09-14 23:56:29,935 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-14 23:56:29,935 - root - INFO -     Initial prediction: [0, 0]
+2025-09-14 23:56:29,935 - root - INFO -     Initial confidence: [0.9556149840354919, 0.04438500106334686]
+2025-09-14 23:56:29,940 - root - INFO - Chain 1: Step size after burn-in:
+2025-09-14 23:56:29,940 - root - INFO -   Initial: 2.00e-03
+2025-09-14 23:56:29,940 - root - INFO -   Final: 1.44e-03
+2025-09-14 23:56:29,940 - root - INFO -   Reduction: 28.1%
+2025-09-14 23:56:30,998 - root - INFO - Chain 1, Step 0:
+2025-09-14 23:56:30,998 - root - INFO -   Actual drift norm: 3.41e-03
+2025-09-14 23:56:30,998 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-14 23:56:30,998 - root - INFO -   Actual drift/noise ratio: 1.163
+2025-09-14 23:56:30,998 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-14 23:56:30,998 - root - INFO -   Prior/Likelihood ratio: 7.137
+2025-09-14 23:56:30,999 - root - INFO -   SAM rho: 0.050
+2025-09-14 23:56:30,999 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-14 23:56:30,999 - root - INFO -   SAM gradient norm: 2.37e+00
+2025-09-14 23:56:30,999 - root - INFO -   SAM perturbation/gradient ratio: 0.207
+2025-09-14 23:56:30,999 - root - INFO -   Rank-1 noise contribution: 0.101
+2025-09-14 23:56:30,999 - root - INFO -   Loss change after SAM perturbation: 0.2845
+2025-09-14 23:56:30,999 - root - INFO -   Temperature: 2.0
+2025-09-14 23:56:31,178 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-14 23:56:31,178 - root - INFO -     Avg parameter movement: 0.000437
+2025-09-14 23:56:31,178 - root - INFO -     Prediction changed: True
+2025-09-14 23:56:31,179 - root - INFO -     Confidence change: 1.057631
+2025-09-14 23:56:31,179 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 23:56:31,179 - root - INFO -     Current confidence: [0.9511675238609314, 0.04883250221610069]
+2025-09-14 23:56:31,179 - root - INFO - Sampling step 0/3000, step_size: 1.44e-03
+2025-09-14 23:57:14,196 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-14 23:57:14,197 - root - INFO -     Avg parameter movement: 0.002804
+2025-09-14 23:57:14,197 - root - INFO -     Prediction changed: True
+2025-09-14 23:57:14,197 - root - INFO -     Confidence change: 1.086073
+2025-09-14 23:57:14,197 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 23:57:14,197 - root - INFO -     Current confidence: [0.7927796244621277, 0.20722036063671112]
+2025-09-14 23:57:57,234 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-14 23:57:57,234 - root - INFO -     Avg parameter movement: 0.004025
+2025-09-14 23:57:57,234 - root - INFO -     Prediction changed: False
+2025-09-14 23:57:57,234 - root - INFO -     Confidence change: 0.235160
+2025-09-14 23:57:57,234 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 23:57:57,235 - root - INFO -     Current confidence: [0.9333885908126831, 0.06661143153905869]
+2025-09-14 23:58:40,271 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-14 23:58:40,272 - root - INFO -     Avg parameter movement: 0.005185
+2025-09-14 23:58:40,272 - root - INFO -     Prediction changed: True
+2025-09-14 23:58:40,272 - root - INFO -     Confidence change: 1.058772
+2025-09-14 23:58:40,272 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 23:58:40,272 - root - INFO -     Current confidence: [0.9268448948860168, 0.07315512001514435]
+2025-09-14 23:59:23,317 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-14 23:59:23,317 - root - INFO -     Avg parameter movement: 0.005927
+2025-09-14 23:59:23,317 - root - INFO -     Prediction changed: True
+2025-09-14 23:59:23,317 - root - INFO -     Confidence change: 1.679094
+2025-09-14 23:59:23,317 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:59:23,317 - root - INFO -     Current confidence: [0.005240693688392639, 0.9947592616081238]
+2025-09-15 00:02:58,442 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 00:02:58,444 - root - INFO -     Avg parameter movement: 0.009228
+2025-09-15 00:02:58,445 - root - INFO -     Prediction changed: True
+2025-09-15 00:02:58,445 - root - INFO -     Confidence change: 1.710489
+2025-09-15 00:02:58,445 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:02:58,445 - root - INFO -     Current confidence: [0.007205120287835598, 0.9927948117256165]
+2025-09-15 00:10:09,190 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 00:10:09,192 - root - INFO -     Avg parameter movement: 0.014826
+2025-09-15 00:10:09,192 - root - INFO -     Prediction changed: True
+2025-09-15 00:10:09,193 - root - INFO -     Confidence change: 1.356743
+2025-09-15 00:10:09,193 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:10:09,193 - root - INFO -     Current confidence: [0.012448287568986416, 0.987551748752594]
+2025-09-15 00:10:52,461 - root - INFO - Chain 1, Step 1000:
+2025-09-15 00:10:52,463 - root - INFO -   Actual drift norm: 3.51e-03
+2025-09-15 00:10:52,463 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-15 00:10:52,463 - root - INFO -   Actual drift/noise ratio: 1.197
+2025-09-15 00:10:52,463 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 00:10:52,463 - root - INFO -   Prior/Likelihood ratio: 4.185
+2025-09-15 00:10:52,463 - root - INFO -   SAM rho: 0.050
+2025-09-15 00:10:52,463 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 00:10:52,463 - root - INFO -   SAM gradient norm: 2.44e+00
+2025-09-15 00:10:52,464 - root - INFO -   SAM perturbation/gradient ratio: 0.201
+2025-09-15 00:10:52,464 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-15 00:10:52,464 - root - INFO -   Loss change after SAM perturbation: 0.2521
+2025-09-15 00:10:52,464 - root - INFO -   Temperature: 2.0
+2025-09-15 00:10:52,591 - root - INFO - Sampling step 1000/3000, step_size: 1.44e-03
+2025-09-15 00:17:19,475 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 00:17:19,478 - root - INFO -     Avg parameter movement: 0.020054
+2025-09-15 00:17:19,478 - root - INFO -     Prediction changed: True
+2025-09-15 00:17:19,478 - root - INFO -     Confidence change: 1.713271
+2025-09-15 00:17:19,478 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:17:19,479 - root - INFO -     Current confidence: [0.005680167581886053, 0.9943197965621948]
+2025-09-15 00:24:28,683 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 00:24:28,685 - root - INFO -     Avg parameter movement: 0.025187
+2025-09-15 00:24:28,685 - root - INFO -     Prediction changed: True
+2025-09-15 00:24:28,686 - root - INFO -     Confidence change: 1.360695
+2025-09-15 00:24:28,686 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:24:28,686 - root - INFO -     Current confidence: [0.013216876424849033, 0.9867831468582153]
+2025-09-15 00:25:11,650 - root - INFO - Chain 1, Step 2000:
+2025-09-15 00:25:11,650 - root - INFO -   Actual drift norm: 1.77e-03
+2025-09-15 00:25:11,651 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-15 00:25:11,651 - root - INFO -   Actual drift/noise ratio: 0.606
+2025-09-15 00:25:11,651 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 00:25:11,651 - root - INFO -   Prior/Likelihood ratio: 3.658
+2025-09-15 00:25:11,651 - root - INFO -   SAM rho: 0.050
+2025-09-15 00:25:11,651 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 00:25:11,651 - root - INFO -   SAM gradient norm: 1.23e+00
+2025-09-15 00:25:11,651 - root - INFO -   SAM perturbation/gradient ratio: 0.397
+2025-09-15 00:25:11,652 - root - INFO -   Rank-1 noise contribution: 0.090
+2025-09-15 00:25:11,652 - root - INFO -   Loss change after SAM perturbation: 0.1692
+2025-09-15 00:25:11,652 - root - INFO -   Temperature: 2.0
+2025-09-15 00:25:11,779 - root - INFO - Sampling step 2000/3000, step_size: 1.44e-03
+2025-09-15 00:31:38,303 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 00:31:38,305 - root - INFO -     Avg parameter movement: 0.030069
+2025-09-15 00:31:38,305 - root - INFO -     Prediction changed: True
+2025-09-15 00:31:38,305 - root - INFO -     Confidence change: 1.372901
+2025-09-15 00:31:38,306 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:31:38,306 - root - INFO -     Current confidence: [0.005595791153609753, 0.9944041967391968]
+2025-09-15 00:38:47,545 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 00:38:47,548 - root - INFO -     Avg parameter movement: 0.034873
+2025-09-15 00:38:47,548 - root - INFO -     Prediction changed: True
+2025-09-15 00:38:47,548 - root - INFO -     Confidence change: 1.700175
+2025-09-15 00:38:47,548 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:38:47,548 - root - INFO -     Current confidence: [0.017297832295298576, 0.9827021360397339]
+2025-09-15 00:39:29,517 - root - INFO - Chain 1: Collected 15 samples
+2025-09-15 00:39:29,565 - root - INFO -   DIAGNOSTIC - Chain 1 summary:
+2025-09-15 00:39:29,565 - root - INFO -     Final avg parameter movement: 0.035310
+2025-09-15 00:39:29,566 - root - INFO -     Final prediction changed: True
+2025-09-15 00:39:29,566 - root - INFO -     Final confidence change: 1.680296
+2025-09-15 00:39:29,566 - root - INFO -     Final prediction: [1, 1]
+2025-09-15 00:39:29,566 - root - INFO -     Final confidence: [0.004665484186261892, 0.9953345656394958]
+2025-09-15 00:39:29,701 - root - INFO - Running chain 2/4
+2025-09-15 00:39:30,330 - root - INFO - Chain 2: MAP model loaded - LoRA param norms: [2.3472883701324463, 1.2312262058258057, 2.283034324645996]
+2025-09-15 00:39:30,522 - root - INFO - Chain 2: MAP model test - Loss: 0.3996, Acc: 0.7812
+2025-09-15 00:39:30,522 - root - INFO - Chain 2: Initial configuration:
+2025-09-15 00:39:30,522 - root - INFO -   Initial step size: 2.00e-03
+2025-09-15 00:39:30,522 - root - INFO -   Temperature: 2.0
+2025-09-15 00:39:30,522 - root - INFO -   Noise scale: 1.00e-04
+2025-09-15 00:39:30,523 - root - INFO -   Prior std: 17.000
+2025-09-15 00:39:30,523 - root - INFO -   SAM rho: 0.050
+2025-09-15 00:39:30,523 - root - INFO -   Decay rate: 0.300
+2025-09-15 00:39:30,523 - root - INFO - Chain 2: Burn-in phase (8000 steps)
+2025-09-15 00:39:31,704 - root - INFO - Burn-in step 0/8000:
+2025-09-15 00:39:31,704 - root - INFO -   Actual drift norm: 8.47e-03
+2025-09-15 00:39:31,704 - root - INFO -   Actual noise norm: 3.45e-03
+2025-09-15 00:39:31,704 - root - INFO -   Actual drift/noise ratio: 2.454
+2025-09-15 00:39:31,704 - root - INFO -   Theoretical step/noise ratio: 55.470
+2025-09-15 00:39:31,705 - root - INFO -   Prior/Likelihood ratio: 12.204
+2025-09-15 00:39:31,705 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 00:39:31,705 - root - INFO -   SAM gradient norm: 4.23e+00
+2025-09-15 00:39:31,705 - root - INFO -   SAM perturbation/gradient ratio: 0.116
+2025-09-15 00:39:31,705 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 00:39:31,705 - root - INFO -   Loss change after SAM perturbation: 1.4944
+2025-09-15 00:46:41,153 - root - INFO - Burn-in step 500/8000:
+2025-09-15 00:46:41,156 - root - INFO -   Actual drift norm: 3.64e-03
+2025-09-15 00:46:41,156 - root - INFO -   Actual noise norm: 3.40e-03
+2025-09-15 00:46:41,156 - root - INFO -   Actual drift/noise ratio: 1.069
+2025-09-15 00:46:41,156 - root - INFO -   Theoretical step/noise ratio: 54.499
+2025-09-15 00:46:41,156 - root - INFO -   Prior/Likelihood ratio: 4.609
+2025-09-15 00:46:41,156 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 00:46:41,156 - root - INFO -   SAM gradient norm: 1.88e+00
+2025-09-15 00:46:41,156 - root - INFO -   SAM perturbation/gradient ratio: 0.260
+2025-09-15 00:46:41,157 - root - INFO -   Rank-1 noise contribution: 0.085
+2025-09-15 00:46:41,157 - root - INFO -   Loss change after SAM perturbation: 0.5258
+2025-09-15 00:53:50,862 - root - INFO - Burn-in step 1000/8000:
+2025-09-15 00:53:50,865 - root - INFO -   Actual drift norm: 8.15e-03
+2025-09-15 00:53:50,865 - root - INFO -   Actual noise norm: 3.35e-03
+2025-09-15 00:53:50,865 - root - INFO -   Actual drift/noise ratio: 2.436
+2025-09-15 00:53:50,865 - root - INFO -   Theoretical step/noise ratio: 53.644
+2025-09-15 00:53:50,866 - root - INFO -   Prior/Likelihood ratio: 6.643
+2025-09-15 00:53:50,866 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 00:53:50,866 - root - INFO -   SAM gradient norm: 4.36e+00
+2025-09-15 00:53:50,866 - root - INFO -   SAM perturbation/gradient ratio: 0.112
+2025-09-15 00:53:50,866 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-15 00:53:50,866 - root - INFO -   Loss change after SAM perturbation: 0.5183
+2025-09-15 01:01:00,190 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 01:01:00,193 - root - INFO -   Actual drift norm: 3.31e-03
+2025-09-15 01:01:00,193 - root - INFO -   Actual noise norm: 3.30e-03
+2025-09-15 01:01:00,193 - root - INFO -   Actual drift/noise ratio: 1.005
+2025-09-15 01:01:00,193 - root - INFO -   Theoretical step/noise ratio: 52.883
+2025-09-15 01:01:00,193 - root - INFO -   Prior/Likelihood ratio: 9.738
+2025-09-15 01:01:00,193 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:01:00,193 - root - INFO -   SAM gradient norm: 1.82e+00
+2025-09-15 01:01:00,193 - root - INFO -   SAM perturbation/gradient ratio: 0.269
+2025-09-15 01:01:00,193 - root - INFO -   Rank-1 noise contribution: 0.110
+2025-09-15 01:01:00,193 - root - INFO -   Loss change after SAM perturbation: 0.3536
+2025-09-15 01:08:10,319 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 01:08:10,322 - root - INFO -   Actual drift norm: 7.66e-03
+2025-09-15 01:08:10,322 - root - INFO -   Actual noise norm: 3.25e-03
+2025-09-15 01:08:10,322 - root - INFO -   Actual drift/noise ratio: 2.359
+2025-09-15 01:08:10,322 - root - INFO -   Theoretical step/noise ratio: 52.197
+2025-09-15 01:08:10,322 - root - INFO -   Prior/Likelihood ratio: 5.051
+2025-09-15 01:08:10,322 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:08:10,323 - root - INFO -   SAM gradient norm: 4.32e+00
+2025-09-15 01:08:10,323 - root - INFO -   SAM perturbation/gradient ratio: 0.113
+2025-09-15 01:08:10,323 - root - INFO -   Rank-1 noise contribution: 0.100
+2025-09-15 01:08:10,323 - root - INFO -   Loss change after SAM perturbation: 0.7129
+2025-09-15 01:15:20,773 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 01:15:20,776 - root - INFO -   Actual drift norm: 2.80e-03
+2025-09-15 01:15:20,776 - root - INFO -   Actual noise norm: 3.22e-03
+2025-09-15 01:15:20,776 - root - INFO -   Actual drift/noise ratio: 0.870
+2025-09-15 01:15:20,776 - root - INFO -   Theoretical step/noise ratio: 51.574
+2025-09-15 01:15:20,776 - root - INFO -   Prior/Likelihood ratio: 10.249
+2025-09-15 01:15:20,776 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:15:20,777 - root - INFO -   SAM gradient norm: 1.62e+00
+2025-09-15 01:15:20,777 - root - INFO -   SAM perturbation/gradient ratio: 0.302
+2025-09-15 01:15:20,777 - root - INFO -   Rank-1 noise contribution: 0.095
+2025-09-15 01:15:20,777 - root - INFO -   Loss change after SAM perturbation: 0.2059
+2025-09-15 01:22:31,252 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 01:22:31,255 - root - INFO -   Actual drift norm: 6.16e-03
+2025-09-15 01:22:31,255 - root - INFO -   Actual noise norm: 3.18e-03
+2025-09-15 01:22:31,255 - root - INFO -   Actual drift/noise ratio: 1.939
+2025-09-15 01:22:31,255 - root - INFO -   Theoretical step/noise ratio: 51.004
+2025-09-15 01:22:31,255 - root - INFO -   Prior/Likelihood ratio: 3.314
+2025-09-15 01:22:31,255 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:22:31,256 - root - INFO -   SAM gradient norm: 3.64e+00
+2025-09-15 01:22:31,256 - root - INFO -   SAM perturbation/gradient ratio: 0.135
+2025-09-15 01:22:31,256 - root - INFO -   Rank-1 noise contribution: 0.089
+2025-09-15 01:22:31,256 - root - INFO -   Loss change after SAM perturbation: 0.4954
+2025-09-15 01:29:40,415 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 01:29:40,418 - root - INFO -   Actual drift norm: 8.14e-03
+2025-09-15 01:29:40,419 - root - INFO -   Actual noise norm: 3.14e-03
+2025-09-15 01:29:40,419 - root - INFO -   Actual drift/noise ratio: 2.590
+2025-09-15 01:29:40,419 - root - INFO -   Theoretical step/noise ratio: 50.479
+2025-09-15 01:29:40,419 - root - INFO -   Prior/Likelihood ratio: 5.268
+2025-09-15 01:29:40,419 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:29:40,419 - root - INFO -   SAM gradient norm: 4.91e+00
+2025-09-15 01:29:40,419 - root - INFO -   SAM perturbation/gradient ratio: 0.100
+2025-09-15 01:29:40,419 - root - INFO -   Rank-1 noise contribution: 0.094
+2025-09-15 01:29:40,419 - root - INFO -   Loss change after SAM perturbation: 0.5999
+2025-09-15 01:36:49,410 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 01:36:49,413 - root - INFO -   Actual drift norm: 1.89e-03
+2025-09-15 01:36:49,413 - root - INFO -   Actual noise norm: 3.11e-03
+2025-09-15 01:36:49,413 - root - INFO -   Actual drift/noise ratio: 0.607
+2025-09-15 01:36:49,413 - root - INFO -   Theoretical step/noise ratio: 49.992
+2025-09-15 01:36:49,413 - root - INFO -   Prior/Likelihood ratio: 7.128
+2025-09-15 01:36:49,413 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:36:49,413 - root - INFO -   SAM gradient norm: 1.16e+00
+2025-09-15 01:36:49,413 - root - INFO -   SAM perturbation/gradient ratio: 0.422
+2025-09-15 01:36:49,413 - root - INFO -   Rank-1 noise contribution: 0.104
+2025-09-15 01:36:49,413 - root - INFO -   Loss change after SAM perturbation: 0.1787
+2025-09-15 01:43:58,436 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 01:43:58,439 - root - INFO -   Actual drift norm: 3.65e-03
+2025-09-15 01:43:58,439 - root - INFO -   Actual noise norm: 3.09e-03
+2025-09-15 01:43:58,439 - root - INFO -   Actual drift/noise ratio: 1.183
+2025-09-15 01:43:58,439 - root - INFO -   Theoretical step/noise ratio: 49.540
+2025-09-15 01:43:58,439 - root - INFO -   Prior/Likelihood ratio: 6.510
+2025-09-15 01:43:58,439 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:43:58,439 - root - INFO -   SAM gradient norm: 2.29e+00
+2025-09-15 01:43:58,439 - root - INFO -   SAM perturbation/gradient ratio: 0.214
+2025-09-15 01:43:58,439 - root - INFO -   Rank-1 noise contribution: 0.094
+2025-09-15 01:43:58,439 - root - INFO -   Loss change after SAM perturbation: 0.3417
+2025-09-15 01:51:07,654 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 01:51:07,656 - root - INFO -   Actual drift norm: 2.17e-03
+2025-09-15 01:51:07,656 - root - INFO -   Actual noise norm: 3.06e-03
+2025-09-15 01:51:07,656 - root - INFO -   Actual drift/noise ratio: 0.708
+2025-09-15 01:51:07,657 - root - INFO -   Theoretical step/noise ratio: 49.117
+2025-09-15 01:51:07,657 - root - INFO -   Prior/Likelihood ratio: 6.829
+2025-09-15 01:51:07,657 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:51:07,657 - root - INFO -   SAM gradient norm: 1.38e+00
+2025-09-15 01:51:07,657 - root - INFO -   SAM perturbation/gradient ratio: 0.355
+2025-09-15 01:51:07,657 - root - INFO -   Rank-1 noise contribution: 0.088
+2025-09-15 01:51:07,657 - root - INFO -   Loss change after SAM perturbation: 0.1794
+2025-09-15 01:58:17,333 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 01:58:17,336 - root - INFO -   Actual drift norm: 3.36e-03
+2025-09-15 01:58:17,336 - root - INFO -   Actual noise norm: 3.04e-03
+2025-09-15 01:58:17,336 - root - INFO -   Actual drift/noise ratio: 1.105
+2025-09-15 01:58:17,336 - root - INFO -   Theoretical step/noise ratio: 48.720
+2025-09-15 01:58:17,336 - root - INFO -   Prior/Likelihood ratio: 1.918
+2025-09-15 01:58:17,336 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 01:58:17,336 - root - INFO -   SAM gradient norm: 2.17e+00
+2025-09-15 01:58:17,336 - root - INFO -   SAM perturbation/gradient ratio: 0.225
+2025-09-15 01:58:17,336 - root - INFO -   Rank-1 noise contribution: 0.087
+2025-09-15 01:58:17,336 - root - INFO -   Loss change after SAM perturbation: 0.2006
+2025-09-15 02:05:26,933 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 02:05:26,936 - root - INFO -   Actual drift norm: 3.82e-03
+2025-09-15 02:05:26,936 - root - INFO -   Actual noise norm: 3.01e-03
+2025-09-15 02:05:26,936 - root - INFO -   Actual drift/noise ratio: 1.270
+2025-09-15 02:05:26,936 - root - INFO -   Theoretical step/noise ratio: 48.347
+2025-09-15 02:05:26,937 - root - INFO -   Prior/Likelihood ratio: 6.117
+2025-09-15 02:05:26,937 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:05:26,937 - root - INFO -   SAM gradient norm: 2.52e+00
+2025-09-15 02:05:26,937 - root - INFO -   SAM perturbation/gradient ratio: 0.195
+2025-09-15 02:05:26,937 - root - INFO -   Rank-1 noise contribution: 0.086
+2025-09-15 02:05:26,937 - root - INFO -   Loss change after SAM perturbation: 0.3786
+2025-09-15 02:12:36,572 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 02:12:36,575 - root - INFO -   Actual drift norm: 1.47e-03
+2025-09-15 02:12:36,575 - root - INFO -   Actual noise norm: 2.99e-03
+2025-09-15 02:12:36,575 - root - INFO -   Actual drift/noise ratio: 0.492
+2025-09-15 02:12:36,575 - root - INFO -   Theoretical step/noise ratio: 47.994
+2025-09-15 02:12:36,575 - root - INFO -   Prior/Likelihood ratio: 4.250
+2025-09-15 02:12:36,575 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:12:36,575 - root - INFO -   SAM gradient norm: 9.82e-01
+2025-09-15 02:12:36,575 - root - INFO -   SAM perturbation/gradient ratio: 0.499
+2025-09-15 02:12:36,575 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 02:12:36,576 - root - INFO -   Loss change after SAM perturbation: 0.1918
+2025-09-15 02:19:47,262 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 02:19:47,265 - root - INFO -   Actual drift norm: 1.88e-03
+2025-09-15 02:19:47,265 - root - INFO -   Actual noise norm: 2.97e-03
+2025-09-15 02:19:47,265 - root - INFO -   Actual drift/noise ratio: 0.633
+2025-09-15 02:19:47,265 - root - INFO -   Theoretical step/noise ratio: 47.660
+2025-09-15 02:19:47,265 - root - INFO -   Prior/Likelihood ratio: 8.431
+2025-09-15 02:19:47,265 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:19:47,265 - root - INFO -   SAM gradient norm: 1.27e+00
+2025-09-15 02:19:47,265 - root - INFO -   SAM perturbation/gradient ratio: 0.385
+2025-09-15 02:19:47,265 - root - INFO -   Rank-1 noise contribution: 0.099
+2025-09-15 02:19:47,265 - root - INFO -   Loss change after SAM perturbation: 0.2106
+2025-09-15 02:26:57,463 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 02:26:57,466 - root - INFO -   Actual drift norm: 4.41e-03
+2025-09-15 02:26:57,466 - root - INFO -   Actual noise norm: 2.95e-03
+2025-09-15 02:26:57,466 - root - INFO -   Actual drift/noise ratio: 1.498
+2025-09-15 02:26:57,466 - root - INFO -   Theoretical step/noise ratio: 47.344
+2025-09-15 02:26:57,466 - root - INFO -   Prior/Likelihood ratio: 4.897
+2025-09-15 02:26:57,466 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:26:57,466 - root - INFO -   SAM gradient norm: 3.03e+00
+2025-09-15 02:26:57,466 - root - INFO -   SAM perturbation/gradient ratio: 0.162
+2025-09-15 02:26:57,466 - root - INFO -   Rank-1 noise contribution: 0.081
+2025-09-15 02:26:57,466 - root - INFO -   Loss change after SAM perturbation: 0.2068
+2025-09-15 02:34:06,253 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 02:34:06,256 - root - INFO -     Avg parameter movement: 0.135216
+2025-09-15 02:34:06,256 - root - INFO -     Total parameters moved: 96
+2025-09-15 02:34:06,256 - root - INFO - Chain 2: Sampling phase (3000 steps)
+2025-09-15 02:34:06,406 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 02:34:06,406 - root - INFO -     Initial prediction: [1, 0]
+2025-09-15 02:34:06,407 - root - INFO -     Initial confidence: [0.0066697243601083755, 0.9933302998542786]
+2025-09-15 02:34:06,411 - root - INFO - Chain 2: Step size after burn-in:
+2025-09-15 02:34:06,411 - root - INFO -   Initial: 2.00e-03
+2025-09-15 02:34:06,411 - root - INFO -   Final: 1.44e-03
+2025-09-15 02:34:06,411 - root - INFO -   Reduction: 28.1%
+2025-09-15 02:34:07,463 - root - INFO - Chain 2, Step 0:
+2025-09-15 02:34:07,463 - root - INFO -   Actual drift norm: 2.70e-03
+2025-09-15 02:34:07,463 - root - INFO -   Actual noise norm: 2.92e-03
+2025-09-15 02:34:07,463 - root - INFO -   Actual drift/noise ratio: 0.922
+2025-09-15 02:34:07,463 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 02:34:07,463 - root - INFO -   Prior/Likelihood ratio: 4.942
+2025-09-15 02:34:07,464 - root - INFO -   SAM rho: 0.050
+2025-09-15 02:34:07,464 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:34:07,464 - root - INFO -   SAM gradient norm: 1.87e+00
+2025-09-15 02:34:07,464 - root - INFO -   SAM perturbation/gradient ratio: 0.261
+2025-09-15 02:34:07,464 - root - INFO -   Rank-1 noise contribution: 0.097
+2025-09-15 02:34:07,464 - root - INFO -   Loss change after SAM perturbation: 0.3070
+2025-09-15 02:34:07,464 - root - INFO -   Temperature: 2.0
+2025-09-15 02:34:07,631 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 02:34:07,632 - root - INFO -     Avg parameter movement: 0.000390
+2025-09-15 02:34:07,632 - root - INFO -     Prediction changed: False
+2025-09-15 02:34:07,632 - root - INFO -     Confidence change: 0.263136
+2025-09-15 02:34:07,632 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:34:07,632 - root - INFO -     Current confidence: [0.006901583168655634, 0.9930984377861023]
+2025-09-15 02:34:07,632 - root - INFO - Sampling step 0/3000, step_size: 1.44e-03
+2025-09-15 02:34:50,645 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 02:34:50,645 - root - INFO -     Avg parameter movement: 0.002961
+2025-09-15 02:34:50,646 - root - INFO -     Prediction changed: False
+2025-09-15 02:34:50,646 - root - INFO -     Confidence change: 0.263202
+2025-09-15 02:34:50,646 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:34:50,646 - root - INFO -     Current confidence: [0.00633935397490859, 0.9936606287956238]
+2025-09-15 02:35:33,642 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 02:35:33,642 - root - INFO -     Avg parameter movement: 0.004146
+2025-09-15 02:35:33,644 - root - INFO -     Prediction changed: True
+2025-09-15 02:35:33,644 - root - INFO -     Confidence change: 0.813406
+2025-09-15 02:35:33,694 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 02:35:33,720 - root - INFO -     Current confidence: [0.007520568091422319, 0.9924794435501099]
+2025-09-15 02:36:16,881 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 02:36:16,881 - root - INFO -     Avg parameter movement: 0.005073
+2025-09-15 02:36:16,881 - root - INFO -     Prediction changed: False
+2025-09-15 02:36:16,881 - root - INFO -     Confidence change: 0.269305
+2025-09-15 02:36:16,881 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:36:16,881 - root - INFO -     Current confidence: [0.011096972040832043, 0.9889029860496521]
+2025-09-15 02:36:59,833 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 02:36:59,834 - root - INFO -     Avg parameter movement: 0.005972
+2025-09-15 02:36:59,834 - root - INFO -     Prediction changed: True
+2025-09-15 02:36:59,834 - root - INFO -     Confidence change: 1.067502
+2025-09-15 02:36:59,834 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 02:36:59,835 - root - INFO -     Current confidence: [0.04703141376376152, 0.9529685974121094]
+2025-09-15 02:40:34,252 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 02:40:34,254 - root - INFO -     Avg parameter movement: 0.009209
+2025-09-15 02:40:34,255 - root - INFO -     Prediction changed: True
+2025-09-15 02:40:34,255 - root - INFO -     Confidence change: 1.708197
+2025-09-15 02:40:34,278 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:40:34,308 - root - INFO -     Current confidence: [0.9430087804794312, 0.05699129030108452]
+2025-09-15 02:47:43,520 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 02:47:43,522 - root - INFO -     Avg parameter movement: 0.014915
+2025-09-15 02:47:43,522 - root - INFO -     Prediction changed: False
+2025-09-15 02:47:43,522 - root - INFO -     Confidence change: 0.259073
+2025-09-15 02:47:43,523 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:47:43,523 - root - INFO -     Current confidence: [0.006950199604034424, 0.9930497407913208]
+2025-09-15 02:48:26,493 - root - INFO - Chain 2, Step 1000:
+2025-09-15 02:48:26,495 - root - INFO -   Actual drift norm: 1.83e-03
+2025-09-15 02:48:26,495 - root - INFO -   Actual noise norm: 2.94e-03
+2025-09-15 02:48:26,495 - root - INFO -   Actual drift/noise ratio: 0.621
+2025-09-15 02:48:26,496 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 02:48:26,496 - root - INFO -   Prior/Likelihood ratio: 5.456
+2025-09-15 02:48:26,496 - root - INFO -   SAM rho: 0.050
+2025-09-15 02:48:26,496 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 02:48:26,496 - root - INFO -   SAM gradient norm: 1.27e+00
+2025-09-15 02:48:26,496 - root - INFO -   SAM perturbation/gradient ratio: 0.386
+2025-09-15 02:48:26,496 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-15 02:48:26,496 - root - INFO -   Loss change after SAM perturbation: 0.1674
+2025-09-15 02:48:26,496 - root - INFO -   Temperature: 2.0
+2025-09-15 02:48:26,621 - root - INFO - Sampling step 1000/3000, step_size: 1.44e-03
+2025-09-15 02:54:53,023 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 02:54:53,026 - root - INFO -     Avg parameter movement: 0.020129
+2025-09-15 02:54:53,026 - root - INFO -     Prediction changed: False
+2025-09-15 02:54:53,026 - root - INFO -     Confidence change: 0.487339
+2025-09-15 02:54:53,026 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:54:53,026 - root - INFO -     Current confidence: [0.30266255140304565, 0.6973374485969543]
+2025-09-15 03:02:02,457 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 03:02:02,459 - root - INFO -     Avg parameter movement: 0.025200
+2025-09-15 03:02:02,459 - root - INFO -     Prediction changed: True
+2025-09-15 03:02:02,459 - root - INFO -     Confidence change: 1.077656
+2025-09-15 03:02:02,460 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:02:02,460 - root - INFO -     Current confidence: [0.006295621395111084, 0.9937043786048889]
+2025-09-15 03:02:45,514 - root - INFO - Chain 2, Step 2000:
+2025-09-15 03:02:45,514 - root - INFO -   Actual drift norm: 2.63e-03
+2025-09-15 03:02:45,514 - root - INFO -   Actual noise norm: 2.94e-03
+2025-09-15 03:02:45,515 - root - INFO -   Actual drift/noise ratio: 0.896
+2025-09-15 03:02:45,515 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 03:02:45,515 - root - INFO -   Prior/Likelihood ratio: 6.210
+2025-09-15 03:02:45,515 - root - INFO -   SAM rho: 0.050
+2025-09-15 03:02:45,515 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:02:45,515 - root - INFO -   SAM gradient norm: 1.83e+00
+2025-09-15 03:02:45,515 - root - INFO -   SAM perturbation/gradient ratio: 0.268
+2025-09-15 03:02:45,515 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 03:02:45,515 - root - INFO -   Loss change after SAM perturbation: 0.2522
+2025-09-15 03:02:45,515 - root - INFO -   Temperature: 2.0
+2025-09-15 03:02:45,641 - root - INFO - Sampling step 2000/3000, step_size: 1.44e-03
+2025-09-15 03:09:11,722 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 03:09:11,724 - root - INFO -     Avg parameter movement: 0.030186
+2025-09-15 03:09:11,725 - root - INFO -     Prediction changed: False
+2025-09-15 03:09:11,725 - root - INFO -     Confidence change: 0.553870
+2025-09-15 03:09:11,725 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 03:09:11,725 - root - INFO -     Current confidence: [0.3926596939563751, 0.6073403358459473]
+2025-09-15 03:16:21,063 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 03:16:21,066 - root - INFO -     Avg parameter movement: 0.034953
+2025-09-15 03:16:21,066 - root - INFO -     Prediction changed: True
+2025-09-15 03:16:21,066 - root - INFO -     Confidence change: 1.125337
+2025-09-15 03:16:21,066 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:16:21,066 - root - INFO -     Current confidence: [0.23293808102607727, 0.7670619487762451]
+2025-09-15 03:17:03,045 - root - INFO - Chain 2: Collected 15 samples
+2025-09-15 03:17:03,090 - root - INFO -   DIAGNOSTIC - Chain 2 summary:
+2025-09-15 03:17:03,090 - root - INFO -     Final avg parameter movement: 0.035476
+2025-09-15 03:17:03,090 - root - INFO -     Final prediction changed: True
+2025-09-15 03:17:03,091 - root - INFO -     Final confidence change: 1.706843
+2025-09-15 03:17:03,091 - root - INFO -     Final prediction: [0, 1]
+2025-09-15 03:17:03,091 - root - INFO -     Final confidence: [0.9407884478569031, 0.05921157822012901]
+2025-09-15 03:17:03,216 - root - INFO - Running chain 3/4
+2025-09-15 03:17:03,833 - root - INFO - Chain 3: MAP model loaded - LoRA param norms: [2.3472883701324463, 1.2312262058258057, 2.283034324645996]
+2025-09-15 03:17:04,031 - root - INFO - Chain 3: MAP model test - Loss: 0.3996, Acc: 0.7812
+2025-09-15 03:17:04,031 - root - INFO - Chain 3: Initial configuration:
+2025-09-15 03:17:04,031 - root - INFO -   Initial step size: 2.00e-03
+2025-09-15 03:17:04,031 - root - INFO -   Temperature: 2.0
+2025-09-15 03:17:04,031 - root - INFO -   Noise scale: 1.00e-04
+2025-09-15 03:17:04,031 - root - INFO -   Prior std: 17.000
+2025-09-15 03:17:04,032 - root - INFO -   SAM rho: 0.050
+2025-09-15 03:17:04,032 - root - INFO -   Decay rate: 0.300
+2025-09-15 03:17:04,032 - root - INFO - Chain 3: Burn-in phase (8000 steps)
+2025-09-15 03:17:05,214 - root - INFO - Burn-in step 0/8000:
+2025-09-15 03:17:05,215 - root - INFO -   Actual drift norm: 3.09e-03
+2025-09-15 03:17:05,215 - root - INFO -   Actual noise norm: 3.46e-03
+2025-09-15 03:17:05,215 - root - INFO -   Actual drift/noise ratio: 0.891
+2025-09-15 03:17:05,215 - root - INFO -   Theoretical step/noise ratio: 55.470
+2025-09-15 03:17:05,215 - root - INFO -   Prior/Likelihood ratio: 48.494
+2025-09-15 03:17:05,215 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:17:05,215 - root - INFO -   SAM gradient norm: 1.54e+00
+2025-09-15 03:17:05,215 - root - INFO -   SAM perturbation/gradient ratio: 0.318
+2025-09-15 03:17:05,215 - root - INFO -   Rank-1 noise contribution: 0.084
+2025-09-15 03:17:05,215 - root - INFO -   Loss change after SAM perturbation: 0.2046
+2025-09-15 03:24:14,968 - root - INFO - Burn-in step 500/8000:
+2025-09-15 03:24:14,971 - root - INFO -   Actual drift norm: 6.91e-03
+2025-09-15 03:24:14,971 - root - INFO -   Actual noise norm: 3.39e-03
+2025-09-15 03:24:14,971 - root - INFO -   Actual drift/noise ratio: 2.038
+2025-09-15 03:24:14,971 - root - INFO -   Theoretical step/noise ratio: 54.499
+2025-09-15 03:24:14,971 - root - INFO -   Prior/Likelihood ratio: 4.776
+2025-09-15 03:24:14,972 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:24:14,972 - root - INFO -   SAM gradient norm: 3.58e+00
+2025-09-15 03:24:14,972 - root - INFO -   SAM perturbation/gradient ratio: 0.137
+2025-09-15 03:24:14,972 - root - INFO -   Rank-1 noise contribution: 0.097
+2025-09-15 03:24:14,972 - root - INFO -   Loss change after SAM perturbation: 0.2903
+2025-09-15 03:31:24,618 - root - INFO - Burn-in step 1000/8000:
+2025-09-15 03:31:24,621 - root - INFO -   Actual drift norm: 7.16e-03
+2025-09-15 03:31:24,621 - root - INFO -   Actual noise norm: 3.35e-03
+2025-09-15 03:31:24,621 - root - INFO -   Actual drift/noise ratio: 2.139
+2025-09-15 03:31:24,621 - root - INFO -   Theoretical step/noise ratio: 53.644
+2025-09-15 03:31:24,622 - root - INFO -   Prior/Likelihood ratio: 4.593
+2025-09-15 03:31:24,622 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:31:24,622 - root - INFO -   SAM gradient norm: 3.83e+00
+2025-09-15 03:31:24,622 - root - INFO -   SAM perturbation/gradient ratio: 0.128
+2025-09-15 03:31:24,622 - root - INFO -   Rank-1 noise contribution: 0.095
+2025-09-15 03:31:24,622 - root - INFO -   Loss change after SAM perturbation: 0.3253
+2025-09-15 03:38:36,817 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 03:38:36,820 - root - INFO -   Actual drift norm: 5.99e-03
+2025-09-15 03:38:36,820 - root - INFO -   Actual noise norm: 3.29e-03
+2025-09-15 03:38:36,820 - root - INFO -   Actual drift/noise ratio: 1.821
+2025-09-15 03:38:36,820 - root - INFO -   Theoretical step/noise ratio: 52.883
+2025-09-15 03:38:36,820 - root - INFO -   Prior/Likelihood ratio: 2.091
+2025-09-15 03:38:36,820 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:38:36,820 - root - INFO -   SAM gradient norm: 3.29e+00
+2025-09-15 03:38:36,820 - root - INFO -   SAM perturbation/gradient ratio: 0.149
+2025-09-15 03:38:36,821 - root - INFO -   Rank-1 noise contribution: 0.090
+2025-09-15 03:38:36,821 - root - INFO -   Loss change after SAM perturbation: 0.3379
+2025-09-15 03:45:54,318 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 03:45:54,321 - root - INFO -   Actual drift norm: 3.73e-03
+2025-09-15 03:45:54,321 - root - INFO -   Actual noise norm: 3.25e-03
+2025-09-15 03:45:54,321 - root - INFO -   Actual drift/noise ratio: 1.147
+2025-09-15 03:45:54,321 - root - INFO -   Theoretical step/noise ratio: 52.197
+2025-09-15 03:45:54,321 - root - INFO -   Prior/Likelihood ratio: 6.446
+2025-09-15 03:45:54,321 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:45:54,321 - root - INFO -   SAM gradient norm: 2.10e+00
+2025-09-15 03:45:54,321 - root - INFO -   SAM perturbation/gradient ratio: 0.233
+2025-09-15 03:45:54,321 - root - INFO -   Rank-1 noise contribution: 0.097
+2025-09-15 03:45:54,321 - root - INFO -   Loss change after SAM perturbation: 0.2391
+2025-09-15 03:53:07,722 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 03:53:07,725 - root - INFO -   Actual drift norm: 8.64e-03
+2025-09-15 03:53:07,725 - root - INFO -   Actual noise norm: 3.22e-03
+2025-09-15 03:53:07,725 - root - INFO -   Actual drift/noise ratio: 2.688
+2025-09-15 03:53:07,725 - root - INFO -   Theoretical step/noise ratio: 51.574
+2025-09-15 03:53:07,725 - root - INFO -   Prior/Likelihood ratio: 6.402
+2025-09-15 03:53:07,725 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 03:53:07,725 - root - INFO -   SAM gradient norm: 5.22e+00
+2025-09-15 03:53:07,725 - root - INFO -   SAM perturbation/gradient ratio: 0.094
+2025-09-15 03:53:07,725 - root - INFO -   Rank-1 noise contribution: 0.086
+2025-09-15 03:53:07,725 - root - INFO -   Loss change after SAM perturbation: 0.3182
+2025-09-15 04:00:21,516 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 04:00:21,518 - root - INFO -   Actual drift norm: 2.44e-03
+2025-09-15 04:00:21,518 - root - INFO -   Actual noise norm: 3.18e-03
+2025-09-15 04:00:21,518 - root - INFO -   Actual drift/noise ratio: 0.768
+2025-09-15 04:00:21,518 - root - INFO -   Theoretical step/noise ratio: 51.004
+2025-09-15 04:00:21,518 - root - INFO -   Prior/Likelihood ratio: 4.259
+2025-09-15 04:00:21,519 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:00:21,519 - root - INFO -   SAM gradient norm: 1.44e+00
+2025-09-15 04:00:21,519 - root - INFO -   SAM perturbation/gradient ratio: 0.339
+2025-09-15 04:00:21,519 - root - INFO -   Rank-1 noise contribution: 0.089
+2025-09-15 04:00:21,519 - root - INFO -   Loss change after SAM perturbation: 0.2610
+2025-09-15 04:07:35,927 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 04:07:35,929 - root - INFO -   Actual drift norm: 2.48e-03
+2025-09-15 04:07:35,929 - root - INFO -   Actual noise norm: 3.14e-03
+2025-09-15 04:07:35,929 - root - INFO -   Actual drift/noise ratio: 0.788
+2025-09-15 04:07:35,930 - root - INFO -   Theoretical step/noise ratio: 50.479
+2025-09-15 04:07:35,930 - root - INFO -   Prior/Likelihood ratio: 5.053
+2025-09-15 04:07:35,930 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:07:35,930 - root - INFO -   SAM gradient norm: 1.49e+00
+2025-09-15 04:07:35,930 - root - INFO -   SAM perturbation/gradient ratio: 0.328
+2025-09-15 04:07:35,930 - root - INFO -   Rank-1 noise contribution: 0.105
+2025-09-15 04:07:35,930 - root - INFO -   Loss change after SAM perturbation: 0.2288
+2025-09-15 04:14:49,902 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 04:14:49,905 - root - INFO -   Actual drift norm: 3.13e-03
+2025-09-15 04:14:49,905 - root - INFO -   Actual noise norm: 3.12e-03
+2025-09-15 04:14:49,905 - root - INFO -   Actual drift/noise ratio: 1.005
+2025-09-15 04:14:49,905 - root - INFO -   Theoretical step/noise ratio: 49.992
+2025-09-15 04:14:49,905 - root - INFO -   Prior/Likelihood ratio: 3.980
+2025-09-15 04:14:49,905 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:14:49,905 - root - INFO -   SAM gradient norm: 1.93e+00
+2025-09-15 04:14:49,905 - root - INFO -   SAM perturbation/gradient ratio: 0.254
+2025-09-15 04:14:49,905 - root - INFO -   Rank-1 noise contribution: 0.092
+2025-09-15 04:14:49,905 - root - INFO -   Loss change after SAM perturbation: 0.3085
+2025-09-15 04:22:03,684 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 04:22:03,686 - root - INFO -   Actual drift norm: 2.06e-03
+2025-09-15 04:22:03,686 - root - INFO -   Actual noise norm: 3.09e-03
+2025-09-15 04:22:03,686 - root - INFO -   Actual drift/noise ratio: 0.666
+2025-09-15 04:22:03,687 - root - INFO -   Theoretical step/noise ratio: 49.540
+2025-09-15 04:22:03,687 - root - INFO -   Prior/Likelihood ratio: 3.642
+2025-09-15 04:22:03,687 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:22:03,687 - root - INFO -   SAM gradient norm: 1.29e+00
+2025-09-15 04:22:03,687 - root - INFO -   SAM perturbation/gradient ratio: 0.380
+2025-09-15 04:22:03,687 - root - INFO -   Rank-1 noise contribution: 0.090
+2025-09-15 04:22:03,687 - root - INFO -   Loss change after SAM perturbation: 0.1947
+2025-09-15 04:29:17,745 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 04:29:17,747 - root - INFO -   Actual drift norm: 2.42e-03
+2025-09-15 04:29:17,747 - root - INFO -   Actual noise norm: 3.06e-03
+2025-09-15 04:29:17,747 - root - INFO -   Actual drift/noise ratio: 0.791
+2025-09-15 04:29:17,747 - root - INFO -   Theoretical step/noise ratio: 49.117
+2025-09-15 04:29:17,748 - root - INFO -   Prior/Likelihood ratio: 3.788
+2025-09-15 04:29:17,748 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:29:17,748 - root - INFO -   SAM gradient norm: 1.54e+00
+2025-09-15 04:29:17,748 - root - INFO -   SAM perturbation/gradient ratio: 0.317
+2025-09-15 04:29:17,748 - root - INFO -   Rank-1 noise contribution: 0.080
+2025-09-15 04:29:17,748 - root - INFO -   Loss change after SAM perturbation: 0.2745
+2025-09-15 04:36:31,501 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 04:36:31,503 - root - INFO -   Actual drift norm: 2.46e-03
+2025-09-15 04:36:31,503 - root - INFO -   Actual noise norm: 3.04e-03
+2025-09-15 04:36:31,503 - root - INFO -   Actual drift/noise ratio: 0.810
+2025-09-15 04:36:31,504 - root - INFO -   Theoretical step/noise ratio: 48.720
+2025-09-15 04:36:31,504 - root - INFO -   Prior/Likelihood ratio: 4.961
+2025-09-15 04:36:31,504 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:36:31,504 - root - INFO -   SAM gradient norm: 1.60e+00
+2025-09-15 04:36:31,504 - root - INFO -   SAM perturbation/gradient ratio: 0.307
+2025-09-15 04:36:31,504 - root - INFO -   Rank-1 noise contribution: 0.084
+2025-09-15 04:36:31,504 - root - INFO -   Loss change after SAM perturbation: 0.2905
+2025-09-15 04:43:45,348 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 04:43:45,351 - root - INFO -   Actual drift norm: 5.15e-03
+2025-09-15 04:43:45,351 - root - INFO -   Actual noise norm: 3.01e-03
+2025-09-15 04:43:45,351 - root - INFO -   Actual drift/noise ratio: 1.710
+2025-09-15 04:43:45,351 - root - INFO -   Theoretical step/noise ratio: 48.347
+2025-09-15 04:43:45,351 - root - INFO -   Prior/Likelihood ratio: 4.792
+2025-09-15 04:43:45,351 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:43:45,351 - root - INFO -   SAM gradient norm: 3.39e+00
+2025-09-15 04:43:45,351 - root - INFO -   SAM perturbation/gradient ratio: 0.145
+2025-09-15 04:43:45,351 - root - INFO -   Rank-1 noise contribution: 0.091
+2025-09-15 04:43:45,351 - root - INFO -   Loss change after SAM perturbation: 0.4583
+2025-09-15 04:50:59,575 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 04:50:59,578 - root - INFO -   Actual drift norm: 2.77e-03
+2025-09-15 04:50:59,578 - root - INFO -   Actual noise norm: 2.98e-03
+2025-09-15 04:50:59,578 - root - INFO -   Actual drift/noise ratio: 0.927
+2025-09-15 04:50:59,578 - root - INFO -   Theoretical step/noise ratio: 47.994
+2025-09-15 04:50:59,578 - root - INFO -   Prior/Likelihood ratio: 3.662
+2025-09-15 04:50:59,578 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:50:59,578 - root - INFO -   SAM gradient norm: 1.85e+00
+2025-09-15 04:50:59,578 - root - INFO -   SAM perturbation/gradient ratio: 0.265
+2025-09-15 04:50:59,578 - root - INFO -   Rank-1 noise contribution: 0.104
+2025-09-15 04:50:59,578 - root - INFO -   Loss change after SAM perturbation: 0.1654
+2025-09-15 04:58:13,795 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 04:58:13,798 - root - INFO -   Actual drift norm: 3.52e-03
+2025-09-15 04:58:13,798 - root - INFO -   Actual noise norm: 2.97e-03
+2025-09-15 04:58:13,798 - root - INFO -   Actual drift/noise ratio: 1.186
+2025-09-15 04:58:13,798 - root - INFO -   Theoretical step/noise ratio: 47.660
+2025-09-15 04:58:13,798 - root - INFO -   Prior/Likelihood ratio: 3.496
+2025-09-15 04:58:13,798 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 04:58:13,798 - root - INFO -   SAM gradient norm: 2.38e+00
+2025-09-15 04:58:13,798 - root - INFO -   SAM perturbation/gradient ratio: 0.206
+2025-09-15 04:58:13,798 - root - INFO -   Rank-1 noise contribution: 0.083
+2025-09-15 04:58:13,798 - root - INFO -   Loss change after SAM perturbation: 0.3701
+2025-09-15 05:05:28,341 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 05:05:28,344 - root - INFO -   Actual drift norm: 3.33e-03
+2025-09-15 05:05:28,344 - root - INFO -   Actual noise norm: 2.94e-03
+2025-09-15 05:05:28,344 - root - INFO -   Actual drift/noise ratio: 1.133
+2025-09-15 05:05:28,344 - root - INFO -   Theoretical step/noise ratio: 47.344
+2025-09-15 05:05:28,344 - root - INFO -   Prior/Likelihood ratio: 4.331
+2025-09-15 05:05:28,344 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 05:05:28,344 - root - INFO -   SAM gradient norm: 2.29e+00
+2025-09-15 05:05:28,344 - root - INFO -   SAM perturbation/gradient ratio: 0.214
+2025-09-15 05:05:28,344 - root - INFO -   Rank-1 noise contribution: 0.095
+2025-09-15 05:05:28,344 - root - INFO -   Loss change after SAM perturbation: 0.2303
+2025-09-15 05:12:41,117 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 05:12:41,120 - root - INFO -     Avg parameter movement: 0.134967
+2025-09-15 05:12:41,120 - root - INFO -     Total parameters moved: 96
+2025-09-15 05:12:41,120 - root - INFO - Chain 3: Sampling phase (3000 steps)
+2025-09-15 05:12:41,272 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 05:12:41,272 - root - INFO -     Initial prediction: [1, 1]
+2025-09-15 05:12:41,272 - root - INFO -     Initial confidence: [0.009032589383423328, 0.9909674525260925]
+2025-09-15 05:12:41,276 - root - INFO - Chain 3: Step size after burn-in:
+2025-09-15 05:12:41,277 - root - INFO -   Initial: 2.00e-03
+2025-09-15 05:12:41,277 - root - INFO -   Final: 1.44e-03
+2025-09-15 05:12:41,277 - root - INFO -   Reduction: 28.1%
+2025-09-15 05:12:42,345 - root - INFO - Chain 3, Step 0:
+2025-09-15 05:12:42,345 - root - INFO -   Actual drift norm: 2.23e-03
+2025-09-15 05:12:42,345 - root - INFO -   Actual noise norm: 2.94e-03
+2025-09-15 05:12:42,345 - root - INFO -   Actual drift/noise ratio: 0.758
+2025-09-15 05:12:42,345 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 05:12:42,345 - root - INFO -   Prior/Likelihood ratio: 5.017
+2025-09-15 05:12:42,345 - root - INFO -   SAM rho: 0.050
+2025-09-15 05:12:42,345 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 05:12:42,345 - root - INFO -   SAM gradient norm: 1.55e+00
+2025-09-15 05:12:42,345 - root - INFO -   SAM perturbation/gradient ratio: 0.317
+2025-09-15 05:12:42,345 - root - INFO -   Rank-1 noise contribution: 0.100
+2025-09-15 05:12:42,346 - root - INFO -   Loss change after SAM perturbation: 0.2144
+2025-09-15 05:12:42,346 - root - INFO -   Temperature: 2.0
+2025-09-15 05:12:42,514 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 05:12:42,514 - root - INFO -     Avg parameter movement: 0.000366
+2025-09-15 05:12:42,514 - root - INFO -     Prediction changed: True
+2025-09-15 05:12:42,514 - root - INFO -     Confidence change: 1.323926
+2025-09-15 05:12:42,514 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 05:12:42,514 - root - INFO -     Current confidence: [0.9451898336410522, 0.05481018126010895]
+2025-09-15 05:12:42,515 - root - INFO - Sampling step 0/3000, step_size: 1.44e-03
+2025-09-15 05:13:26,036 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 05:13:26,036 - root - INFO -     Avg parameter movement: 0.002779
+2025-09-15 05:13:26,036 - root - INFO -     Prediction changed: False
+2025-09-15 05:13:26,036 - root - INFO -     Confidence change: 0.004046
+2025-09-15 05:13:26,036 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:13:26,037 - root - INFO -     Current confidence: [0.010153120383620262, 0.9898468852043152]
+2025-09-15 05:14:09,665 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 05:14:09,666 - root - INFO -     Avg parameter movement: 0.003969
+2025-09-15 05:14:09,666 - root - INFO -     Prediction changed: False
+2025-09-15 05:14:09,666 - root - INFO -     Confidence change: 0.001325
+2025-09-15 05:14:09,667 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:14:09,667 - root - INFO -     Current confidence: [0.008274700492620468, 0.9917253255844116]
+2025-09-15 05:14:53,084 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 05:14:53,085 - root - INFO -     Avg parameter movement: 0.004947
+2025-09-15 05:14:53,085 - root - INFO -     Prediction changed: False
+2025-09-15 05:14:53,085 - root - INFO -     Confidence change: 0.005103
+2025-09-15 05:14:53,085 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:14:53,085 - root - INFO -     Current confidence: [0.00542429368942976, 0.9945757389068604]
+2025-09-15 05:15:36,559 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 05:15:36,560 - root - INFO -     Avg parameter movement: 0.005842
+2025-09-15 05:15:36,560 - root - INFO -     Prediction changed: True
+2025-09-15 05:15:36,560 - root - INFO -     Confidence change: 1.263468
+2025-09-15 05:15:36,560 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 05:15:36,560 - root - INFO -     Current confidence: [0.9024393558502197, 0.09756062924861908]
+2025-09-15 05:19:13,533 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 05:19:13,536 - root - INFO -     Avg parameter movement: 0.009229
+2025-09-15 05:19:13,536 - root - INFO -     Prediction changed: False
+2025-09-15 05:19:13,536 - root - INFO -     Confidence change: 0.004951
+2025-09-15 05:19:13,536 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:19:13,536 - root - INFO -     Current confidence: [0.0055386959575116634, 0.9944612979888916]
+2025-09-15 05:26:27,519 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 05:26:27,521 - root - INFO -     Avg parameter movement: 0.014921
+2025-09-15 05:26:27,522 - root - INFO -     Prediction changed: False
+2025-09-15 05:26:27,522 - root - INFO -     Confidence change: 0.005508
+2025-09-15 05:26:27,522 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:26:27,522 - root - INFO -     Current confidence: [0.005141864530742168, 0.9948581457138062]
+2025-09-15 05:27:10,905 - root - INFO - Chain 3, Step 1000:
+2025-09-15 05:27:10,906 - root - INFO -   Actual drift norm: 4.35e-03
+2025-09-15 05:27:10,906 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-15 05:27:10,906 - root - INFO -   Actual drift/noise ratio: 1.485
+2025-09-15 05:27:10,906 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 05:27:10,906 - root - INFO -   Prior/Likelihood ratio: 2.058
+2025-09-15 05:27:10,906 - root - INFO -   SAM rho: 0.050
+2025-09-15 05:27:10,906 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 05:27:10,906 - root - INFO -   SAM gradient norm: 3.03e+00
+2025-09-15 05:27:10,906 - root - INFO -   SAM perturbation/gradient ratio: 0.162
+2025-09-15 05:27:10,906 - root - INFO -   Rank-1 noise contribution: 0.096
+2025-09-15 05:27:10,906 - root - INFO -   Loss change after SAM perturbation: 0.3245
+2025-09-15 05:27:10,907 - root - INFO -   Temperature: 2.0
+2025-09-15 05:27:11,027 - root - INFO - Sampling step 1000/3000, step_size: 1.44e-03
+2025-09-15 05:33:41,547 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 05:33:41,550 - root - INFO -     Avg parameter movement: 0.020079
+2025-09-15 05:33:41,550 - root - INFO -     Prediction changed: False
+2025-09-15 05:33:41,550 - root - INFO -     Confidence change: 0.004295
+2025-09-15 05:33:41,550 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:33:41,551 - root - INFO -     Current confidence: [0.0060302577912807465, 0.9939697980880737]
+2025-09-15 05:40:55,875 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 05:40:55,877 - root - INFO -     Avg parameter movement: 0.025052
+2025-09-15 05:40:55,877 - root - INFO -     Prediction changed: True
+2025-09-15 05:40:55,878 - root - INFO -     Confidence change: 0.929044
+2025-09-15 05:40:55,878 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 05:40:55,878 - root - INFO -     Current confidence: [0.00533357635140419, 0.9946664571762085]
+2025-09-15 05:41:39,391 - root - INFO - Chain 3, Step 2000:
+2025-09-15 05:41:39,392 - root - INFO -   Actual drift norm: 2.43e-03
+2025-09-15 05:41:39,393 - root - INFO -   Actual noise norm: 2.92e-03
+2025-09-15 05:41:39,393 - root - INFO -   Actual drift/noise ratio: 0.830
+2025-09-15 05:41:39,393 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 05:41:39,393 - root - INFO -   Prior/Likelihood ratio: 3.720
+2025-09-15 05:41:39,393 - root - INFO -   SAM rho: 0.050
+2025-09-15 05:41:39,393 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 05:41:39,393 - root - INFO -   SAM gradient norm: 1.69e+00
+2025-09-15 05:41:39,393 - root - INFO -   SAM perturbation/gradient ratio: 0.290
+2025-09-15 05:41:39,393 - root - INFO -   Rank-1 noise contribution: 0.091
+2025-09-15 05:41:39,393 - root - INFO -   Loss change after SAM perturbation: 0.2669
+2025-09-15 05:41:39,393 - root - INFO -   Temperature: 2.0
+2025-09-15 05:41:39,520 - root - INFO - Sampling step 2000/3000, step_size: 1.44e-03
+2025-09-15 05:48:10,300 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 05:48:10,303 - root - INFO -     Avg parameter movement: 0.030012
+2025-09-15 05:48:10,303 - root - INFO -     Prediction changed: False
+2025-09-15 05:48:10,303 - root - INFO -     Confidence change: 0.013889
+2025-09-15 05:48:10,303 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 05:48:10,303 - root - INFO -     Current confidence: [0.0045553697273135185, 0.995444655418396]
+2025-09-15 05:55:24,300 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 05:55:24,303 - root - INFO -     Avg parameter movement: 0.034733
+2025-09-15 05:55:24,303 - root - INFO -     Prediction changed: True
+2025-09-15 05:55:24,303 - root - INFO -     Confidence change: 1.344229
+2025-09-15 05:55:24,304 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 05:55:24,304 - root - INFO -     Current confidence: [0.009000781923532486, 0.9909992218017578]
+2025-09-15 05:56:06,692 - root - INFO - Chain 3: Collected 15 samples
+2025-09-15 05:56:06,738 - root - INFO -   DIAGNOSTIC - Chain 3 summary:
+2025-09-15 05:56:06,738 - root - INFO -     Final avg parameter movement: 0.035278
+2025-09-15 05:56:06,738 - root - INFO -     Final prediction changed: True
+2025-09-15 05:56:06,738 - root - INFO -     Final confidence change: 1.329229
+2025-09-15 05:56:06,739 - root - INFO -     Final prediction: [0, 1]
+2025-09-15 05:56:06,739 - root - INFO -     Final confidence: [0.9489226341247559, 0.05107739940285683]
+2025-09-15 05:56:06,859 - root - INFO - Running chain 4/4
+2025-09-15 05:56:07,455 - root - INFO - Chain 4: MAP model loaded - LoRA param norms: [2.3472883701324463, 1.2312262058258057, 2.283034324645996]
+2025-09-15 05:56:07,652 - root - INFO - Chain 4: MAP model test - Loss: 0.3996, Acc: 0.7812
+2025-09-15 05:56:07,652 - root - INFO - Chain 4: Initial configuration:
+2025-09-15 05:56:07,652 - root - INFO -   Initial step size: 2.00e-03
+2025-09-15 05:56:07,652 - root - INFO -   Temperature: 2.0
+2025-09-15 05:56:07,652 - root - INFO -   Noise scale: 1.00e-04
+2025-09-15 05:56:07,652 - root - INFO -   Prior std: 17.000
+2025-09-15 05:56:07,652 - root - INFO -   SAM rho: 0.050
+2025-09-15 05:56:07,652 - root - INFO -   Decay rate: 0.300
+2025-09-15 05:56:07,653 - root - INFO - Chain 4: Burn-in phase (8000 steps)
+2025-09-15 05:56:08,859 - root - INFO - Burn-in step 0/8000:
+2025-09-15 05:56:08,859 - root - INFO -   Actual drift norm: 1.00e-02
+2025-09-15 05:56:08,859 - root - INFO -   Actual noise norm: 3.46e-03
+2025-09-15 05:56:08,859 - root - INFO -   Actual drift/noise ratio: 2.893
+2025-09-15 05:56:08,859 - root - INFO -   Theoretical step/noise ratio: 55.470
+2025-09-15 05:56:08,859 - root - INFO -   Prior/Likelihood ratio: 14.666
+2025-09-15 05:56:08,859 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 05:56:08,859 - root - INFO -   SAM gradient norm: 6.77e+00
+2025-09-15 05:56:08,859 - root - INFO -   SAM perturbation/gradient ratio: 0.072
+2025-09-15 05:56:08,860 - root - INFO -   Rank-1 noise contribution: 0.087
+2025-09-15 05:56:08,860 - root - INFO -   Loss change after SAM perturbation: 0.6559
+2025-09-15 06:03:23,489 - root - INFO - Burn-in step 500/8000:
+2025-09-15 06:03:23,491 - root - INFO -   Actual drift norm: 7.74e-03
+2025-09-15 06:03:23,491 - root - INFO -   Actual noise norm: 3.39e-03
+2025-09-15 06:03:23,491 - root - INFO -   Actual drift/noise ratio: 2.281
+2025-09-15 06:03:23,492 - root - INFO -   Theoretical step/noise ratio: 54.499
+2025-09-15 06:03:23,492 - root - INFO -   Prior/Likelihood ratio: 4.677
+2025-09-15 06:03:23,492 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:03:23,492 - root - INFO -   SAM gradient norm: 4.01e+00
+2025-09-15 06:03:23,492 - root - INFO -   SAM perturbation/gradient ratio: 0.122
+2025-09-15 06:03:23,492 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 06:03:23,492 - root - INFO -   Loss change after SAM perturbation: 0.2156
+2025-09-15 06:10:37,975 - root - INFO - Burn-in step 1000/8000:
+2025-09-15 06:10:37,978 - root - INFO -   Actual drift norm: 1.89e-03
+2025-09-15 06:10:37,978 - root - INFO -   Actual noise norm: 3.35e-03
+2025-09-15 06:10:37,978 - root - INFO -   Actual drift/noise ratio: 0.564
+2025-09-15 06:10:37,978 - root - INFO -   Theoretical step/noise ratio: 53.644
+2025-09-15 06:10:37,978 - root - INFO -   Prior/Likelihood ratio: 3.626
+2025-09-15 06:10:37,978 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:10:37,978 - root - INFO -   SAM gradient norm: 1.01e+00
+2025-09-15 06:10:37,978 - root - INFO -   SAM perturbation/gradient ratio: 0.485
+2025-09-15 06:10:37,978 - root - INFO -   Rank-1 noise contribution: 0.090
+2025-09-15 06:10:37,978 - root - INFO -   Loss change after SAM perturbation: 0.2210
+2025-09-15 06:17:52,361 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 06:17:52,364 - root - INFO -   Actual drift norm: 5.21e-03
+2025-09-15 06:17:52,364 - root - INFO -   Actual noise norm: 3.30e-03
+2025-09-15 06:17:52,364 - root - INFO -   Actual drift/noise ratio: 1.577
+2025-09-15 06:17:52,364 - root - INFO -   Theoretical step/noise ratio: 52.883
+2025-09-15 06:17:52,364 - root - INFO -   Prior/Likelihood ratio: 6.616
+2025-09-15 06:17:52,364 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:17:52,364 - root - INFO -   SAM gradient norm: 2.86e+00
+2025-09-15 06:17:52,364 - root - INFO -   SAM perturbation/gradient ratio: 0.171
+2025-09-15 06:17:52,364 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 06:17:52,364 - root - INFO -   Loss change after SAM perturbation: 0.4179
+2025-09-15 06:25:06,937 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 06:25:06,940 - root - INFO -   Actual drift norm: 6.18e-03
+2025-09-15 06:25:06,940 - root - INFO -   Actual noise norm: 3.25e-03
+2025-09-15 06:25:06,940 - root - INFO -   Actual drift/noise ratio: 1.901
+2025-09-15 06:25:06,940 - root - INFO -   Theoretical step/noise ratio: 52.197
+2025-09-15 06:25:06,940 - root - INFO -   Prior/Likelihood ratio: 2.529
+2025-09-15 06:25:06,940 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:25:06,940 - root - INFO -   SAM gradient norm: 3.49e+00
+2025-09-15 06:25:06,940 - root - INFO -   SAM perturbation/gradient ratio: 0.140
+2025-09-15 06:25:06,941 - root - INFO -   Rank-1 noise contribution: 0.098
+2025-09-15 06:25:06,941 - root - INFO -   Loss change after SAM perturbation: 0.6421
+2025-09-15 06:32:21,308 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 06:32:21,311 - root - INFO -   Actual drift norm: 8.29e-03
+2025-09-15 06:32:21,311 - root - INFO -   Actual noise norm: 3.22e-03
+2025-09-15 06:32:21,311 - root - INFO -   Actual drift/noise ratio: 2.578
+2025-09-15 06:32:21,311 - root - INFO -   Theoretical step/noise ratio: 51.574
+2025-09-15 06:32:21,311 - root - INFO -   Prior/Likelihood ratio: 5.129
+2025-09-15 06:32:21,311 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:32:21,311 - root - INFO -   SAM gradient norm: 4.80e+00
+2025-09-15 06:32:21,311 - root - INFO -   SAM perturbation/gradient ratio: 0.102
+2025-09-15 06:32:21,312 - root - INFO -   Rank-1 noise contribution: 0.084
+2025-09-15 06:32:21,312 - root - INFO -   Loss change after SAM perturbation: 0.1921
+2025-09-15 06:39:35,484 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 06:39:35,487 - root - INFO -   Actual drift norm: 4.69e-03
+2025-09-15 06:39:35,487 - root - INFO -   Actual noise norm: 3.19e-03
+2025-09-15 06:39:35,487 - root - INFO -   Actual drift/noise ratio: 1.471
+2025-09-15 06:39:35,487 - root - INFO -   Theoretical step/noise ratio: 51.004
+2025-09-15 06:39:35,487 - root - INFO -   Prior/Likelihood ratio: 4.061
+2025-09-15 06:39:35,488 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:39:35,488 - root - INFO -   SAM gradient norm: 2.77e+00
+2025-09-15 06:39:35,488 - root - INFO -   SAM perturbation/gradient ratio: 0.177
+2025-09-15 06:39:35,488 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 06:39:35,488 - root - INFO -   Loss change after SAM perturbation: 0.3992
+2025-09-15 06:46:49,311 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 06:46:49,313 - root - INFO -   Actual drift norm: 3.74e-03
+2025-09-15 06:46:49,313 - root - INFO -   Actual noise norm: 3.15e-03
+2025-09-15 06:46:49,313 - root - INFO -   Actual drift/noise ratio: 1.189
+2025-09-15 06:46:49,313 - root - INFO -   Theoretical step/noise ratio: 50.479
+2025-09-15 06:46:49,314 - root - INFO -   Prior/Likelihood ratio: 6.229
+2025-09-15 06:46:49,314 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:46:49,314 - root - INFO -   SAM gradient norm: 2.26e+00
+2025-09-15 06:46:49,314 - root - INFO -   SAM perturbation/gradient ratio: 0.217
+2025-09-15 06:46:49,314 - root - INFO -   Rank-1 noise contribution: 0.088
+2025-09-15 06:46:49,314 - root - INFO -   Loss change after SAM perturbation: 0.1405
+2025-09-15 06:54:02,270 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 06:54:02,274 - root - INFO -   Actual drift norm: 4.35e-03
+2025-09-15 06:54:02,274 - root - INFO -   Actual noise norm: 3.11e-03
+2025-09-15 06:54:02,274 - root - INFO -   Actual drift/noise ratio: 1.397
+2025-09-15 06:54:02,274 - root - INFO -   Theoretical step/noise ratio: 49.992
+2025-09-15 06:54:02,274 - root - INFO -   Prior/Likelihood ratio: 5.977
+2025-09-15 06:54:02,274 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 06:54:02,274 - root - INFO -   SAM gradient norm: 2.68e+00
+2025-09-15 06:54:02,274 - root - INFO -   SAM perturbation/gradient ratio: 0.183
+2025-09-15 06:54:02,274 - root - INFO -   Rank-1 noise contribution: 0.089
+2025-09-15 06:54:02,274 - root - INFO -   Loss change after SAM perturbation: 0.3298
+2025-09-15 07:01:15,218 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 07:01:15,223 - root - INFO -   Actual drift norm: 2.49e-03
+2025-09-15 07:01:15,223 - root - INFO -   Actual noise norm: 3.08e-03
+2025-09-15 07:01:15,223 - root - INFO -   Actual drift/noise ratio: 0.809
+2025-09-15 07:01:15,223 - root - INFO -   Theoretical step/noise ratio: 49.540
+2025-09-15 07:01:15,223 - root - INFO -   Prior/Likelihood ratio: 6.404
+2025-09-15 07:01:15,223 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:01:15,223 - root - INFO -   SAM gradient norm: 1.56e+00
+2025-09-15 07:01:15,223 - root - INFO -   SAM perturbation/gradient ratio: 0.313
+2025-09-15 07:01:15,223 - root - INFO -   Rank-1 noise contribution: 0.095
+2025-09-15 07:01:15,224 - root - INFO -   Loss change after SAM perturbation: 0.1779
+2025-09-15 07:08:29,339 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 07:08:29,342 - root - INFO -   Actual drift norm: 2.17e-03
+2025-09-15 07:08:29,342 - root - INFO -   Actual noise norm: 3.06e-03
+2025-09-15 07:08:29,342 - root - INFO -   Actual drift/noise ratio: 0.710
+2025-09-15 07:08:29,342 - root - INFO -   Theoretical step/noise ratio: 49.117
+2025-09-15 07:08:29,342 - root - INFO -   Prior/Likelihood ratio: 4.366
+2025-09-15 07:08:29,342 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:08:29,342 - root - INFO -   SAM gradient norm: 1.39e+00
+2025-09-15 07:08:29,342 - root - INFO -   SAM perturbation/gradient ratio: 0.354
+2025-09-15 07:08:29,342 - root - INFO -   Rank-1 noise contribution: 0.100
+2025-09-15 07:08:29,343 - root - INFO -   Loss change after SAM perturbation: 0.2647
+2025-09-15 07:15:42,884 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 07:15:42,886 - root - INFO -   Actual drift norm: 2.59e-03
+2025-09-15 07:15:42,886 - root - INFO -   Actual noise norm: 3.04e-03
+2025-09-15 07:15:42,886 - root - INFO -   Actual drift/noise ratio: 0.852
+2025-09-15 07:15:42,886 - root - INFO -   Theoretical step/noise ratio: 48.720
+2025-09-15 07:15:42,887 - root - INFO -   Prior/Likelihood ratio: 6.181
+2025-09-15 07:15:42,887 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:15:42,887 - root - INFO -   SAM gradient norm: 1.68e+00
+2025-09-15 07:15:42,887 - root - INFO -   SAM perturbation/gradient ratio: 0.292
+2025-09-15 07:15:42,887 - root - INFO -   Rank-1 noise contribution: 0.081
+2025-09-15 07:15:42,887 - root - INFO -   Loss change after SAM perturbation: 0.2197
+2025-09-15 07:22:56,990 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 07:22:56,992 - root - INFO -   Actual drift norm: 5.58e-03
+2025-09-15 07:22:56,992 - root - INFO -   Actual noise norm: 3.02e-03
+2025-09-15 07:22:56,993 - root - INFO -   Actual drift/noise ratio: 1.849
+2025-09-15 07:22:56,993 - root - INFO -   Theoretical step/noise ratio: 48.347
+2025-09-15 07:22:56,993 - root - INFO -   Prior/Likelihood ratio: 4.641
+2025-09-15 07:22:56,993 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:22:56,993 - root - INFO -   SAM gradient norm: 3.67e+00
+2025-09-15 07:22:56,993 - root - INFO -   SAM perturbation/gradient ratio: 0.133
+2025-09-15 07:22:56,993 - root - INFO -   Rank-1 noise contribution: 0.082
+2025-09-15 07:22:56,993 - root - INFO -   Loss change after SAM perturbation: 0.5885
+2025-09-15 07:30:10,157 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 07:30:10,160 - root - INFO -   Actual drift norm: 3.14e-03
+2025-09-15 07:30:10,160 - root - INFO -   Actual noise norm: 2.99e-03
+2025-09-15 07:30:10,160 - root - INFO -   Actual drift/noise ratio: 1.052
+2025-09-15 07:30:10,160 - root - INFO -   Theoretical step/noise ratio: 47.994
+2025-09-15 07:30:10,160 - root - INFO -   Prior/Likelihood ratio: 4.609
+2025-09-15 07:30:10,160 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:30:10,160 - root - INFO -   SAM gradient norm: 2.10e+00
+2025-09-15 07:30:10,160 - root - INFO -   SAM perturbation/gradient ratio: 0.233
+2025-09-15 07:30:10,160 - root - INFO -   Rank-1 noise contribution: 0.086
+2025-09-15 07:30:10,160 - root - INFO -   Loss change after SAM perturbation: 0.1923
+2025-09-15 07:37:24,184 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 07:37:24,187 - root - INFO -   Actual drift norm: 5.02e-03
+2025-09-15 07:37:24,187 - root - INFO -   Actual noise norm: 2.97e-03
+2025-09-15 07:37:24,187 - root - INFO -   Actual drift/noise ratio: 1.693
+2025-09-15 07:37:24,187 - root - INFO -   Theoretical step/noise ratio: 47.660
+2025-09-15 07:37:24,187 - root - INFO -   Prior/Likelihood ratio: 5.284
+2025-09-15 07:37:24,187 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:37:24,188 - root - INFO -   SAM gradient norm: 3.40e+00
+2025-09-15 07:37:24,188 - root - INFO -   SAM perturbation/gradient ratio: 0.144
+2025-09-15 07:37:24,188 - root - INFO -   Rank-1 noise contribution: 0.077
+2025-09-15 07:37:24,188 - root - INFO -   Loss change after SAM perturbation: 0.4556
+2025-09-15 07:44:38,293 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 07:44:38,296 - root - INFO -   Actual drift norm: 2.22e-03
+2025-09-15 07:44:38,296 - root - INFO -   Actual noise norm: 2.95e-03
+2025-09-15 07:44:38,296 - root - INFO -   Actual drift/noise ratio: 0.751
+2025-09-15 07:44:38,296 - root - INFO -   Theoretical step/noise ratio: 47.344
+2025-09-15 07:44:38,296 - root - INFO -   Prior/Likelihood ratio: 4.928
+2025-09-15 07:44:38,296 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:44:38,296 - root - INFO -   SAM gradient norm: 1.52e+00
+2025-09-15 07:44:38,296 - root - INFO -   SAM perturbation/gradient ratio: 0.322
+2025-09-15 07:44:38,296 - root - INFO -   Rank-1 noise contribution: 0.094
+2025-09-15 07:44:38,296 - root - INFO -   Loss change after SAM perturbation: 0.1785
+2025-09-15 07:51:50,661 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 07:51:50,664 - root - INFO -     Avg parameter movement: 0.135023
+2025-09-15 07:51:50,664 - root - INFO -     Total parameters moved: 96
+2025-09-15 07:51:50,664 - root - INFO - Chain 4: Sampling phase (3000 steps)
+2025-09-15 07:51:50,812 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 07:51:50,813 - root - INFO -     Initial prediction: [0, 0]
+2025-09-15 07:51:50,813 - root - INFO -     Initial confidence: [0.5149581432342529, 0.48504185676574707]
+2025-09-15 07:51:50,818 - root - INFO - Chain 4: Step size after burn-in:
+2025-09-15 07:51:50,818 - root - INFO -   Initial: 2.00e-03
+2025-09-15 07:51:50,818 - root - INFO -   Final: 1.44e-03
+2025-09-15 07:51:50,818 - root - INFO -   Reduction: 28.1%
+2025-09-15 07:51:51,887 - root - INFO - Chain 4, Step 0:
+2025-09-15 07:51:51,887 - root - INFO -   Actual drift norm: 1.87e-03
+2025-09-15 07:51:51,887 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-15 07:51:51,887 - root - INFO -   Actual drift/noise ratio: 0.637
+2025-09-15 07:51:51,887 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 07:51:51,887 - root - INFO -   Prior/Likelihood ratio: 5.217
+2025-09-15 07:51:51,888 - root - INFO -   SAM rho: 0.050
+2025-09-15 07:51:51,888 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 07:51:51,888 - root - INFO -   SAM gradient norm: 1.30e+00
+2025-09-15 07:51:51,888 - root - INFO -   SAM perturbation/gradient ratio: 0.377
+2025-09-15 07:51:51,888 - root - INFO -   Rank-1 noise contribution: 0.091
+2025-09-15 07:51:51,888 - root - INFO -   Loss change after SAM perturbation: 0.1687
+2025-09-15 07:51:51,888 - root - INFO -   Temperature: 2.0
+2025-09-15 07:51:52,053 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 07:51:52,053 - root - INFO -     Avg parameter movement: 0.000350
+2025-09-15 07:51:52,053 - root - INFO -     Prediction changed: True
+2025-09-15 07:51:52,054 - root - INFO -     Confidence change: 1.503581
+2025-09-15 07:51:52,054 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 07:51:52,054 - root - INFO -     Current confidence: [0.006032607518136501, 0.9939674139022827]
+2025-09-15 07:51:52,054 - root - INFO - Sampling step 0/3000, step_size: 1.44e-03
+2025-09-15 07:52:35,408 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 07:52:35,408 - root - INFO -     Avg parameter movement: 0.002885
+2025-09-15 07:52:35,408 - root - INFO -     Prediction changed: True
+2025-09-15 07:52:35,408 - root - INFO -     Confidence change: 0.719221
+2025-09-15 07:52:35,408 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 07:52:35,409 - root - INFO -     Current confidence: [0.0065391287207603455, 0.9934608936309814]
+2025-09-15 07:53:18,992 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 07:53:18,993 - root - INFO -     Avg parameter movement: 0.004047
+2025-09-15 07:53:18,994 - root - INFO -     Prediction changed: True
+2025-09-15 07:53:18,994 - root - INFO -     Confidence change: 0.719892
+2025-09-15 07:53:18,995 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 07:53:18,995 - root - INFO -     Current confidence: [0.005979303736239672, 0.9940206408500671]
+2025-09-15 07:54:02,363 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 07:54:02,364 - root - INFO -     Avg parameter movement: 0.004949
+2025-09-15 07:54:02,364 - root - INFO -     Prediction changed: True
+2025-09-15 07:54:02,364 - root - INFO -     Confidence change: 1.502642
+2025-09-15 07:54:02,364 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 07:54:02,365 - root - INFO -     Current confidence: [0.006212072446942329, 0.993787944316864]
+2025-09-15 07:54:45,726 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 07:54:45,727 - root - INFO -     Avg parameter movement: 0.005809
+2025-09-15 07:54:45,727 - root - INFO -     Prediction changed: True
+2025-09-15 07:54:45,727 - root - INFO -     Confidence change: 1.429953
+2025-09-15 07:54:45,727 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 07:54:45,727 - root - INFO -     Current confidence: [0.9044948220252991, 0.09550515562295914]
+2025-09-15 07:58:22,557 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 07:58:22,559 - root - INFO -     Avg parameter movement: 0.009185
+2025-09-15 07:58:22,559 - root - INFO -     Prediction changed: True
+2025-09-15 07:58:22,559 - root - INFO -     Confidence change: 1.493428
+2025-09-15 07:58:22,560 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 07:58:22,560 - root - INFO -     Current confidence: [0.01737414114177227, 0.9826258420944214]
+2025-09-15 08:05:35,458 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 08:05:35,460 - root - INFO -     Avg parameter movement: 0.014974
+2025-09-15 08:05:35,460 - root - INFO -     Prediction changed: True
+2025-09-15 08:05:35,460 - root - INFO -     Confidence change: 1.503732
+2025-09-15 08:05:35,460 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 08:05:35,460 - root - INFO -     Current confidence: [0.006236516870558262, 0.9937635064125061]
+2025-09-15 08:06:18,900 - root - INFO - Chain 4, Step 1000:
+2025-09-15 08:06:18,901 - root - INFO -   Actual drift norm: 2.47e-03
+2025-09-15 08:06:18,901 - root - INFO -   Actual noise norm: 2.93e-03
+2025-09-15 08:06:18,901 - root - INFO -   Actual drift/noise ratio: 0.842
+2025-09-15 08:06:18,901 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 08:06:18,901 - root - INFO -   Prior/Likelihood ratio: 3.651
+2025-09-15 08:06:18,901 - root - INFO -   SAM rho: 0.050
+2025-09-15 08:06:18,901 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 08:06:18,901 - root - INFO -   SAM gradient norm: 1.72e+00
+2025-09-15 08:06:18,901 - root - INFO -   SAM perturbation/gradient ratio: 0.285
+2025-09-15 08:06:18,901 - root - INFO -   Rank-1 noise contribution: 0.099
+2025-09-15 08:06:18,901 - root - INFO -   Loss change after SAM perturbation: 0.2584
+2025-09-15 08:06:18,901 - root - INFO -   Temperature: 2.0
+2025-09-15 08:06:19,021 - root - INFO - Sampling step 1000/3000, step_size: 1.44e-03
+2025-09-15 08:12:49,234 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 08:12:49,236 - root - INFO -     Avg parameter movement: 0.020171
+2025-09-15 08:12:49,237 - root - INFO -     Prediction changed: True
+2025-09-15 08:12:49,237 - root - INFO -     Confidence change: 1.429628
+2025-09-15 08:12:49,237 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 08:12:49,237 - root - INFO -     Current confidence: [0.006590582896023989, 0.9934093952178955]
+2025-09-15 08:20:02,155 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 08:20:02,158 - root - INFO -     Avg parameter movement: 0.025107
+2025-09-15 08:20:02,158 - root - INFO -     Prediction changed: True
+2025-09-15 08:20:02,158 - root - INFO -     Confidence change: 0.714496
+2025-09-15 08:20:02,159 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 08:20:02,159 - root - INFO -     Current confidence: [0.009799892082810402, 0.9902001023292542]
+2025-09-15 08:20:45,480 - root - INFO - Chain 4, Step 2000:
+2025-09-15 08:20:45,480 - root - INFO -   Actual drift norm: 2.20e-03
+2025-09-15 08:20:45,480 - root - INFO -   Actual noise norm: 2.94e-03
+2025-09-15 08:20:45,480 - root - INFO -   Actual drift/noise ratio: 0.750
+2025-09-15 08:20:45,480 - root - INFO -   Theoretical step/noise ratio: 47.042
+2025-09-15 08:20:45,480 - root - INFO -   Prior/Likelihood ratio: 7.260
+2025-09-15 08:20:45,480 - root - INFO -   SAM rho: 0.050
+2025-09-15 08:20:45,480 - root - INFO -   SAM perturbation norm: 4.90e-01
+2025-09-15 08:20:45,481 - root - INFO -   SAM gradient norm: 1.53e+00
+2025-09-15 08:20:45,481 - root - INFO -   SAM perturbation/gradient ratio: 0.320
+2025-09-15 08:20:45,481 - root - INFO -   Rank-1 noise contribution: 0.093
+2025-09-15 08:20:45,481 - root - INFO -   Loss change after SAM perturbation: 0.2433
+2025-09-15 08:20:45,481 - root - INFO -   Temperature: 2.0
+2025-09-15 08:20:45,606 - root - INFO - Sampling step 2000/3000, step_size: 1.44e-03
+2025-09-15 08:27:16,208 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 08:27:16,211 - root - INFO -     Avg parameter movement: 0.029972
+2025-09-15 08:27:16,211 - root - INFO -     Prediction changed: True
+2025-09-15 08:27:16,211 - root - INFO -     Confidence change: 1.482463
+2025-09-15 08:27:16,212 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 08:27:16,212 - root - INFO -     Current confidence: [0.006695229094475508, 0.9933047890663147]
+2025-09-15 08:34:30,483 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 08:34:30,485 - root - INFO -     Avg parameter movement: 0.034646
+2025-09-15 08:34:30,485 - root - INFO -     Prediction changed: True
+2025-09-15 08:34:30,485 - root - INFO -     Confidence change: 1.503903
+2025-09-15 08:34:30,486 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 08:34:30,486 - root - INFO -     Current confidence: [0.007396594621241093, 0.9926034808158875]
+2025-09-15 08:35:12,855 - root - INFO - Chain 4: Collected 15 samples
+2025-09-15 08:35:12,900 - root - INFO -   DIAGNOSTIC - Chain 4 summary:
+2025-09-15 08:35:12,900 - root - INFO -     Final avg parameter movement: 0.035102
+2025-09-15 08:35:12,900 - root - INFO -     Final prediction changed: True
+2025-09-15 08:35:12,900 - root - INFO -     Final confidence change: 1.352411
+2025-09-15 08:35:12,900 - root - INFO -     Final prediction: [1, 1]
+2025-09-15 08:35:12,900 - root - INFO -     Final confidence: [0.3077453672885895, 0.6922546029090881]
+2025-09-15 08:35:13,019 - root - INFO - Total samples collected: 60
+2025-09-15 08:35:13,019 - root - INFO - Computing overall MCMC diagnostics...
+2025-09-15 08:35:13,019 - root - INFO - SAM-SGLD sampling completed with 60 total samples
+2025-09-15 08:35:13,214 - root - INFO - Final model after sampling - Loss: 0.2007, Acc: 0.8750
+2025-09-15 08:35:13,214 - root - INFO - ESS and R-hat will be computed during evaluation phase
+2025-09-15 08:35:14,047 - root - INFO - SAM-SGLD samples saved to runs/mrpc_roberta_lora_samsgld_rank1/samsgld_samples.pth
+2025-09-15 08:35:14,047 - root - INFO - Training completed successfully!

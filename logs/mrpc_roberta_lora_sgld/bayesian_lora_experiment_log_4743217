@@ -1,0 +1,1274 @@
+=== GPU Information ===
+Sun Sep 14 22:20:28 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A10                     Off |   00000000:86:00.0 Off |                    0 |
+|  0%   25C    P8             16W /  150W |       0MiB /  23028MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Memory Information ===
+               total        used        free      shared  buff/cache   available
+Mem:           503Gi        40Gi       460Gi        18Gi        24Gi       463Gi
+Swap:             0B          0B          0B
+=== Current Directory ===
+/u/nalint2/scratch/Bayesian-LORA
+=== Python Version ===
+Python 3.9.18
+=== Setting up environment ===
+=== Upgrading pip to fix version issues ===
+Requirement already satisfied: pip in ./.venv/lib/python3.9/site-packages (25.2)
+=== Installing dependencies ===
+Installing package in editable mode...
+Obtaining file:///scratch/nalint2/Bayesian-LORA
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.8.0)
+Requirement already satisfied: torchvision in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.23.0)
+Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (2.0.2)
+Requirement already satisfied: tqdm in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.67.1)
+Requirement already satisfied: pyyaml in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.0.2)
+Requirement already satisfied: scikit-learn in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.6.1)
+Requirement already satisfied: scipy in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.13.1)
+Requirement already satisfied: matplotlib in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (3.9.4)
+Requirement already satisfied: transformers>=4.30.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.56.0)
+Requirement already satisfied: datasets>=2.12.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (4.0.0)
+Requirement already satisfied: tokenizers>=0.13.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.22.0)
+Requirement already satisfied: peft>=0.4.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.17.1)
+Requirement already satisfied: accelerate>=0.20.0 in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (1.10.1)
+Requirement already satisfied: sentencepiece in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (0.2.1)
+Requirement already satisfied: protobuf in ./.venv/lib/python3.9/site-packages (from Bayesian-LORA==0.1.0) (6.32.0)
+Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (25.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (7.0.0)
+Requirement already satisfied: huggingface_hub>=0.21.0 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.34.4)
+Requirement already satisfied: safetensors>=0.4.3 in ./.venv/lib/python3.9/site-packages (from accelerate>=0.20.0->Bayesian-LORA==0.1.0) (0.6.2)
+Requirement already satisfied: filelock in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.19.1)
+Requirement already satisfied: pyarrow>=15.0.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (21.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.8)
+Requirement already satisfied: pandas in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.3.2)
+Requirement already satisfied: requests>=2.32.2 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.32.5)
+Requirement already satisfied: xxhash in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.70.16)
+Requirement already satisfied: fsspec<=2025.3.0,>=2023.1.0 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.3.0)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.12.15)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (5.0.1)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (25.3.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.7.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (6.6.4)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (0.3.2)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (1.20.1)
+Requirement already satisfied: typing-extensions>=4.1.0 in ./.venv/lib/python3.9/site-packages (from multidict<7.0,>=4.5->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (4.15.0)
+Requirement already satisfied: idna>=2.0 in ./.venv/lib/python3.9/site-packages (from yarl<2.0,>=1.17.0->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.10)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in ./.venv/lib/python3.9/site-packages (from huggingface_hub>=0.21.0->accelerate>=0.20.0->Bayesian-LORA==0.1.0) (1.1.9)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (3.4.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.9/site-packages (from requests>=2.32.2->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.8.3)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.14.0)
+Requirement already satisfied: networkx in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.2.1)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (2.27.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (1.13.1.3)
+Requirement already satisfied: triton==3.4.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->Bayesian-LORA==0.1.0) (3.4.0)
+Requirement already satisfied: setuptools>=40.8.0 in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (53.0.0)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (8.7.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy>=1.13.3->torch>=2.0.0->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: regex!=2019.12.17 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->Bayesian-LORA==0.1.0) (2025.9.1)
+Requirement already satisfied: zipp>=3.20 in ./.venv/lib/python3.9/site-packages (from importlib-metadata->triton==3.4.0->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.23.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch>=2.0.0->Bayesian-LORA==0.1.0) (3.0.2)
+Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.3.0)
+Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (4.59.2)
+Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (1.4.7)
+Requirement already satisfied: pillow>=8 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (11.3.0)
+Requirement already satisfied: pyparsing>=2.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (2.9.0.post0)
+Requirement already satisfied: importlib-resources>=3.2.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->Bayesian-LORA==0.1.0) (6.5.2)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib->Bayesian-LORA==0.1.0) (1.17.0)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->Bayesian-LORA==0.1.0) (2025.2)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (1.5.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->Bayesian-LORA==0.1.0) (3.6.0)
+Building wheels for collected packages: Bayesian-LORA
+  Building editable for Bayesian-LORA (pyproject.toml): started
+  Building editable for Bayesian-LORA (pyproject.toml): finished with status 'done'
+  Created wheel for Bayesian-LORA: filename=bayesian_lora-0.1.0-0.editable-py3-none-any.whl size=1457 sha256=36eb7d8d949e2210cec1437e9af236f1b73d5fac8c6ab0e4f9af0066ff5ea8d3
+  Stored in directory: /tmp/pip-ephem-wheel-cache-3oxynwl5/wheels/e6/8c/54/9ced548b41650fdd37110b7a4079fec5aecbe008507cf13c8d
+Successfully built Bayesian-LORA
+Installing collected packages: Bayesian-LORA
+  Attempting uninstall: Bayesian-LORA
+    Found existing installation: Bayesian-LORA 0.1.0
+    Uninstalling Bayesian-LORA-0.1.0:
+      Successfully uninstalled Bayesian-LORA-0.1.0
+Successfully installed Bayesian-LORA-0.1.0
+=== Verifying pip installation ===
+Name: Bayesian-LORA
+Version: 0.1.0
+Summary: Bayesian inference for Low-Rank Adaptation of Large Language Models
+Home-page: 
+Author: Bayesian LoRA Team
+Author-email: 
+License: 
+Location: /scratch/nalint2/Bayesian-LORA/.venv/lib/python3.9/site-packages
+Editable project location: /scratch/nalint2/Bayesian-LORA
+Requires: accelerate, datasets, matplotlib, numpy, peft, protobuf, pyyaml, scikit-learn, scipy, sentencepiece, tokenizers, torch, torchvision, tqdm, transformers
+Required-by: 
+=== Verifying installation ===
+Testing package installation status...
+=== Testing bayesian_lora import ===
+Python path: ['', '/usr/lib64/python39.zip', '/usr/lib64/python3.9']...
+✅ bayesian_lora module imported successfully!
+Version: 0.1.0
+Author: Bayesian LoRA Team
+Module location: /scratch/nalint2/Bayesian-LORA/src/bayesian_lora/__init__.py
+✅ Package installation verified successfully!
+=== Installing additional requirements ===
+Requirement already satisfied: torch>=2.0.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 2)) (2.8.0)
+Requirement already satisfied: torchvision in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 3)) (0.23.0)
+Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 4)) (2.0.2)
+Requirement already satisfied: tqdm in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 5)) (4.67.1)
+Requirement already satisfied: pyyaml in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 6)) (6.0.2)
+Requirement already satisfied: scikit-learn in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 7)) (1.6.1)
+Requirement already satisfied: scipy in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 8)) (1.13.1)
+Requirement already satisfied: matplotlib in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 9)) (3.9.4)
+Requirement already satisfied: transformers>=4.30.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 12)) (4.56.0)
+Requirement already satisfied: datasets>=2.12.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 13)) (4.0.0)
+Requirement already satisfied: tokenizers>=0.13.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 14)) (0.22.0)
+Requirement already satisfied: peft>=0.4.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 15)) (0.17.1)
+Requirement already satisfied: accelerate>=0.20.0 in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 18)) (1.10.1)
+Requirement already satisfied: sentencepiece in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 19)) (0.2.1)
+Requirement already satisfied: protobuf in ./.venv/lib/python3.9/site-packages (from -r requirements_lora.txt (line 20)) (6.32.0)
+Requirement already satisfied: filelock in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.19.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (4.15.0)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.14.0)
+Requirement already satisfied: networkx in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.2.1)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.1.6)
+Requirement already satisfied: fsspec in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (2025.3.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (2.27.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.13.1.3)
+Requirement already satisfied: triton==3.4.0 in ./.venv/lib/python3.9/site-packages (from torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.4.0)
+Requirement already satisfied: setuptools>=40.8.0 in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->-r requirements_lora.txt (line 2)) (53.0.0)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.9/site-packages (from triton==3.4.0->torch>=2.0.0->-r requirements_lora.txt (line 2)) (8.7.0)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in ./.venv/lib/python3.9/site-packages (from torchvision->-r requirements_lora.txt (line 3)) (11.3.0)
+Requirement already satisfied: joblib>=1.2.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->-r requirements_lora.txt (line 7)) (1.5.2)
+Requirement already satisfied: threadpoolctl>=3.1.0 in ./.venv/lib/python3.9/site-packages (from scikit-learn->-r requirements_lora.txt (line 7)) (3.6.0)
+Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (1.3.0)
+Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (4.59.2)
+Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (1.4.7)
+Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (25.0)
+Requirement already satisfied: pyparsing>=2.3.1 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (2.9.0.post0)
+Requirement already satisfied: importlib-resources>=3.2.0 in ./.venv/lib/python3.9/site-packages (from matplotlib->-r requirements_lora.txt (line 9)) (6.5.2)
+Requirement already satisfied: huggingface-hub<1.0,>=0.34.0 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (0.34.4)
+Requirement already satisfied: regex!=2019.12.17 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2025.9.1)
+Requirement already satisfied: requests in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2.32.5)
+Requirement already satisfied: safetensors>=0.4.3 in ./.venv/lib/python3.9/site-packages (from transformers>=4.30.0->-r requirements_lora.txt (line 12)) (0.6.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in ./.venv/lib/python3.9/site-packages (from huggingface-hub<1.0,>=0.34.0->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (1.1.9)
+Requirement already satisfied: pyarrow>=15.0.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (21.0.0)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.3.8)
+Requirement already satisfied: pandas in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2.3.2)
+Requirement already satisfied: xxhash in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.5.0)
+Requirement already satisfied: multiprocess<0.70.17 in ./.venv/lib/python3.9/site-packages (from datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.70.16)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in ./.venv/lib/python3.9/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.12.15)
+Requirement already satisfied: psutil in ./.venv/lib/python3.9/site-packages (from peft>=0.4.0->-r requirements_lora.txt (line 15)) (7.0.0)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (5.0.1)
+Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (25.3.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.7.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (6.6.4)
+Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (0.3.2)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./.venv/lib/python3.9/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (1.20.1)
+Requirement already satisfied: idna>=2.0 in ./.venv/lib/python3.9/site-packages (from yarl<2.0,>=1.17.0->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (3.10)
+Requirement already satisfied: zipp>=3.1.0 in ./.venv/lib/python3.9/site-packages (from importlib-resources>=3.2.0->matplotlib->-r requirements_lora.txt (line 9)) (3.23.0)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib->-r requirements_lora.txt (line 9)) (1.17.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (3.4.3)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.9/site-packages (from requests->transformers>=4.30.0->-r requirements_lora.txt (line 12)) (2025.8.3)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy>=1.13.3->torch>=2.0.0->-r requirements_lora.txt (line 2)) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch>=2.0.0->-r requirements_lora.txt (line 2)) (3.0.2)
+Requirement already satisfied: pytz>=2020.1 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2025.2)
+Requirement already satisfied: tzdata>=2022.7 in ./.venv/lib/python3.9/site-packages (from pandas->datasets>=2.12.0->-r requirements_lora.txt (line 13)) (2025.2)
+=== Environment setup complete ===
+Python executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/python3
+Pip executable: /scratch/nalint2/Bayesian-LORA/.venv/bin/pip3
+Virtual environment: /scratch/nalint2/Bayesian-LORA/.venv
+=== Starting LoRA Experiment ===
+Configuration: configs/mrpc_roberta_lora_sgld.yaml
+Output directory: runs/mrpc_roberta_lora_sgld
+=== Phase 1: Training MAP LoRA and SGLD Sampling ===
+2025-09-14 22:21:18,975 - root - INFO - Using device: cuda
+Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2025-09-14 22:21:22,021 - root - INFO - Starting MAP LoRA training...
+2025-09-14 22:22:08,499 - root - INFO - Epoch 1: Train Loss: 0.5927, Val Loss: 0.5502, Val Acc: 0.6838
+2025-09-14 22:22:54,320 - root - INFO - Epoch 2: Train Loss: 0.4772, Val Loss: 0.4044, Val Acc: 0.8260
+2025-09-14 22:23:40,479 - root - INFO - Epoch 3: Train Loss: 0.3821, Val Loss: 0.3633, Val Acc: 0.8529
+2025-09-14 22:24:27,039 - root - INFO - Epoch 4: Train Loss: 0.3370, Val Loss: 0.3019, Val Acc: 0.8824
+2025-09-14 22:25:13,987 - root - INFO - Epoch 5: Train Loss: 0.2883, Val Loss: 0.3078, Val Acc: 0.8578
+2025-09-14 22:26:01,092 - root - INFO - Epoch 6: Train Loss: 0.2517, Val Loss: 0.3257, Val Acc: 0.8725
+2025-09-14 22:26:48,420 - root - INFO - Epoch 7: Train Loss: 0.2151, Val Loss: 0.3005, Val Acc: 0.8725
+2025-09-14 22:27:35,812 - root - INFO - Epoch 8: Train Loss: 0.1808, Val Loss: 0.3508, Val Acc: 0.8652
+2025-09-14 22:28:23,182 - root - INFO - Epoch 9: Train Loss: 0.1657, Val Loss: 0.3760, Val Acc: 0.8824
+2025-09-14 22:29:10,593 - root - INFO - Epoch 10: Train Loss: 0.1419, Val Loss: 0.3419, Val Acc: 0.8799
+2025-09-14 22:29:58,063 - root - INFO - Epoch 11: Train Loss: 0.1188, Val Loss: 0.3398, Val Acc: 0.8799
+2025-09-14 22:30:45,608 - root - INFO - Epoch 12: Train Loss: 0.1024, Val Loss: 0.3849, Val Acc: 0.8775
+2025-09-14 22:31:33,196 - root - INFO - Epoch 13: Train Loss: 0.0822, Val Loss: 0.4208, Val Acc: 0.8824
+2025-09-14 22:32:20,989 - root - INFO - Epoch 14: Train Loss: 0.0860, Val Loss: 0.3487, Val Acc: 0.8897
+2025-09-14 22:33:08,581 - root - INFO - Epoch 15: Train Loss: 0.0687, Val Loss: 0.3735, Val Acc: 0.8799
+2025-09-14 22:33:56,135 - root - INFO - Epoch 16: Train Loss: 0.0562, Val Loss: 0.4495, Val Acc: 0.8971
+2025-09-14 22:34:43,718 - root - INFO - Epoch 17: Train Loss: 0.0624, Val Loss: 0.4084, Val Acc: 0.8897
+2025-09-14 22:35:31,352 - root - INFO - Epoch 18: Train Loss: 0.0511, Val Loss: 0.4169, Val Acc: 0.8799
+2025-09-14 22:36:18,878 - root - INFO - Epoch 19: Train Loss: 0.0445, Val Loss: 0.4490, Val Acc: 0.8824
+2025-09-14 22:37:06,452 - root - INFO - Epoch 20: Train Loss: 0.0458, Val Loss: 0.4421, Val Acc: 0.8848
+2025-09-14 22:37:07,237 - root - INFO - MAP model saved to runs/mrpc_roberta_lora_sgld/map_model.pth
+2025-09-14 22:37:07,362 - root - INFO - Starting SGLD LoRA training...
+2025-09-14 22:37:07,362 - root - INFO - Running chain 1/4
+2025-09-14 22:37:07,676 - root - INFO - Chain 1: MAP model loaded - LoRA param norms: [2.341869354248047, 1.2824249267578125, 2.4131240844726562]
+2025-09-14 22:37:07,891 - root - INFO - Chain 1: MAP model test - Loss: 0.6736, Acc: 0.8125
+2025-09-14 22:37:07,892 - root - INFO - Chain 1: Initial configuration:
+2025-09-14 22:37:07,892 - root - INFO -   Initial step size: 5.00e-03
+2025-09-14 22:37:07,892 - root - INFO -   Temperature: 2.0
+2025-09-14 22:37:07,892 - root - INFO -   Noise scale: 5.00e-04
+2025-09-14 22:37:07,892 - root - INFO -   Prior std: 100.000
+2025-09-14 22:37:07,892 - root - INFO -   Decay rate: 0.300
+2025-09-14 22:37:07,892 - root - INFO - Chain 1: Burn-in phase (8000 steps)
+2025-09-14 22:37:08,633 - root - INFO - Burn-in step 0/8000:
+2025-09-14 22:37:08,633 - root - INFO -   Actual drift norm: 5.55e-04
+2025-09-14 22:37:08,633 - root - INFO -   Actual noise norm: 2.71e-02
+2025-09-14 22:37:08,633 - root - INFO -   Actual drift/noise ratio: 0.020
+2025-09-14 22:37:08,633 - root - INFO -   Theoretical step/noise ratio: 141.421
+2025-09-14 22:37:08,633 - root - INFO -   Prior/Likelihood ratio: 0.127
+2025-09-14 22:40:33,882 - root - INFO - Burn-in step 500/8000:
+2025-09-14 22:40:33,884 - root - INFO -   Actual drift norm: 1.92e-04
+2025-09-14 22:40:33,884 - root - INFO -   Actual noise norm: 2.67e-02
+2025-09-14 22:40:33,884 - root - INFO -   Actual drift/noise ratio: 0.007
+2025-09-14 22:40:33,884 - root - INFO -   Theoretical step/noise ratio: 138.945
+2025-09-14 22:40:33,884 - root - INFO -   Prior/Likelihood ratio: 3.008
+2025-09-14 22:43:58,708 - root - INFO - Burn-in step 1000/8000:
+2025-09-14 22:43:58,709 - root - INFO -   Actual drift norm: 4.73e-04
+2025-09-14 22:43:58,709 - root - INFO -   Actual noise norm: 2.63e-02
+2025-09-14 22:43:58,709 - root - INFO -   Actual drift/noise ratio: 0.018
+2025-09-14 22:43:58,709 - root - INFO -   Theoretical step/noise ratio: 136.766
+2025-09-14 22:43:58,709 - root - INFO -   Prior/Likelihood ratio: 3.158
+2025-09-14 22:47:23,757 - root - INFO - Burn-in step 1500/8000:
+2025-09-14 22:47:23,760 - root - INFO -   Actual drift norm: 4.46e-04
+2025-09-14 22:47:23,760 - root - INFO -   Actual noise norm: 2.59e-02
+2025-09-14 22:47:23,760 - root - INFO -   Actual drift/noise ratio: 0.017
+2025-09-14 22:47:23,760 - root - INFO -   Theoretical step/noise ratio: 134.825
+2025-09-14 22:47:23,760 - root - INFO -   Prior/Likelihood ratio: 0.932
+2025-09-14 22:50:48,878 - root - INFO - Burn-in step 2000/8000:
+2025-09-14 22:50:48,880 - root - INFO -   Actual drift norm: 6.38e-04
+2025-09-14 22:50:48,880 - root - INFO -   Actual noise norm: 2.55e-02
+2025-09-14 22:50:48,880 - root - INFO -   Actual drift/noise ratio: 0.025
+2025-09-14 22:50:48,880 - root - INFO -   Theoretical step/noise ratio: 133.076
+2025-09-14 22:50:48,880 - root - INFO -   Prior/Likelihood ratio: 2.331
+2025-09-14 22:54:14,050 - root - INFO - Burn-in step 2500/8000:
+2025-09-14 22:54:14,052 - root - INFO -   Actual drift norm: 1.79e-02
+2025-09-14 22:54:14,053 - root - INFO -   Actual noise norm: 2.53e-02
+2025-09-14 22:54:14,053 - root - INFO -   Actual drift/noise ratio: 0.707
+2025-09-14 22:54:14,053 - root - INFO -   Theoretical step/noise ratio: 131.488
+2025-09-14 22:54:14,053 - root - INFO -   Prior/Likelihood ratio: 0.230
+2025-09-14 22:57:38,429 - root - INFO - Burn-in step 3000/8000:
+2025-09-14 22:57:38,431 - root - INFO -   Actual drift norm: 1.26e-04
+2025-09-14 22:57:38,431 - root - INFO -   Actual noise norm: 2.49e-02
+2025-09-14 22:57:38,431 - root - INFO -   Actual drift/noise ratio: 0.005
+2025-09-14 22:57:38,431 - root - INFO -   Theoretical step/noise ratio: 130.035
+2025-09-14 22:57:38,431 - root - INFO -   Prior/Likelihood ratio: 3.874
+2025-09-14 23:01:02,499 - root - INFO - Burn-in step 3500/8000:
+2025-09-14 23:01:02,501 - root - INFO -   Actual drift norm: 9.68e-04
+2025-09-14 23:01:02,501 - root - INFO -   Actual noise norm: 2.47e-02
+2025-09-14 23:01:02,501 - root - INFO -   Actual drift/noise ratio: 0.039
+2025-09-14 23:01:02,501 - root - INFO -   Theoretical step/noise ratio: 128.696
+2025-09-14 23:01:02,502 - root - INFO -   Prior/Likelihood ratio: 3.264
+2025-09-14 23:04:26,546 - root - INFO - Burn-in step 4000/8000:
+2025-09-14 23:04:26,548 - root - INFO -   Actual drift norm: 5.16e-04
+2025-09-14 23:04:26,549 - root - INFO -   Actual noise norm: 2.45e-02
+2025-09-14 23:04:26,549 - root - INFO -   Actual drift/noise ratio: 0.021
+2025-09-14 23:04:26,549 - root - INFO -   Theoretical step/noise ratio: 127.456
+2025-09-14 23:04:26,549 - root - INFO -   Prior/Likelihood ratio: 2.009
+2025-09-14 23:07:50,557 - root - INFO - Burn-in step 4500/8000:
+2025-09-14 23:07:50,559 - root - INFO -   Actual drift norm: 1.66e-04
+2025-09-14 23:07:50,559 - root - INFO -   Actual noise norm: 2.42e-02
+2025-09-14 23:07:50,559 - root - INFO -   Actual drift/noise ratio: 0.007
+2025-09-14 23:07:50,559 - root - INFO -   Theoretical step/noise ratio: 126.302
+2025-09-14 23:07:50,559 - root - INFO -   Prior/Likelihood ratio: 3.674
+2025-09-14 23:11:14,395 - root - INFO - Burn-in step 5000/8000:
+2025-09-14 23:11:14,397 - root - INFO -   Actual drift norm: 7.72e-03
+2025-09-14 23:11:14,397 - root - INFO -   Actual noise norm: 2.40e-02
+2025-09-14 23:11:14,397 - root - INFO -   Actual drift/noise ratio: 0.321
+2025-09-14 23:11:14,397 - root - INFO -   Theoretical step/noise ratio: 125.224
+2025-09-14 23:11:14,397 - root - INFO -   Prior/Likelihood ratio: 0.055
+2025-09-14 23:14:38,304 - root - INFO - Burn-in step 5500/8000:
+2025-09-14 23:14:38,306 - root - INFO -   Actual drift norm: 3.18e-04
+2025-09-14 23:14:38,306 - root - INFO -   Actual noise norm: 2.39e-02
+2025-09-14 23:14:38,306 - root - INFO -   Actual drift/noise ratio: 0.013
+2025-09-14 23:14:38,306 - root - INFO -   Theoretical step/noise ratio: 124.213
+2025-09-14 23:14:38,306 - root - INFO -   Prior/Likelihood ratio: 3.471
+2025-09-14 23:18:02,351 - root - INFO - Burn-in step 6000/8000:
+2025-09-14 23:18:02,351 - root - INFO -   Actual drift norm: 1.90e-02
+2025-09-14 23:18:02,351 - root - INFO -   Actual noise norm: 2.36e-02
+2025-09-14 23:18:02,352 - root - INFO -   Actual drift/noise ratio: 0.803
+2025-09-14 23:18:02,352 - root - INFO -   Theoretical step/noise ratio: 123.261
+2025-09-14 23:18:02,352 - root - INFO -   Prior/Likelihood ratio: 4.032
+2025-09-14 23:21:26,255 - root - INFO - Burn-in step 6500/8000:
+2025-09-14 23:21:26,257 - root - INFO -   Actual drift norm: 8.75e-05
+2025-09-14 23:21:26,257 - root - INFO -   Actual noise norm: 2.35e-02
+2025-09-14 23:21:26,257 - root - INFO -   Actual drift/noise ratio: 0.004
+2025-09-14 23:21:26,257 - root - INFO -   Theoretical step/noise ratio: 122.362
+2025-09-14 23:21:26,257 - root - INFO -   Prior/Likelihood ratio: 3.718
+2025-09-14 23:24:50,227 - root - INFO - Burn-in step 7000/8000:
+2025-09-14 23:24:50,228 - root - INFO -   Actual drift norm: 7.36e-03
+2025-09-14 23:24:50,228 - root - INFO -   Actual noise norm: 2.33e-02
+2025-09-14 23:24:50,228 - root - INFO -   Actual drift/noise ratio: 0.316
+2025-09-14 23:24:50,228 - root - INFO -   Theoretical step/noise ratio: 121.511
+2025-09-14 23:24:50,228 - root - INFO -   Prior/Likelihood ratio: 2.660
+2025-09-14 23:28:14,197 - root - INFO - Burn-in step 7500/8000:
+2025-09-14 23:28:14,199 - root - INFO -   Actual drift norm: 9.56e-05
+2025-09-14 23:28:14,199 - root - INFO -   Actual noise norm: 2.32e-02
+2025-09-14 23:28:14,199 - root - INFO -   Actual drift/noise ratio: 0.004
+2025-09-14 23:28:14,199 - root - INFO -   Theoretical step/noise ratio: 120.703
+2025-09-14 23:28:14,199 - root - INFO -   Prior/Likelihood ratio: 1.641
+2025-09-14 23:31:37,408 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-14 23:31:37,409 - root - INFO -     Avg parameter movement: 0.235120
+2025-09-14 23:31:37,409 - root - INFO -     Total parameters moved: 96
+2025-09-14 23:31:37,409 - root - INFO - Chain 1: Sampling phase (3000 steps)
+2025-09-14 23:31:37,597 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-14 23:31:37,597 - root - INFO -     Initial prediction: [1, 1]
+2025-09-14 23:31:37,597 - root - INFO -     Initial confidence: [0.0014797919429838657, 0.9985201954841614]
+2025-09-14 23:31:37,602 - root - INFO - Chain 1: Step size after burn-in:
+2025-09-14 23:31:37,602 - root - INFO -   Initial: 5.00e-03
+2025-09-14 23:31:37,602 - root - INFO -   Final: 3.60e-03
+2025-09-14 23:31:37,602 - root - INFO -   Reduction: 28.1%
+2025-09-14 23:31:38,188 - root - INFO - Chain 1, Step 0:
+2025-09-14 23:31:38,188 - root - INFO -   Actual drift norm: 1.36e-04
+2025-09-14 23:31:38,189 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-14 23:31:38,189 - root - INFO -   Actual drift/noise ratio: 0.006
+2025-09-14 23:31:38,189 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-14 23:31:38,189 - root - INFO -   Prior/Likelihood ratio: 3.199
+2025-09-14 23:31:38,189 - root - INFO -   Temperature: 2.0
+2025-09-14 23:31:38,349 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-14 23:31:38,350 - root - INFO -     Avg parameter movement: 0.002349
+2025-09-14 23:31:38,350 - root - INFO -     Prediction changed: False
+2025-09-14 23:31:38,350 - root - INFO -     Confidence change: 0.000141
+2025-09-14 23:31:38,350 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:31:38,350 - root - INFO -     Current confidence: [0.0014108093455433846, 0.9985892176628113]
+2025-09-14 23:31:38,350 - root - INFO - Sampling step 0/3000, step_size: 3.60e-03
+2025-09-14 23:31:58,731 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-14 23:31:58,732 - root - INFO -     Avg parameter movement: 0.016915
+2025-09-14 23:31:58,732 - root - INFO -     Prediction changed: False
+2025-09-14 23:31:58,732 - root - INFO -     Confidence change: 0.000118
+2025-09-14 23:31:58,732 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:31:58,732 - root - INFO -     Current confidence: [0.0013971307780593634, 0.9986029267311096]
+2025-09-14 23:32:19,143 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-14 23:32:19,144 - root - INFO -     Avg parameter movement: 0.023998
+2025-09-14 23:32:19,144 - root - INFO -     Prediction changed: False
+2025-09-14 23:32:19,144 - root - INFO -     Confidence change: 0.000126
+2025-09-14 23:32:19,144 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:32:19,144 - root - INFO -     Current confidence: [0.0014079404063522816, 0.9985920786857605]
+2025-09-14 23:32:39,558 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-14 23:32:39,558 - root - INFO -     Avg parameter movement: 0.029534
+2025-09-14 23:32:39,558 - root - INFO -     Prediction changed: True
+2025-09-14 23:32:39,558 - root - INFO -     Confidence change: 1.991295
+2025-09-14 23:32:39,559 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 23:32:39,559 - root - INFO -     Current confidence: [0.9971053004264832, 0.002894656267017126]
+2025-09-14 23:33:00,088 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-14 23:33:00,089 - root - INFO -     Avg parameter movement: 0.034009
+2025-09-14 23:33:00,089 - root - INFO -     Prediction changed: True
+2025-09-14 23:33:00,089 - root - INFO -     Confidence change: 1.989665
+2025-09-14 23:33:00,090 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 23:33:00,090 - root - INFO -     Current confidence: [0.9953864216804504, 0.004613569006323814]
+2025-09-14 23:34:42,066 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-14 23:34:42,067 - root - INFO -     Avg parameter movement: 0.050778
+2025-09-14 23:34:42,067 - root - INFO -     Prediction changed: True
+2025-09-14 23:34:42,067 - root - INFO -     Confidence change: 1.990742
+2025-09-14 23:34:42,067 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 23:34:42,067 - root - INFO -     Current confidence: [0.9968253374099731, 0.003174681682139635]
+2025-09-14 23:38:05,930 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-14 23:38:05,931 - root - INFO -     Avg parameter movement: 0.073922
+2025-09-14 23:38:05,931 - root - INFO -     Prediction changed: False
+2025-09-14 23:38:05,931 - root - INFO -     Confidence change: 0.000763
+2025-09-14 23:38:05,931 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:38:05,932 - root - INFO -     Current confidence: [0.00158133904915303, 0.9984186887741089]
+2025-09-14 23:38:26,392 - root - INFO - Chain 1, Step 1000:
+2025-09-14 23:38:26,392 - root - INFO -   Actual drift norm: 3.82e-04
+2025-09-14 23:38:26,392 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-14 23:38:26,392 - root - INFO -   Actual drift/noise ratio: 0.017
+2025-09-14 23:38:26,392 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-14 23:38:26,392 - root - INFO -   Prior/Likelihood ratio: 2.122
+2025-09-14 23:38:26,392 - root - INFO -   Temperature: 2.0
+2025-09-14 23:38:26,508 - root - INFO - Sampling step 1000/3000, step_size: 3.60e-03
+2025-09-14 23:41:29,970 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-14 23:41:29,971 - root - INFO -     Avg parameter movement: 0.091032
+2025-09-14 23:41:29,971 - root - INFO -     Prediction changed: True
+2025-09-14 23:41:29,971 - root - INFO -     Confidence change: 1.990866
+2025-09-14 23:41:29,972 - root - INFO -     Current prediction: [0, 0]
+2025-09-14 23:41:29,972 - root - INFO -     Current confidence: [0.9966400861740112, 0.0033598882146179676]
+2025-09-14 23:44:53,971 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-14 23:44:53,973 - root - INFO -     Avg parameter movement: 0.105667
+2025-09-14 23:44:53,973 - root - INFO -     Prediction changed: True
+2025-09-14 23:44:53,973 - root - INFO -     Confidence change: 1.407219
+2025-09-14 23:44:53,973 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 23:44:53,974 - root - INFO -     Current confidence: [0.9965338706970215, 0.003466120222583413]
+2025-09-14 23:45:14,441 - root - INFO - Chain 1, Step 2000:
+2025-09-14 23:45:14,442 - root - INFO -   Actual drift norm: 6.55e-04
+2025-09-14 23:45:14,442 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-14 23:45:14,442 - root - INFO -   Actual drift/noise ratio: 0.028
+2025-09-14 23:45:14,442 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-14 23:45:14,442 - root - INFO -   Prior/Likelihood ratio: 3.007
+2025-09-14 23:45:14,443 - root - INFO -   Temperature: 2.0
+2025-09-14 23:45:14,562 - root - INFO - Sampling step 2000/3000, step_size: 3.60e-03
+2025-09-14 23:48:18,029 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-14 23:48:18,029 - root - INFO -     Avg parameter movement: 0.118541
+2025-09-14 23:48:18,029 - root - INFO -     Prediction changed: False
+2025-09-14 23:48:18,029 - root - INFO -     Confidence change: 0.000181
+2025-09-14 23:48:18,029 - root - INFO -     Current prediction: [1, 1]
+2025-09-14 23:48:18,030 - root - INFO -     Current confidence: [0.0014456332428380847, 0.9985544085502625]
+2025-09-14 23:51:42,217 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-14 23:51:42,219 - root - INFO -     Avg parameter movement: 0.129975
+2025-09-14 23:51:42,219 - root - INFO -     Prediction changed: True
+2025-09-14 23:51:42,219 - root - INFO -     Confidence change: 1.408344
+2025-09-14 23:51:42,219 - root - INFO -     Current prediction: [0, 1]
+2025-09-14 23:51:42,219 - root - INFO -     Current confidence: [0.9973291158676147, 0.002670867368578911]
+2025-09-14 23:52:02,128 - root - INFO - Chain 1: Collected 15 samples
+2025-09-14 23:52:02,173 - root - INFO -   DIAGNOSTIC - Chain 1 summary:
+2025-09-14 23:52:02,173 - root - INFO -     Final avg parameter movement: 0.131056
+2025-09-14 23:52:02,173 - root - INFO -     Final prediction changed: False
+2025-09-14 23:52:02,173 - root - INFO -     Final confidence change: 0.000135
+2025-09-14 23:52:02,173 - root - INFO -     Final prediction: [1, 1]
+2025-09-14 23:52:02,173 - root - INFO -     Final confidence: [0.0013841255567967892, 0.9986158609390259]
+2025-09-14 23:52:02,293 - root - INFO - Running chain 2/4
+2025-09-14 23:52:02,932 - root - INFO - Chain 2: MAP model loaded - LoRA param norms: [2.341869354248047, 1.2824249267578125, 2.4131240844726562]
+2025-09-14 23:52:03,115 - root - INFO - Chain 2: MAP model test - Loss: 0.6736, Acc: 0.8125
+2025-09-14 23:52:03,115 - root - INFO - Chain 2: Initial configuration:
+2025-09-14 23:52:03,116 - root - INFO -   Initial step size: 5.00e-03
+2025-09-14 23:52:03,116 - root - INFO -   Temperature: 2.0
+2025-09-14 23:52:03,116 - root - INFO -   Noise scale: 5.00e-04
+2025-09-14 23:52:03,116 - root - INFO -   Prior std: 100.000
+2025-09-14 23:52:03,116 - root - INFO -   Decay rate: 0.300
+2025-09-14 23:52:03,116 - root - INFO - Chain 2: Burn-in phase (8000 steps)
+2025-09-14 23:52:03,836 - root - INFO - Burn-in step 0/8000:
+2025-09-14 23:52:03,836 - root - INFO -   Actual drift norm: 4.18e-03
+2025-09-14 23:52:03,836 - root - INFO -   Actual noise norm: 2.72e-02
+2025-09-14 23:52:03,836 - root - INFO -   Actual drift/noise ratio: 0.154
+2025-09-14 23:52:03,836 - root - INFO -   Theoretical step/noise ratio: 141.421
+2025-09-14 23:52:03,836 - root - INFO -   Prior/Likelihood ratio: 1.592
+2025-09-14 23:55:27,955 - root - INFO - Burn-in step 500/8000:
+2025-09-14 23:55:27,958 - root - INFO -   Actual drift norm: 7.59e-03
+2025-09-14 23:55:27,958 - root - INFO -   Actual noise norm: 2.67e-02
+2025-09-14 23:55:27,958 - root - INFO -   Actual drift/noise ratio: 0.284
+2025-09-14 23:55:27,958 - root - INFO -   Theoretical step/noise ratio: 138.945
+2025-09-14 23:55:27,958 - root - INFO -   Prior/Likelihood ratio: 0.627
+2025-09-14 23:58:52,202 - root - INFO - Burn-in step 1000/8000:
+2025-09-14 23:58:52,203 - root - INFO -   Actual drift norm: 1.37e-02
+2025-09-14 23:58:52,203 - root - INFO -   Actual noise norm: 2.62e-02
+2025-09-14 23:58:52,203 - root - INFO -   Actual drift/noise ratio: 0.521
+2025-09-14 23:58:52,203 - root - INFO -   Theoretical step/noise ratio: 136.766
+2025-09-14 23:58:52,203 - root - INFO -   Prior/Likelihood ratio: 0.521
+2025-09-15 00:02:16,562 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 00:02:16,564 - root - INFO -   Actual drift norm: 1.48e-03
+2025-09-15 00:02:16,564 - root - INFO -   Actual noise norm: 2.59e-02
+2025-09-15 00:02:16,564 - root - INFO -   Actual drift/noise ratio: 0.057
+2025-09-15 00:02:16,564 - root - INFO -   Theoretical step/noise ratio: 134.825
+2025-09-15 00:02:16,564 - root - INFO -   Prior/Likelihood ratio: 3.083
+2025-09-15 00:05:40,949 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 00:05:40,952 - root - INFO -   Actual drift norm: 7.04e-04
+2025-09-15 00:05:40,952 - root - INFO -   Actual noise norm: 2.56e-02
+2025-09-15 00:05:40,952 - root - INFO -   Actual drift/noise ratio: 0.028
+2025-09-15 00:05:40,952 - root - INFO -   Theoretical step/noise ratio: 133.076
+2025-09-15 00:05:40,952 - root - INFO -   Prior/Likelihood ratio: 2.500
+2025-09-15 00:09:05,465 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 00:09:05,465 - root - INFO -   Actual drift norm: 1.74e-02
+2025-09-15 00:09:05,465 - root - INFO -   Actual noise norm: 2.53e-02
+2025-09-15 00:09:05,465 - root - INFO -   Actual drift/noise ratio: 0.688
+2025-09-15 00:09:05,465 - root - INFO -   Theoretical step/noise ratio: 131.488
+2025-09-15 00:09:05,465 - root - INFO -   Prior/Likelihood ratio: 1.235
+2025-09-15 00:12:29,828 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 00:12:29,830 - root - INFO -   Actual drift norm: 3.68e-03
+2025-09-15 00:12:29,830 - root - INFO -   Actual noise norm: 2.50e-02
+2025-09-15 00:12:29,830 - root - INFO -   Actual drift/noise ratio: 0.148
+2025-09-15 00:12:29,830 - root - INFO -   Theoretical step/noise ratio: 130.035
+2025-09-15 00:12:29,830 - root - INFO -   Prior/Likelihood ratio: 1.647
+2025-09-15 00:15:54,166 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 00:15:54,168 - root - INFO -   Actual drift norm: 5.98e-05
+2025-09-15 00:15:54,169 - root - INFO -   Actual noise norm: 2.47e-02
+2025-09-15 00:15:54,169 - root - INFO -   Actual drift/noise ratio: 0.002
+2025-09-15 00:15:54,169 - root - INFO -   Theoretical step/noise ratio: 128.696
+2025-09-15 00:15:54,169 - root - INFO -   Prior/Likelihood ratio: 3.505
+2025-09-15 00:19:18,398 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 00:19:18,399 - root - INFO -   Actual drift norm: 4.07e-04
+2025-09-15 00:19:18,399 - root - INFO -   Actual noise norm: 2.45e-02
+2025-09-15 00:19:18,399 - root - INFO -   Actual drift/noise ratio: 0.017
+2025-09-15 00:19:18,399 - root - INFO -   Theoretical step/noise ratio: 127.456
+2025-09-15 00:19:18,399 - root - INFO -   Prior/Likelihood ratio: 2.563
+2025-09-15 00:22:42,301 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 00:22:42,302 - root - INFO -   Actual drift norm: 8.84e-05
+2025-09-15 00:22:42,302 - root - INFO -   Actual noise norm: 2.43e-02
+2025-09-15 00:22:42,303 - root - INFO -   Actual drift/noise ratio: 0.004
+2025-09-15 00:22:42,303 - root - INFO -   Theoretical step/noise ratio: 126.302
+2025-09-15 00:22:42,303 - root - INFO -   Prior/Likelihood ratio: 3.706
+2025-09-15 00:26:06,191 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 00:26:06,193 - root - INFO -   Actual drift norm: 8.81e-03
+2025-09-15 00:26:06,193 - root - INFO -   Actual noise norm: 2.40e-02
+2025-09-15 00:26:06,194 - root - INFO -   Actual drift/noise ratio: 0.367
+2025-09-15 00:26:06,194 - root - INFO -   Theoretical step/noise ratio: 125.224
+2025-09-15 00:26:06,194 - root - INFO -   Prior/Likelihood ratio: 1.606
+2025-09-15 00:29:29,978 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 00:29:29,979 - root - INFO -   Actual drift norm: 1.20e-02
+2025-09-15 00:29:29,979 - root - INFO -   Actual noise norm: 2.38e-02
+2025-09-15 00:29:29,979 - root - INFO -   Actual drift/noise ratio: 0.503
+2025-09-15 00:29:29,979 - root - INFO -   Theoretical step/noise ratio: 124.213
+2025-09-15 00:29:29,979 - root - INFO -   Prior/Likelihood ratio: 3.757
+2025-09-15 00:32:53,951 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 00:32:53,952 - root - INFO -   Actual drift norm: 1.32e-02
+2025-09-15 00:32:53,952 - root - INFO -   Actual noise norm: 2.37e-02
+2025-09-15 00:32:53,953 - root - INFO -   Actual drift/noise ratio: 0.558
+2025-09-15 00:32:53,953 - root - INFO -   Theoretical step/noise ratio: 123.261
+2025-09-15 00:32:53,953 - root - INFO -   Prior/Likelihood ratio: 3.432
+2025-09-15 00:36:17,806 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 00:36:17,808 - root - INFO -   Actual drift norm: 5.38e-05
+2025-09-15 00:36:17,808 - root - INFO -   Actual noise norm: 2.35e-02
+2025-09-15 00:36:17,808 - root - INFO -   Actual drift/noise ratio: 0.002
+2025-09-15 00:36:17,808 - root - INFO -   Theoretical step/noise ratio: 122.362
+2025-09-15 00:36:17,808 - root - INFO -   Prior/Likelihood ratio: 4.006
+2025-09-15 00:39:41,641 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 00:39:41,641 - root - INFO -   Actual drift norm: 1.71e-02
+2025-09-15 00:39:41,641 - root - INFO -   Actual noise norm: 2.33e-02
+2025-09-15 00:39:41,642 - root - INFO -   Actual drift/noise ratio: 0.732
+2025-09-15 00:39:41,642 - root - INFO -   Theoretical step/noise ratio: 121.511
+2025-09-15 00:39:41,642 - root - INFO -   Prior/Likelihood ratio: 4.057
+2025-09-15 00:43:05,411 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 00:43:05,413 - root - INFO -   Actual drift norm: 3.90e-05
+2025-09-15 00:43:05,413 - root - INFO -   Actual noise norm: 2.31e-02
+2025-09-15 00:43:05,413 - root - INFO -   Actual drift/noise ratio: 0.002
+2025-09-15 00:43:05,413 - root - INFO -   Theoretical step/noise ratio: 120.703
+2025-09-15 00:43:05,413 - root - INFO -   Prior/Likelihood ratio: 4.634
+2025-09-15 00:46:28,485 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 00:46:28,488 - root - INFO -     Avg parameter movement: 0.235270
+2025-09-15 00:46:28,488 - root - INFO -     Total parameters moved: 96
+2025-09-15 00:46:28,488 - root - INFO - Chain 2: Sampling phase (3000 steps)
+2025-09-15 00:46:28,633 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 00:46:28,634 - root - INFO -     Initial prediction: [0, 0]
+2025-09-15 00:46:28,634 - root - INFO -     Initial confidence: [0.9969567060470581, 0.003043243894353509]
+2025-09-15 00:46:28,638 - root - INFO - Chain 2: Step size after burn-in:
+2025-09-15 00:46:28,638 - root - INFO -   Initial: 5.00e-03
+2025-09-15 00:46:28,638 - root - INFO -   Final: 3.60e-03
+2025-09-15 00:46:28,638 - root - INFO -   Reduction: 28.1%
+2025-09-15 00:46:29,226 - root - INFO - Chain 2, Step 0:
+2025-09-15 00:46:29,227 - root - INFO -   Actual drift norm: 8.78e-05
+2025-09-15 00:46:29,227 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 00:46:29,227 - root - INFO -   Actual drift/noise ratio: 0.004
+2025-09-15 00:46:29,227 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 00:46:29,227 - root - INFO -   Prior/Likelihood ratio: 3.730
+2025-09-15 00:46:29,227 - root - INFO -   Temperature: 2.0
+2025-09-15 00:46:29,390 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 00:46:29,390 - root - INFO -     Avg parameter movement: 0.002349
+2025-09-15 00:46:29,390 - root - INFO -     Prediction changed: True
+2025-09-15 00:46:29,390 - root - INFO -     Confidence change: 1.407842
+2025-09-15 00:46:29,390 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:46:29,390 - root - INFO -     Current confidence: [0.0014624163741245866, 0.998537540435791]
+2025-09-15 00:46:29,390 - root - INFO - Sampling step 0/3000, step_size: 3.60e-03
+2025-09-15 00:46:49,761 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 00:46:49,761 - root - INFO -     Avg parameter movement: 0.017039
+2025-09-15 00:46:49,761 - root - INFO -     Prediction changed: True
+2025-09-15 00:46:49,761 - root - INFO -     Confidence change: 1.991216
+2025-09-15 00:46:49,761 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:46:49,762 - root - INFO -     Current confidence: [0.0014047507429495454, 0.9985952973365784]
+2025-09-15 00:47:10,153 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 00:47:10,153 - root - INFO -     Avg parameter movement: 0.024008
+2025-09-15 00:47:10,153 - root - INFO -     Prediction changed: False
+2025-09-15 00:47:10,153 - root - INFO -     Confidence change: 0.000547
+2025-09-15 00:47:10,153 - root - INFO -     Current prediction: [0, 0]
+2025-09-15 00:47:10,153 - root - INFO -     Current confidence: [0.9966953992843628, 0.0033046426251530647]
+2025-09-15 00:47:30,563 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 00:47:30,563 - root - INFO -     Avg parameter movement: 0.029470
+2025-09-15 00:47:30,563 - root - INFO -     Prediction changed: True
+2025-09-15 00:47:30,563 - root - INFO -     Confidence change: 1.407443
+2025-09-15 00:47:30,563 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:47:30,563 - root - INFO -     Current confidence: [0.0017442642711102962, 0.9982556700706482]
+2025-09-15 00:47:50,981 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 00:47:50,981 - root - INFO -     Avg parameter movement: 0.034059
+2025-09-15 00:47:50,982 - root - INFO -     Prediction changed: True
+2025-09-15 00:47:50,982 - root - INFO -     Confidence change: 1.991259
+2025-09-15 00:47:50,982 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:47:50,982 - root - INFO -     Current confidence: [0.0014536349335685372, 0.9985463619232178]
+2025-09-15 00:49:32,946 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 00:49:32,946 - root - INFO -     Avg parameter movement: 0.050916
+2025-09-15 00:49:32,946 - root - INFO -     Prediction changed: True
+2025-09-15 00:49:32,946 - root - INFO -     Confidence change: 1.407821
+2025-09-15 00:49:32,947 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 00:49:32,947 - root - INFO -     Current confidence: [0.0014767148531973362, 0.9985232949256897]
+2025-09-15 00:52:56,936 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 00:52:56,939 - root - INFO -     Avg parameter movement: 0.073843
+2025-09-15 00:52:56,939 - root - INFO -     Prediction changed: True
+2025-09-15 00:52:56,939 - root - INFO -     Confidence change: 1.991273
+2025-09-15 00:52:56,939 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 00:52:56,939 - root - INFO -     Current confidence: [0.0014452161267399788, 0.9985547661781311]
+2025-09-15 00:53:17,387 - root - INFO - Chain 2, Step 1000:
+2025-09-15 00:53:17,387 - root - INFO -   Actual drift norm: 3.49e-03
+2025-09-15 00:53:17,387 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 00:53:17,387 - root - INFO -   Actual drift/noise ratio: 0.151
+2025-09-15 00:53:17,387 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 00:53:17,388 - root - INFO -   Prior/Likelihood ratio: 0.708
+2025-09-15 00:53:17,388 - root - INFO -   Temperature: 2.0
+2025-09-15 00:53:17,502 - root - INFO - Sampling step 1000/3000, step_size: 3.60e-03
+2025-09-15 00:56:20,990 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 00:56:20,991 - root - INFO -     Avg parameter movement: 0.091057
+2025-09-15 00:56:20,992 - root - INFO -     Prediction changed: True
+2025-09-15 00:56:20,992 - root - INFO -     Confidence change: 1.408232
+2025-09-15 00:56:20,995 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 00:56:20,995 - root - INFO -     Current confidence: [0.9973291158676147, 0.002670862479135394]
+2025-09-15 00:59:44,848 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 00:59:44,848 - root - INFO -     Avg parameter movement: 0.105506
+2025-09-15 00:59:44,848 - root - INFO -     Prediction changed: False
+2025-09-15 00:59:44,849 - root - INFO -     Confidence change: 0.000473
+2025-09-15 00:59:44,849 - root - INFO -     Current prediction: [0, 0]
+2025-09-15 00:59:44,849 - root - INFO -     Current confidence: [0.9972907900810242, 0.0027091260999441147]
+2025-09-15 01:00:05,306 - root - INFO - Chain 2, Step 2000:
+2025-09-15 01:00:05,306 - root - INFO -   Actual drift norm: 1.44e-04
+2025-09-15 01:00:05,307 - root - INFO -   Actual noise norm: 2.31e-02
+2025-09-15 01:00:05,307 - root - INFO -   Actual drift/noise ratio: 0.006
+2025-09-15 01:00:05,307 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 01:00:05,307 - root - INFO -   Prior/Likelihood ratio: 3.444
+2025-09-15 01:00:05,307 - root - INFO -   Temperature: 2.0
+2025-09-15 01:00:05,424 - root - INFO - Sampling step 2000/3000, step_size: 3.60e-03
+2025-09-15 01:03:09,131 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 01:03:09,133 - root - INFO -     Avg parameter movement: 0.118061
+2025-09-15 01:03:09,133 - root - INFO -     Prediction changed: True
+2025-09-15 01:03:09,133 - root - INFO -     Confidence change: 1.407305
+2025-09-15 01:03:09,134 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 01:03:09,134 - root - INFO -     Current confidence: [0.0018417730461806059, 0.9981582760810852]
+2025-09-15 01:06:33,404 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 01:06:33,405 - root - INFO -     Avg parameter movement: 0.129623
+2025-09-15 01:06:33,406 - root - INFO -     Prediction changed: True
+2025-09-15 01:06:33,406 - root - INFO -     Confidence change: 1.991328
+2025-09-15 01:06:33,408 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 01:06:33,408 - root - INFO -     Current confidence: [0.0014108488103374839, 0.9985890984535217]
+2025-09-15 01:06:53,294 - root - INFO - Chain 2: Collected 15 samples
+2025-09-15 01:06:53,339 - root - INFO -   DIAGNOSTIC - Chain 2 summary:
+2025-09-15 01:06:53,339 - root - INFO -     Final avg parameter movement: 0.130671
+2025-09-15 01:06:53,339 - root - INFO -     Final prediction changed: True
+2025-09-15 01:06:53,340 - root - INFO -     Final confidence change: 1.991196
+2025-09-15 01:06:53,340 - root - INFO -     Final prediction: [1, 1]
+2025-09-15 01:06:53,340 - root - INFO -     Final confidence: [0.0015364798018708825, 0.99846351146698]
+2025-09-15 01:06:53,445 - root - INFO - Running chain 3/4
+2025-09-15 01:06:54,058 - root - INFO - Chain 3: MAP model loaded - LoRA param norms: [2.341869354248047, 1.2824249267578125, 2.4131240844726562]
+2025-09-15 01:06:54,242 - root - INFO - Chain 3: MAP model test - Loss: 0.6736, Acc: 0.8125
+2025-09-15 01:06:54,242 - root - INFO - Chain 3: Initial configuration:
+2025-09-15 01:06:54,242 - root - INFO -   Initial step size: 5.00e-03
+2025-09-15 01:06:54,243 - root - INFO -   Temperature: 2.0
+2025-09-15 01:06:54,243 - root - INFO -   Noise scale: 5.00e-04
+2025-09-15 01:06:54,243 - root - INFO -   Prior std: 100.000
+2025-09-15 01:06:54,243 - root - INFO -   Decay rate: 0.300
+2025-09-15 01:06:54,243 - root - INFO - Chain 3: Burn-in phase (8000 steps)
+2025-09-15 01:06:54,965 - root - INFO - Burn-in step 0/8000:
+2025-09-15 01:06:54,966 - root - INFO -   Actual drift norm: 9.57e-03
+2025-09-15 01:06:54,966 - root - INFO -   Actual noise norm: 2.72e-02
+2025-09-15 01:06:54,966 - root - INFO -   Actual drift/noise ratio: 0.352
+2025-09-15 01:06:54,966 - root - INFO -   Theoretical step/noise ratio: 141.421
+2025-09-15 01:06:54,966 - root - INFO -   Prior/Likelihood ratio: 0.359
+2025-09-15 01:10:19,209 - root - INFO - Burn-in step 500/8000:
+2025-09-15 01:10:19,209 - root - INFO -   Actual drift norm: 1.31e-03
+2025-09-15 01:10:19,209 - root - INFO -   Actual noise norm: 2.67e-02
+2025-09-15 01:10:19,210 - root - INFO -   Actual drift/noise ratio: 0.049
+2025-09-15 01:10:19,210 - root - INFO -   Theoretical step/noise ratio: 138.945
+2025-09-15 01:10:19,210 - root - INFO -   Prior/Likelihood ratio: 2.513
+2025-09-15 01:13:43,611 - root - INFO - Burn-in step 1000/8000:
+2025-09-15 01:13:43,613 - root - INFO -   Actual drift norm: 2.34e-02
+2025-09-15 01:13:43,613 - root - INFO -   Actual noise norm: 2.63e-02
+2025-09-15 01:13:43,613 - root - INFO -   Actual drift/noise ratio: 0.889
+2025-09-15 01:13:43,613 - root - INFO -   Theoretical step/noise ratio: 136.766
+2025-09-15 01:13:43,613 - root - INFO -   Prior/Likelihood ratio: 0.450
+2025-09-15 01:17:08,038 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 01:17:08,041 - root - INFO -   Actual drift norm: 1.35e-02
+2025-09-15 01:17:08,041 - root - INFO -   Actual noise norm: 2.59e-02
+2025-09-15 01:17:08,041 - root - INFO -   Actual drift/noise ratio: 0.523
+2025-09-15 01:17:08,041 - root - INFO -   Theoretical step/noise ratio: 134.825
+2025-09-15 01:17:08,041 - root - INFO -   Prior/Likelihood ratio: 3.344
+2025-09-15 01:20:32,484 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 01:20:32,485 - root - INFO -   Actual drift norm: 2.07e-04
+2025-09-15 01:20:32,485 - root - INFO -   Actual noise norm: 2.55e-02
+2025-09-15 01:20:32,485 - root - INFO -   Actual drift/noise ratio: 0.008
+2025-09-15 01:20:32,485 - root - INFO -   Theoretical step/noise ratio: 133.076
+2025-09-15 01:20:32,485 - root - INFO -   Prior/Likelihood ratio: 0.093
+2025-09-15 01:23:56,731 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 01:23:56,733 - root - INFO -   Actual drift norm: 3.24e-03
+2025-09-15 01:23:56,733 - root - INFO -   Actual noise norm: 2.53e-02
+2025-09-15 01:23:56,733 - root - INFO -   Actual drift/noise ratio: 0.128
+2025-09-15 01:23:56,733 - root - INFO -   Theoretical step/noise ratio: 131.488
+2025-09-15 01:23:56,733 - root - INFO -   Prior/Likelihood ratio: 2.047
+2025-09-15 01:27:20,915 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 01:27:20,917 - root - INFO -   Actual drift norm: 2.11e-02
+2025-09-15 01:27:20,917 - root - INFO -   Actual noise norm: 2.49e-02
+2025-09-15 01:27:20,917 - root - INFO -   Actual drift/noise ratio: 0.847
+2025-09-15 01:27:20,917 - root - INFO -   Theoretical step/noise ratio: 130.035
+2025-09-15 01:27:20,917 - root - INFO -   Prior/Likelihood ratio: 2.710
+2025-09-15 01:30:44,724 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 01:30:44,724 - root - INFO -   Actual drift norm: 1.68e-04
+2025-09-15 01:30:44,724 - root - INFO -   Actual noise norm: 2.47e-02
+2025-09-15 01:30:44,724 - root - INFO -   Actual drift/noise ratio: 0.007
+2025-09-15 01:30:44,725 - root - INFO -   Theoretical step/noise ratio: 128.696
+2025-09-15 01:30:44,725 - root - INFO -   Prior/Likelihood ratio: 2.729
+2025-09-15 01:34:08,585 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 01:34:08,586 - root - INFO -   Actual drift norm: 1.10e-02
+2025-09-15 01:34:08,586 - root - INFO -   Actual noise norm: 2.45e-02
+2025-09-15 01:34:08,586 - root - INFO -   Actual drift/noise ratio: 0.449
+2025-09-15 01:34:08,586 - root - INFO -   Theoretical step/noise ratio: 127.456
+2025-09-15 01:34:08,587 - root - INFO -   Prior/Likelihood ratio: 3.577
+2025-09-15 01:37:32,424 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 01:37:32,426 - root - INFO -   Actual drift norm: 4.34e-04
+2025-09-15 01:37:32,426 - root - INFO -   Actual noise norm: 2.43e-02
+2025-09-15 01:37:32,426 - root - INFO -   Actual drift/noise ratio: 0.018
+2025-09-15 01:37:32,426 - root - INFO -   Theoretical step/noise ratio: 126.302
+2025-09-15 01:37:32,426 - root - INFO -   Prior/Likelihood ratio: 3.887
+2025-09-15 01:40:56,205 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 01:40:56,206 - root - INFO -   Actual drift norm: 1.96e-02
+2025-09-15 01:40:56,206 - root - INFO -   Actual noise norm: 2.40e-02
+2025-09-15 01:40:56,206 - root - INFO -   Actual drift/noise ratio: 0.817
+2025-09-15 01:40:56,206 - root - INFO -   Theoretical step/noise ratio: 125.224
+2025-09-15 01:40:56,206 - root - INFO -   Prior/Likelihood ratio: 0.079
+2025-09-15 01:44:19,853 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 01:44:19,855 - root - INFO -   Actual drift norm: 1.33e-04
+2025-09-15 01:44:19,855 - root - INFO -   Actual noise norm: 2.39e-02
+2025-09-15 01:44:19,855 - root - INFO -   Actual drift/noise ratio: 0.006
+2025-09-15 01:44:19,855 - root - INFO -   Theoretical step/noise ratio: 124.213
+2025-09-15 01:44:19,855 - root - INFO -   Prior/Likelihood ratio: 3.193
+2025-09-15 01:47:43,548 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 01:47:43,550 - root - INFO -   Actual drift norm: 6.63e-04
+2025-09-15 01:47:43,551 - root - INFO -   Actual noise norm: 2.37e-02
+2025-09-15 01:47:43,551 - root - INFO -   Actual drift/noise ratio: 0.028
+2025-09-15 01:47:43,551 - root - INFO -   Theoretical step/noise ratio: 123.261
+2025-09-15 01:47:43,551 - root - INFO -   Prior/Likelihood ratio: 3.002
+2025-09-15 01:51:07,337 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 01:51:07,338 - root - INFO -   Actual drift norm: 4.91e-05
+2025-09-15 01:51:07,338 - root - INFO -   Actual noise norm: 2.35e-02
+2025-09-15 01:51:07,338 - root - INFO -   Actual drift/noise ratio: 0.002
+2025-09-15 01:51:07,338 - root - INFO -   Theoretical step/noise ratio: 122.362
+2025-09-15 01:51:07,338 - root - INFO -   Prior/Likelihood ratio: 3.959
+2025-09-15 01:54:31,115 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 01:54:31,118 - root - INFO -   Actual drift norm: 4.22e-03
+2025-09-15 01:54:31,118 - root - INFO -   Actual noise norm: 2.33e-02
+2025-09-15 01:54:31,118 - root - INFO -   Actual drift/noise ratio: 0.181
+2025-09-15 01:54:31,118 - root - INFO -   Theoretical step/noise ratio: 121.511
+2025-09-15 01:54:31,118 - root - INFO -   Prior/Likelihood ratio: 4.098
+2025-09-15 01:57:55,089 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 01:57:55,092 - root - INFO -   Actual drift norm: 1.08e-04
+2025-09-15 01:57:55,092 - root - INFO -   Actual noise norm: 2.32e-02
+2025-09-15 01:57:55,092 - root - INFO -   Actual drift/noise ratio: 0.005
+2025-09-15 01:57:55,092 - root - INFO -   Theoretical step/noise ratio: 120.703
+2025-09-15 01:57:55,092 - root - INFO -   Prior/Likelihood ratio: 3.204
+2025-09-15 02:01:18,189 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 02:01:18,189 - root - INFO -     Avg parameter movement: 0.234825
+2025-09-15 02:01:18,190 - root - INFO -     Total parameters moved: 96
+2025-09-15 02:01:18,190 - root - INFO - Chain 3: Sampling phase (3000 steps)
+2025-09-15 02:01:18,328 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 02:01:18,328 - root - INFO -     Initial prediction: [1, 1]
+2025-09-15 02:01:18,328 - root - INFO -     Initial confidence: [0.0014212189707905054, 0.9985787868499756]
+2025-09-15 02:01:18,333 - root - INFO - Chain 3: Step size after burn-in:
+2025-09-15 02:01:18,333 - root - INFO -   Initial: 5.00e-03
+2025-09-15 02:01:18,333 - root - INFO -   Final: 3.60e-03
+2025-09-15 02:01:18,333 - root - INFO -   Reduction: 28.1%
+2025-09-15 02:01:18,919 - root - INFO - Chain 3, Step 0:
+2025-09-15 02:01:18,920 - root - INFO -   Actual drift norm: 2.02e-04
+2025-09-15 02:01:18,920 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 02:01:18,920 - root - INFO -   Actual drift/noise ratio: 0.009
+2025-09-15 02:01:18,920 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 02:01:18,920 - root - INFO -   Prior/Likelihood ratio: 3.194
+2025-09-15 02:01:18,920 - root - INFO -   Temperature: 2.0
+2025-09-15 02:01:19,075 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 02:01:19,075 - root - INFO -     Avg parameter movement: 0.002348
+2025-09-15 02:01:19,075 - root - INFO -     Prediction changed: True
+2025-09-15 02:01:19,075 - root - INFO -     Confidence change: 1.406946
+2025-09-15 02:01:19,075 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:01:19,075 - root - INFO -     Current confidence: [0.9962819218635559, 0.0037181461229920387]
+2025-09-15 02:01:19,075 - root - INFO - Sampling step 0/3000, step_size: 3.60e-03
+2025-09-15 02:01:39,461 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 02:01:39,461 - root - INFO -     Avg parameter movement: 0.017344
+2025-09-15 02:01:39,462 - root - INFO -     Prediction changed: False
+2025-09-15 02:01:39,462 - root - INFO -     Confidence change: 0.000669
+2025-09-15 02:01:39,462 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 02:01:39,462 - root - INFO -     Current confidence: [0.00165762088727206, 0.9983423948287964]
+2025-09-15 02:01:59,857 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 02:01:59,857 - root - INFO -     Avg parameter movement: 0.024112
+2025-09-15 02:01:59,857 - root - INFO -     Prediction changed: True
+2025-09-15 02:01:59,858 - root - INFO -     Confidence change: 1.408105
+2025-09-15 02:01:59,858 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:01:59,858 - root - INFO -     Current confidence: [0.9971018433570862, 0.0028981626965105534]
+2025-09-15 02:02:20,262 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 02:02:20,263 - root - INFO -     Avg parameter movement: 0.029617
+2025-09-15 02:02:20,263 - root - INFO -     Prediction changed: False
+2025-09-15 02:02:20,263 - root - INFO -     Confidence change: 0.000011
+2025-09-15 02:02:20,263 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 02:02:20,263 - root - INFO -     Current confidence: [0.0014210985973477364, 0.9985789060592651]
+2025-09-15 02:02:40,692 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 02:02:40,693 - root - INFO -     Avg parameter movement: 0.034124
+2025-09-15 02:02:40,695 - root - INFO -     Prediction changed: True
+2025-09-15 02:02:40,695 - root - INFO -     Confidence change: 1.406659
+2025-09-15 02:02:40,734 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:02:40,743 - root - INFO -     Current confidence: [0.9960790276527405, 0.003921009600162506]
+2025-09-15 02:04:22,783 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 02:04:22,783 - root - INFO -     Avg parameter movement: 0.050997
+2025-09-15 02:04:22,783 - root - INFO -     Prediction changed: True
+2025-09-15 02:04:22,783 - root - INFO -     Confidence change: 1.408232
+2025-09-15 02:04:22,783 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:04:22,784 - root - INFO -     Current confidence: [0.9971913695335388, 0.0028085981030017138]
+2025-09-15 02:07:46,479 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 02:07:46,481 - root - INFO -     Avg parameter movement: 0.073872
+2025-09-15 02:07:46,483 - root - INFO -     Prediction changed: True
+2025-09-15 02:07:46,483 - root - INFO -     Confidence change: 1.408264
+2025-09-15 02:07:46,516 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 02:07:46,533 - root - INFO -     Current confidence: [0.0014453654875978827, 0.9985546469688416]
+2025-09-15 02:08:07,142 - root - INFO - Chain 3, Step 1000:
+2025-09-15 02:08:07,142 - root - INFO -   Actual drift norm: 1.80e-02
+2025-09-15 02:08:07,142 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 02:08:07,142 - root - INFO -   Actual drift/noise ratio: 0.781
+2025-09-15 02:08:07,142 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 02:08:07,142 - root - INFO -   Prior/Likelihood ratio: 3.676
+2025-09-15 02:08:07,142 - root - INFO -   Temperature: 2.0
+2025-09-15 02:08:07,254 - root - INFO - Sampling step 1000/3000, step_size: 3.60e-03
+2025-09-15 02:11:10,652 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 02:11:10,652 - root - INFO -     Avg parameter movement: 0.091127
+2025-09-15 02:11:10,652 - root - INFO -     Prediction changed: True
+2025-09-15 02:11:10,652 - root - INFO -     Confidence change: 1.407631
+2025-09-15 02:11:10,652 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:11:10,653 - root - INFO -     Current confidence: [0.9967666864395142, 0.0032332914415746927]
+2025-09-15 02:14:34,862 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 02:14:34,863 - root - INFO -     Avg parameter movement: 0.105638
+2025-09-15 02:14:34,864 - root - INFO -     Prediction changed: False
+2025-09-15 02:14:34,864 - root - INFO -     Confidence change: 0.000021
+2025-09-15 02:14:34,864 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 02:14:34,864 - root - INFO -     Current confidence: [0.0014110920019447803, 0.9985888600349426]
+2025-09-15 02:14:55,359 - root - INFO - Chain 3, Step 2000:
+2025-09-15 02:14:55,359 - root - INFO -   Actual drift norm: 1.80e-02
+2025-09-15 02:14:55,359 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 02:14:55,359 - root - INFO -   Actual drift/noise ratio: 0.780
+2025-09-15 02:14:55,359 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 02:14:55,359 - root - INFO -   Prior/Likelihood ratio: 0.086
+2025-09-15 02:14:55,359 - root - INFO -   Temperature: 2.0
+2025-09-15 02:14:55,472 - root - INFO - Sampling step 2000/3000, step_size: 3.60e-03
+2025-09-15 02:17:59,285 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 02:17:59,286 - root - INFO -     Avg parameter movement: 0.118402
+2025-09-15 02:17:59,288 - root - INFO -     Prediction changed: True
+2025-09-15 02:17:59,288 - root - INFO -     Confidence change: 1.408092
+2025-09-15 02:17:59,308 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:17:59,338 - root - INFO -     Current confidence: [0.9970922470092773, 0.002907687099650502]
+2025-09-15 02:21:23,550 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 02:21:23,550 - root - INFO -     Avg parameter movement: 0.129817
+2025-09-15 02:21:23,550 - root - INFO -     Prediction changed: True
+2025-09-15 02:21:23,550 - root - INFO -     Confidence change: 1.407664
+2025-09-15 02:21:23,550 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 02:21:23,551 - root - INFO -     Current confidence: [0.9967896342277527, 0.0032103427220135927]
+2025-09-15 02:21:43,459 - root - INFO - Chain 3: Collected 15 samples
+2025-09-15 02:21:43,504 - root - INFO -   DIAGNOSTIC - Chain 3 summary:
+2025-09-15 02:21:43,504 - root - INFO -     Final avg parameter movement: 0.130922
+2025-09-15 02:21:43,504 - root - INFO -     Final prediction changed: True
+2025-09-15 02:21:43,504 - root - INFO -     Final confidence change: 1.407242
+2025-09-15 02:21:43,504 - root - INFO -     Final prediction: [0, 1]
+2025-09-15 02:21:43,504 - root - INFO -     Final confidence: [0.9964917302131653, 0.003508217865601182]
+2025-09-15 02:21:43,606 - root - INFO - Running chain 4/4
+2025-09-15 02:21:44,243 - root - INFO - Chain 4: MAP model loaded - LoRA param norms: [2.341869354248047, 1.2824249267578125, 2.4131240844726562]
+2025-09-15 02:21:44,426 - root - INFO - Chain 4: MAP model test - Loss: 0.6736, Acc: 0.8125
+2025-09-15 02:21:44,426 - root - INFO - Chain 4: Initial configuration:
+2025-09-15 02:21:44,426 - root - INFO -   Initial step size: 5.00e-03
+2025-09-15 02:21:44,426 - root - INFO -   Temperature: 2.0
+2025-09-15 02:21:44,426 - root - INFO -   Noise scale: 5.00e-04
+2025-09-15 02:21:44,426 - root - INFO -   Prior std: 100.000
+2025-09-15 02:21:44,426 - root - INFO -   Decay rate: 0.300
+2025-09-15 02:21:44,426 - root - INFO - Chain 4: Burn-in phase (8000 steps)
+2025-09-15 02:21:45,143 - root - INFO - Burn-in step 0/8000:
+2025-09-15 02:21:45,143 - root - INFO -   Actual drift norm: 1.12e-02
+2025-09-15 02:21:45,143 - root - INFO -   Actual noise norm: 2.72e-02
+2025-09-15 02:21:45,143 - root - INFO -   Actual drift/noise ratio: 0.411
+2025-09-15 02:21:45,143 - root - INFO -   Theoretical step/noise ratio: 141.421
+2025-09-15 02:21:45,143 - root - INFO -   Prior/Likelihood ratio: 0.155
+2025-09-15 02:25:09,286 - root - INFO - Burn-in step 500/8000:
+2025-09-15 02:25:09,288 - root - INFO -   Actual drift norm: 4.10e-03
+2025-09-15 02:25:09,288 - root - INFO -   Actual noise norm: 2.67e-02
+2025-09-15 02:25:09,288 - root - INFO -   Actual drift/noise ratio: 0.154
+2025-09-15 02:25:09,288 - root - INFO -   Theoretical step/noise ratio: 138.945
+2025-09-15 02:25:09,288 - root - INFO -   Prior/Likelihood ratio: 0.378
+2025-09-15 02:28:33,401 - root - INFO - Burn-in step 1000/8000:
+2025-09-15 02:28:33,402 - root - INFO -   Actual drift norm: 1.47e-02
+2025-09-15 02:28:33,402 - root - INFO -   Actual noise norm: 2.62e-02
+2025-09-15 02:28:33,403 - root - INFO -   Actual drift/noise ratio: 0.563
+2025-09-15 02:28:33,403 - root - INFO -   Theoretical step/noise ratio: 136.766
+2025-09-15 02:28:33,403 - root - INFO -   Prior/Likelihood ratio: 2.188
+2025-09-15 02:31:57,544 - root - INFO - Burn-in step 1500/8000:
+2025-09-15 02:31:57,544 - root - INFO -   Actual drift norm: 1.37e-03
+2025-09-15 02:31:57,544 - root - INFO -   Actual noise norm: 2.59e-02
+2025-09-15 02:31:57,544 - root - INFO -   Actual drift/noise ratio: 0.053
+2025-09-15 02:31:57,544 - root - INFO -   Theoretical step/noise ratio: 134.825
+2025-09-15 02:31:57,544 - root - INFO -   Prior/Likelihood ratio: 3.301
+2025-09-15 02:35:21,604 - root - INFO - Burn-in step 2000/8000:
+2025-09-15 02:35:21,606 - root - INFO -   Actual drift norm: 7.34e-04
+2025-09-15 02:35:21,606 - root - INFO -   Actual noise norm: 2.55e-02
+2025-09-15 02:35:21,606 - root - INFO -   Actual drift/noise ratio: 0.029
+2025-09-15 02:35:21,606 - root - INFO -   Theoretical step/noise ratio: 133.076
+2025-09-15 02:35:21,606 - root - INFO -   Prior/Likelihood ratio: 3.036
+2025-09-15 02:38:45,603 - root - INFO - Burn-in step 2500/8000:
+2025-09-15 02:38:45,606 - root - INFO -   Actual drift norm: 1.89e-02
+2025-09-15 02:38:45,606 - root - INFO -   Actual noise norm: 2.53e-02
+2025-09-15 02:38:45,606 - root - INFO -   Actual drift/noise ratio: 0.748
+2025-09-15 02:38:45,606 - root - INFO -   Theoretical step/noise ratio: 131.488
+2025-09-15 02:38:45,606 - root - INFO -   Prior/Likelihood ratio: 2.027
+2025-09-15 02:42:09,499 - root - INFO - Burn-in step 3000/8000:
+2025-09-15 02:42:09,501 - root - INFO -   Actual drift norm: 9.82e-05
+2025-09-15 02:42:09,501 - root - INFO -   Actual noise norm: 2.50e-02
+2025-09-15 02:42:09,501 - root - INFO -   Actual drift/noise ratio: 0.004
+2025-09-15 02:42:09,501 - root - INFO -   Theoretical step/noise ratio: 130.035
+2025-09-15 02:42:09,501 - root - INFO -   Prior/Likelihood ratio: 2.343
+2025-09-15 02:45:33,208 - root - INFO - Burn-in step 3500/8000:
+2025-09-15 02:45:33,210 - root - INFO -   Actual drift norm: 5.30e-04
+2025-09-15 02:45:33,210 - root - INFO -   Actual noise norm: 2.47e-02
+2025-09-15 02:45:33,210 - root - INFO -   Actual drift/noise ratio: 0.021
+2025-09-15 02:45:33,210 - root - INFO -   Theoretical step/noise ratio: 128.696
+2025-09-15 02:45:33,210 - root - INFO -   Prior/Likelihood ratio: 3.969
+2025-09-15 02:48:57,018 - root - INFO - Burn-in step 4000/8000:
+2025-09-15 02:48:57,019 - root - INFO -   Actual drift norm: 4.78e-05
+2025-09-15 02:48:57,019 - root - INFO -   Actual noise norm: 2.45e-02
+2025-09-15 02:48:57,019 - root - INFO -   Actual drift/noise ratio: 0.002
+2025-09-15 02:48:57,019 - root - INFO -   Theoretical step/noise ratio: 127.456
+2025-09-15 02:48:57,019 - root - INFO -   Prior/Likelihood ratio: 3.662
+2025-09-15 02:52:20,742 - root - INFO - Burn-in step 4500/8000:
+2025-09-15 02:52:20,744 - root - INFO -   Actual drift norm: 5.77e-04
+2025-09-15 02:52:20,744 - root - INFO -   Actual noise norm: 2.42e-02
+2025-09-15 02:52:20,744 - root - INFO -   Actual drift/noise ratio: 0.024
+2025-09-15 02:52:20,744 - root - INFO -   Theoretical step/noise ratio: 126.302
+2025-09-15 02:52:20,744 - root - INFO -   Prior/Likelihood ratio: 1.854
+2025-09-15 02:55:44,505 - root - INFO - Burn-in step 5000/8000:
+2025-09-15 02:55:44,507 - root - INFO -   Actual drift norm: 5.35e-04
+2025-09-15 02:55:44,507 - root - INFO -   Actual noise norm: 2.40e-02
+2025-09-15 02:55:44,507 - root - INFO -   Actual drift/noise ratio: 0.022
+2025-09-15 02:55:44,507 - root - INFO -   Theoretical step/noise ratio: 125.224
+2025-09-15 02:55:44,507 - root - INFO -   Prior/Likelihood ratio: 3.183
+2025-09-15 02:59:08,480 - root - INFO - Burn-in step 5500/8000:
+2025-09-15 02:59:08,482 - root - INFO -   Actual drift norm: 1.58e-02
+2025-09-15 02:59:08,482 - root - INFO -   Actual noise norm: 2.38e-02
+2025-09-15 02:59:08,482 - root - INFO -   Actual drift/noise ratio: 0.662
+2025-09-15 02:59:08,482 - root - INFO -   Theoretical step/noise ratio: 124.213
+2025-09-15 02:59:08,482 - root - INFO -   Prior/Likelihood ratio: 0.329
+2025-09-15 03:02:32,586 - root - INFO - Burn-in step 6000/8000:
+2025-09-15 03:02:32,588 - root - INFO -   Actual drift norm: 1.01e-03
+2025-09-15 03:02:32,588 - root - INFO -   Actual noise norm: 2.37e-02
+2025-09-15 03:02:32,588 - root - INFO -   Actual drift/noise ratio: 0.043
+2025-09-15 03:02:32,589 - root - INFO -   Theoretical step/noise ratio: 123.261
+2025-09-15 03:02:32,589 - root - INFO -   Prior/Likelihood ratio: 1.259
+2025-09-15 03:05:56,359 - root - INFO - Burn-in step 6500/8000:
+2025-09-15 03:05:56,361 - root - INFO -   Actual drift norm: 6.22e-05
+2025-09-15 03:05:56,361 - root - INFO -   Actual noise norm: 2.34e-02
+2025-09-15 03:05:56,361 - root - INFO -   Actual drift/noise ratio: 0.003
+2025-09-15 03:05:56,362 - root - INFO -   Theoretical step/noise ratio: 122.362
+2025-09-15 03:05:56,362 - root - INFO -   Prior/Likelihood ratio: 3.647
+2025-09-15 03:09:20,252 - root - INFO - Burn-in step 7000/8000:
+2025-09-15 03:09:20,253 - root - INFO -   Actual drift norm: 3.85e-03
+2025-09-15 03:09:20,254 - root - INFO -   Actual noise norm: 2.33e-02
+2025-09-15 03:09:20,254 - root - INFO -   Actual drift/noise ratio: 0.165
+2025-09-15 03:09:20,254 - root - INFO -   Theoretical step/noise ratio: 121.511
+2025-09-15 03:09:20,254 - root - INFO -   Prior/Likelihood ratio: 4.134
+2025-09-15 03:12:44,180 - root - INFO - Burn-in step 7500/8000:
+2025-09-15 03:12:44,180 - root - INFO -   Actual drift norm: 3.43e-04
+2025-09-15 03:12:44,180 - root - INFO -   Actual noise norm: 2.32e-02
+2025-09-15 03:12:44,180 - root - INFO -   Actual drift/noise ratio: 0.015
+2025-09-15 03:12:44,181 - root - INFO -   Theoretical step/noise ratio: 120.703
+2025-09-15 03:12:44,181 - root - INFO -   Prior/Likelihood ratio: 2.726
+2025-09-15 03:16:07,218 - root - INFO -   DIAGNOSTIC - Burn-in completed:
+2025-09-15 03:16:07,219 - root - INFO -     Avg parameter movement: 0.235700
+2025-09-15 03:16:07,219 - root - INFO -     Total parameters moved: 96
+2025-09-15 03:16:07,219 - root - INFO - Chain 4: Sampling phase (3000 steps)
+2025-09-15 03:16:07,356 - root - INFO -   DIAGNOSTIC - Initial state:
+2025-09-15 03:16:07,356 - root - INFO -     Initial prediction: [1, 1]
+2025-09-15 03:16:07,356 - root - INFO -     Initial confidence: [0.0014107123715803027, 0.9985892176628113]
+2025-09-15 03:16:07,361 - root - INFO - Chain 4: Step size after burn-in:
+2025-09-15 03:16:07,361 - root - INFO -   Initial: 5.00e-03
+2025-09-15 03:16:07,361 - root - INFO -   Final: 3.60e-03
+2025-09-15 03:16:07,361 - root - INFO -   Reduction: 28.1%
+2025-09-15 03:16:07,949 - root - INFO - Chain 4, Step 0:
+2025-09-15 03:16:07,949 - root - INFO -   Actual drift norm: 7.61e-05
+2025-09-15 03:16:07,949 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 03:16:07,949 - root - INFO -   Actual drift/noise ratio: 0.003
+2025-09-15 03:16:07,950 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 03:16:07,950 - root - INFO -   Prior/Likelihood ratio: 4.122
+2025-09-15 03:16:07,950 - root - INFO -   Temperature: 2.0
+2025-09-15 03:16:08,105 - root - INFO -   DIAGNOSTIC - Sample 1:
+2025-09-15 03:16:08,106 - root - INFO -     Avg parameter movement: 0.002351
+2025-09-15 03:16:08,106 - root - INFO -     Prediction changed: False
+2025-09-15 03:16:08,106 - root - INFO -     Confidence change: 0.000853
+2025-09-15 03:16:08,106 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:16:08,106 - root - INFO -     Current confidence: [0.0014031577156856656, 0.9985968470573425]
+2025-09-15 03:16:08,106 - root - INFO - Sampling step 0/3000, step_size: 3.60e-03
+2025-09-15 03:16:28,728 - root - INFO -   DIAGNOSTIC - Sample 2:
+2025-09-15 03:16:28,728 - root - INFO -     Avg parameter movement: 0.017115
+2025-09-15 03:16:28,728 - root - INFO -     Prediction changed: False
+2025-09-15 03:16:28,728 - root - INFO -     Confidence change: 0.000083
+2025-09-15 03:16:28,728 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:16:28,729 - root - INFO -     Current confidence: [0.0014693281846120954, 0.9985306262969971]
+2025-09-15 03:16:49,141 - root - INFO -   DIAGNOSTIC - Sample 3:
+2025-09-15 03:16:49,141 - root - INFO -     Avg parameter movement: 0.024083
+2025-09-15 03:16:49,141 - root - INFO -     Prediction changed: False
+2025-09-15 03:16:49,141 - root - INFO -     Confidence change: 0.000029
+2025-09-15 03:16:49,141 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:16:49,141 - root - INFO -     Current confidence: [0.0014306280063465238, 0.9985693693161011]
+2025-09-15 03:17:09,561 - root - INFO -   DIAGNOSTIC - Sample 4:
+2025-09-15 03:17:09,561 - root - INFO -     Avg parameter movement: 0.029429
+2025-09-15 03:17:09,561 - root - INFO -     Prediction changed: False
+2025-09-15 03:17:09,561 - root - INFO -     Confidence change: 0.000051
+2025-09-15 03:17:09,561 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:17:09,561 - root - INFO -     Current confidence: [0.00143553561065346, 0.9985645413398743]
+2025-09-15 03:17:29,974 - root - INFO -   DIAGNOSTIC - Sample 5:
+2025-09-15 03:17:29,974 - root - INFO -     Avg parameter movement: 0.033872
+2025-09-15 03:17:29,974 - root - INFO -     Prediction changed: False
+2025-09-15 03:17:29,974 - root - INFO -     Confidence change: 0.000319
+2025-09-15 03:17:29,974 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:17:29,974 - root - INFO -     Current confidence: [0.001636088127270341, 0.9983639121055603]
+2025-09-15 03:19:11,827 - root - INFO -   DIAGNOSTIC - Sample 10:
+2025-09-15 03:19:11,829 - root - INFO -     Avg parameter movement: 0.050849
+2025-09-15 03:19:11,829 - root - INFO -     Prediction changed: False
+2025-09-15 03:19:11,829 - root - INFO -     Confidence change: 0.000233
+2025-09-15 03:19:11,829 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:19:11,829 - root - INFO -     Current confidence: [0.0014368075644597411, 0.9985632300376892]
+2025-09-15 03:22:35,657 - root - INFO -   DIAGNOSTIC - Sample 20:
+2025-09-15 03:22:35,657 - root - INFO -     Avg parameter movement: 0.073583
+2025-09-15 03:22:35,658 - root - INFO -     Prediction changed: False
+2025-09-15 03:22:35,658 - root - INFO -     Confidence change: 0.000020
+2025-09-15 03:22:35,658 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:22:35,658 - root - INFO -     Current confidence: [0.0014024230185896158, 0.9985975623130798]
+2025-09-15 03:22:56,108 - root - INFO - Chain 4, Step 1000:
+2025-09-15 03:22:56,108 - root - INFO -   Actual drift norm: 1.80e-02
+2025-09-15 03:22:56,108 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 03:22:56,108 - root - INFO -   Actual drift/noise ratio: 0.781
+2025-09-15 03:22:56,108 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 03:22:56,108 - root - INFO -   Prior/Likelihood ratio: 3.326
+2025-09-15 03:22:56,108 - root - INFO -   Temperature: 2.0
+2025-09-15 03:22:56,219 - root - INFO - Sampling step 1000/3000, step_size: 3.60e-03
+2025-09-15 03:25:59,579 - root - INFO -   DIAGNOSTIC - Sample 30:
+2025-09-15 03:25:59,581 - root - INFO -     Avg parameter movement: 0.090963
+2025-09-15 03:25:59,581 - root - INFO -     Prediction changed: True
+2025-09-15 03:25:59,581 - root - INFO -     Confidence change: 1.408449
+2025-09-15 03:25:59,581 - root - INFO -     Current prediction: [1, 0]
+2025-09-15 03:25:59,581 - root - INFO -     Current confidence: [0.0014284184435382485, 0.998571515083313]
+2025-09-15 03:29:23,446 - root - INFO -   DIAGNOSTIC - Sample 40:
+2025-09-15 03:29:23,448 - root - INFO -     Avg parameter movement: 0.105369
+2025-09-15 03:29:23,448 - root - INFO -     Prediction changed: False
+2025-09-15 03:29:23,448 - root - INFO -     Confidence change: 0.000042
+2025-09-15 03:29:23,448 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:29:23,448 - root - INFO -     Current confidence: [0.0014281757175922394, 0.9985717535018921]
+2025-09-15 03:29:43,939 - root - INFO - Chain 4, Step 2000:
+2025-09-15 03:29:43,939 - root - INFO -   Actual drift norm: 4.57e-04
+2025-09-15 03:29:43,939 - root - INFO -   Actual noise norm: 2.30e-02
+2025-09-15 03:29:43,939 - root - INFO -   Actual drift/noise ratio: 0.020
+2025-09-15 03:29:43,939 - root - INFO -   Theoretical step/noise ratio: 119.935
+2025-09-15 03:29:43,939 - root - INFO -   Prior/Likelihood ratio: 2.860
+2025-09-15 03:29:43,939 - root - INFO -   Temperature: 2.0
+2025-09-15 03:29:44,051 - root - INFO - Sampling step 2000/3000, step_size: 3.60e-03
+2025-09-15 03:32:47,618 - root - INFO -   DIAGNOSTIC - Sample 50:
+2025-09-15 03:32:47,619 - root - INFO -     Avg parameter movement: 0.118048
+2025-09-15 03:32:47,619 - root - INFO -     Prediction changed: True
+2025-09-15 03:32:47,620 - root - INFO -     Confidence change: 1.408225
+2025-09-15 03:32:47,620 - root - INFO -     Current prediction: [0, 1]
+2025-09-15 03:32:47,620 - root - INFO -     Current confidence: [0.9971761703491211, 0.002823842456564307]
+2025-09-15 03:36:11,419 - root - INFO -   DIAGNOSTIC - Sample 60:
+2025-09-15 03:36:11,420 - root - INFO -     Avg parameter movement: 0.129385
+2025-09-15 03:36:11,420 - root - INFO -     Prediction changed: False
+2025-09-15 03:36:11,421 - root - INFO -     Confidence change: 0.000057
+2025-09-15 03:36:11,421 - root - INFO -     Current prediction: [1, 1]
+2025-09-15 03:36:11,421 - root - INFO -     Current confidence: [0.0013796431012451649, 0.9986203908920288]
+2025-09-15 03:36:31,264 - root - INFO - Chain 4: Collected 15 samples
+2025-09-15 03:36:31,308 - root - INFO -   DIAGNOSTIC - Chain 4 summary:
+2025-09-15 03:36:31,308 - root - INFO -     Final avg parameter movement: 0.130476
+2025-09-15 03:36:31,308 - root - INFO -     Final prediction changed: True
+2025-09-15 03:36:31,308 - root - INFO -     Final confidence change: 1.408309
+2025-09-15 03:36:31,308 - root - INFO -     Final prediction: [0, 1]
+2025-09-15 03:36:31,309 - root - INFO -     Final confidence: [0.9972358345985413, 0.0027641523629426956]
+2025-09-15 03:36:31,407 - root - INFO - Total samples collected: 60
+2025-09-15 03:36:31,407 - root - INFO - Computing overall MCMC diagnostics...
+2025-09-15 03:36:31,407 - root - INFO - SGLD sampling completed with 60 total samples
+2025-09-15 03:36:31,595 - root - INFO - Final model after sampling - Loss: 0.4747, Acc: 0.9062
+2025-09-15 03:36:31,595 - root - INFO - ESS and R-hat will be computed during evaluation phase
+2025-09-15 03:36:32,452 - root - INFO - SGLD samples saved to runs/mrpc_roberta_lora_sgld/sgld_samples.pth
+2025-09-15 03:36:32,453 - root - INFO - Training completed successfully!
+Total parameters: 125,829,124
+Trainable (LoRA) parameters: 589,824
+Frozen (base) parameters: 125,239,300
+LoRA ratio: 0.47%
+✅ LoRA training completed successfully!
+=== Phase 2: Evaluating LoRA Results ===
+2025-09-15 03:36:59,930 - root - INFO - Using device: cuda
+2025-09-15 03:36:59,932 - root - INFO - Loading MAP model...
+Some weights of RobertaForSequenceClassification were not initialized from the model checkpoint at roberta-base and are newly initialized: ['classifier.dense.bias', 'classifier.dense.weight', 'classifier.out_proj.bias', 'classifier.out_proj.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2025-09-15 03:37:01,476 - root - INFO - Loading samples...
+2025-09-15 03:37:01,476 - root - INFO - Loading samples from: runs/mrpc_roberta_lora_sgld/sgld_samples.pth
+2025-09-15 03:37:02,569 - root - INFO - Loaded 60 samples from file
+2025-09-15 03:37:02,570 - root - WARNING - No diagnostic values found, will recompute from samples
+2025-09-15 03:37:04,225 - root - INFO - Evaluating MAP model...
+2025-09-15 03:37:06,950 - root - INFO - Config: chains=4, samples_to_retain=60
+2025-09-15 03:37:06,951 - root - INFO - Actual: 60 samples loaded
+2025-09-15 03:37:07,191 - root - INFO - Evaluating sample 1/60
+2025-09-15 03:37:09,451 - root - INFO - Evaluating sample 2/60
+2025-09-15 03:37:11,717 - root - INFO - Evaluating sample 3/60
+2025-09-15 03:37:13,992 - root - INFO - Evaluating sample 4/60
+2025-09-15 03:37:16,269 - root - INFO - Evaluating sample 5/60
+2025-09-15 03:37:18,549 - root - INFO - Evaluating sample 6/60
+2025-09-15 03:37:20,834 - root - INFO - Evaluating sample 7/60
+2025-09-15 03:37:23,127 - root - INFO - Evaluating sample 8/60
+2025-09-15 03:37:25,425 - root - INFO - Evaluating sample 9/60
+2025-09-15 03:37:27,728 - root - INFO - Evaluating sample 10/60
+2025-09-15 03:37:30,033 - root - INFO - Evaluating sample 11/60
+2025-09-15 03:37:32,335 - root - INFO - Evaluating sample 12/60
+2025-09-15 03:37:34,646 - root - INFO - Evaluating sample 13/60
+2025-09-15 03:37:36,955 - root - INFO - Evaluating sample 14/60
+2025-09-15 03:37:39,267 - root - INFO - Evaluating sample 15/60
+2025-09-15 03:37:41,574 - root - INFO - Evaluating sample 16/60
+2025-09-15 03:37:43,890 - root - INFO - Evaluating sample 17/60
+2025-09-15 03:37:46,203 - root - INFO - Evaluating sample 18/60
+2025-09-15 03:37:48,513 - root - INFO - Evaluating sample 19/60
+2025-09-15 03:37:50,829 - root - INFO - Evaluating sample 20/60
+2025-09-15 03:37:53,150 - root - INFO - Evaluating sample 21/60
+2025-09-15 03:37:55,469 - root - INFO - Evaluating sample 22/60
+2025-09-15 03:37:57,789 - root - INFO - Evaluating sample 23/60
+2025-09-15 03:38:00,112 - root - INFO - Evaluating sample 24/60
+2025-09-15 03:38:02,432 - root - INFO - Evaluating sample 25/60
+2025-09-15 03:38:04,754 - root - INFO - Evaluating sample 26/60
+2025-09-15 03:38:07,078 - root - INFO - Evaluating sample 27/60
+2025-09-15 03:38:09,402 - root - INFO - Evaluating sample 28/60
+2025-09-15 03:38:11,724 - root - INFO - Evaluating sample 29/60
+2025-09-15 03:38:14,050 - root - INFO - Evaluating sample 30/60
+2025-09-15 03:38:16,375 - root - INFO - Evaluating sample 31/60
+2025-09-15 03:38:18,701 - root - INFO - Evaluating sample 32/60
+2025-09-15 03:38:21,030 - root - INFO - Evaluating sample 33/60
+2025-09-15 03:38:23,361 - root - INFO - Evaluating sample 34/60
+2025-09-15 03:38:25,688 - root - INFO - Evaluating sample 35/60
+2025-09-15 03:38:28,018 - root - INFO - Evaluating sample 36/60
+2025-09-15 03:38:30,349 - root - INFO - Evaluating sample 37/60
+2025-09-15 03:38:32,677 - root - INFO - Evaluating sample 38/60
+2025-09-15 03:38:35,006 - root - INFO - Evaluating sample 39/60
+2025-09-15 03:38:37,337 - root - INFO - Evaluating sample 40/60
+2025-09-15 03:38:39,671 - root - INFO - Evaluating sample 41/60
+2025-09-15 03:38:41,999 - root - INFO - Evaluating sample 42/60
+2025-09-15 03:38:44,334 - root - INFO - Evaluating sample 43/60
+2025-09-15 03:38:46,667 - root - INFO - Evaluating sample 44/60
+2025-09-15 03:38:48,998 - root - INFO - Evaluating sample 45/60
+2025-09-15 03:38:51,334 - root - INFO - Evaluating sample 46/60
+2025-09-15 03:38:53,671 - root - INFO - Evaluating sample 47/60
+2025-09-15 03:38:56,007 - root - INFO - Evaluating sample 48/60
+2025-09-15 03:38:58,344 - root - INFO - Evaluating sample 49/60
+2025-09-15 03:39:00,678 - root - INFO - Evaluating sample 50/60
+2025-09-15 03:39:03,013 - root - INFO - Evaluating sample 51/60
+2025-09-15 03:39:05,349 - root - INFO - Evaluating sample 52/60
+2025-09-15 03:39:07,687 - root - INFO - Evaluating sample 53/60
+2025-09-15 03:39:10,026 - root - INFO - Evaluating sample 54/60
+2025-09-15 03:39:12,369 - root - INFO - Evaluating sample 55/60
+2025-09-15 03:39:14,708 - root - INFO - Evaluating sample 56/60
+2025-09-15 03:39:17,049 - root - INFO - Evaluating sample 57/60
+2025-09-15 03:39:19,389 - root - INFO - Evaluating sample 58/60
+2025-09-15 03:39:21,728 - root - INFO - Evaluating sample 59/60
+2025-09-15 03:39:24,068 - root - INFO - Evaluating sample 60/60
+2025-09-15 03:39:26,427 - root - INFO - Recomputing diagnostic values from samples
+2025-09-15 03:39:26,657 - root - INFO - 
+==================================================
+2025-09-15 03:39:26,657 - root - INFO - EVALUATION RESULTS
+2025-09-15 03:39:26,657 - root - INFO - ==================================================
+2025-09-15 03:39:26,657 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-15 03:39:26,657 - root - INFO - --------------------------------------------------
+2025-09-15 03:39:26,657 - root - INFO - MAP-LoRA        0.8848     0.4421     0.0896    
+2025-09-15 03:39:26,657 - root - INFO - SGLD-LoRA       0.8922     0.3277     0.0803    
+2025-09-15 03:39:26,657 - root - INFO - 
+MCMC Diagnostics:
+2025-09-15 03:39:26,657 - root - INFO - R-hat (log posterior): 1.8820
+2025-09-15 03:39:26,657 - root - INFO - R-hat (L2 norm): 1.7573
+2025-09-15 03:39:26,657 - root - INFO - ESS (log posterior): 1
+2025-09-15 03:39:26,658 - root - INFO - ESS (L2 norm): 4
+2025-09-15 03:39:26,658 - root - INFO - Min ESS: 1
+2025-09-15 03:39:26,658 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-15 03:39:26,658 - root - INFO - R-hat (log posterior): 1.882
+2025-09-15 03:39:26,658 - root - INFO - R-hat (L2 norm): 1.757
+2025-09-15 03:39:26,658 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ✅ GOOD
+2025-09-15 03:39:26,658 - root - INFO - 
+Within-mode mixing:
+2025-09-15 03:39:26,658 - root - INFO - Avg ESS (log posterior): 8.0 ± 7.0
+2025-09-15 03:39:26,658 - root - INFO - Avg ESS (L2 norm): 4.0 ± 0.0
+2025-09-15 03:39:26,658 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:26,658 - root - INFO - 
+ESS Statistics Summary:
+2025-09-15 03:39:26,658 - root - INFO -   Log Posterior ESS: 1 (min), 8.0 ± 7.0 (mean ± std)
+2025-09-15 03:39:26,658 - root - INFO -   L2 Norm ESS: 4 (min), 4.0 ± 0.0 (mean ± std)
+2025-09-15 03:39:26,658 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-15 03:39:26,659 - root - INFO -   • Log posterior ESS varies significantly (std=7.0) - different modes have different mixing quality
+2025-09-15 03:39:26,659 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-15 03:39:26,659 - root - INFO - 
+Per-chain ESS details:
+2025-09-15 03:39:26,659 - root - INFO -   Chain 1: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 2: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 3: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 4: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:26,659 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-15 03:39:26,659 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-15 03:39:26,659 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ✅ PASS
+2025-09-15 03:39:26,659 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-15 03:39:26,659 - root - INFO -   Accuracy within ±0.3% of MAP: ❌ FAIL (diff: 0.0074)
+2025-09-15 03:39:26,659 - root - INFO -   NLL lower than MAP: ✅ PASS (SGLD-LoRA: 0.3277, MAP: 0.4421)
+2025-09-15 03:39:26,660 - root - INFO -   ECE lower than MAP: ✅ PASS (SGLD-LoRA: 0.0803, MAP: 0.0896)
+2025-09-15 03:39:26,660 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-15 03:39:26,660 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-15 03:39:26,660 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-15 03:39:26,660 - root - WARNING -   - Check if SGLD-LoRA is learning properly
+2025-09-15 03:39:26,664 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_sgld/evaluation_results.yaml
+Total parameters: 125,829,124
+Trainable (LoRA) parameters: 589,824
+Frozen (base) parameters: 125,239,300
+LoRA ratio: 0.47%
+✅ LoRA evaluation completed successfully!
+=== LoRA experiment completed successfully! ===
+Results saved to: runs/mrpc_roberta_lora_sgld/
+Job completed at: Mon Sep 15 03:39:27 CDT 2025

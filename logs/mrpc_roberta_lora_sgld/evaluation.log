@@ -1,0 +1,378 @@
+2025-09-14 21:45:10,044 - root - INFO - Using device: cuda
+2025-09-14 21:45:10,045 - root - INFO - Loading MAP model...
+2025-09-14 21:45:11,741 - root - INFO - Loading samples...
+2025-09-14 21:45:11,741 - root - INFO - Loading samples from: runs/mrpc_roberta_lora_sgld/sgld_samples.pth
+2025-09-14 21:45:12,824 - root - INFO - Loaded 60 samples from file
+2025-09-14 21:45:12,824 - root - WARNING - No diagnostic values found, will recompute from samples
+2025-09-14 21:45:14,417 - root - INFO - Evaluating MAP model...
+2025-09-14 21:45:17,117 - root - INFO - Config: chains=1, samples_to_retain=60
+2025-09-14 21:45:17,117 - root - INFO - Actual: 60 samples loaded
+2025-09-14 21:45:17,117 - root - INFO - Single chain mode: using all 60 samples
+2025-09-14 21:45:17,357 - root - INFO - Evaluating sample 1/60
+2025-09-14 21:45:19,786 - root - INFO - Evaluating sample 2/60
+2025-09-14 21:45:22,238 - root - INFO - Evaluating sample 3/60
+2025-09-14 21:45:24,742 - root - INFO - Evaluating sample 4/60
+2025-09-14 21:45:27,233 - root - INFO - Evaluating sample 5/60
+2025-09-14 21:45:29,755 - root - INFO - Evaluating sample 6/60
+2025-09-14 21:45:32,300 - root - INFO - Evaluating sample 7/60
+2025-09-14 21:45:34,851 - root - INFO - Evaluating sample 8/60
+2025-09-14 21:45:37,398 - root - INFO - Evaluating sample 9/60
+2025-09-14 21:45:39,960 - root - INFO - Evaluating sample 10/60
+2025-09-14 21:45:42,520 - root - INFO - Evaluating sample 11/60
+2025-09-14 21:45:45,093 - root - INFO - Evaluating sample 12/60
+2025-09-14 21:45:47,652 - root - INFO - Evaluating sample 13/60
+2025-09-14 21:45:50,190 - root - INFO - Evaluating sample 14/60
+2025-09-14 21:45:52,727 - root - INFO - Evaluating sample 15/60
+2025-09-14 21:45:55,271 - root - INFO - Evaluating sample 16/60
+2025-09-14 21:45:57,806 - root - INFO - Evaluating sample 17/60
+2025-09-14 21:46:00,348 - root - INFO - Evaluating sample 18/60
+2025-09-14 21:46:02,908 - root - INFO - Evaluating sample 19/60
+2025-09-14 21:46:05,469 - root - INFO - Evaluating sample 20/60
+2025-09-14 21:46:08,023 - root - INFO - Evaluating sample 21/60
+2025-09-14 21:46:10,563 - root - INFO - Evaluating sample 22/60
+2025-09-14 21:46:13,108 - root - INFO - Evaluating sample 23/60
+2025-09-14 21:46:15,640 - root - INFO - Evaluating sample 24/60
+2025-09-14 21:46:18,181 - root - INFO - Evaluating sample 25/60
+2025-09-14 21:46:20,720 - root - INFO - Evaluating sample 26/60
+2025-09-14 21:46:23,260 - root - INFO - Evaluating sample 27/60
+2025-09-14 21:46:25,803 - root - INFO - Evaluating sample 28/60
+2025-09-14 21:46:28,358 - root - INFO - Evaluating sample 29/60
+2025-09-14 21:46:30,902 - root - INFO - Evaluating sample 30/60
+2025-09-14 21:46:33,457 - root - INFO - Evaluating sample 31/60
+2025-09-14 21:46:36,016 - root - INFO - Evaluating sample 32/60
+2025-09-14 21:46:38,572 - root - INFO - Evaluating sample 33/60
+2025-09-14 21:46:41,134 - root - INFO - Evaluating sample 34/60
+2025-09-14 21:46:43,692 - root - INFO - Evaluating sample 35/60
+2025-09-14 21:46:46,255 - root - INFO - Evaluating sample 36/60
+2025-09-14 21:46:48,813 - root - INFO - Evaluating sample 37/60
+2025-09-14 21:46:51,373 - root - INFO - Evaluating sample 38/60
+2025-09-14 21:46:53,934 - root - INFO - Evaluating sample 39/60
+2025-09-14 21:46:56,492 - root - INFO - Evaluating sample 40/60
+2025-09-14 21:46:59,054 - root - INFO - Evaluating sample 41/60
+2025-09-14 21:47:01,614 - root - INFO - Evaluating sample 42/60
+2025-09-14 21:47:04,170 - root - INFO - Evaluating sample 43/60
+2025-09-14 21:47:06,732 - root - INFO - Evaluating sample 44/60
+2025-09-14 21:47:09,290 - root - INFO - Evaluating sample 45/60
+2025-09-14 21:47:11,851 - root - INFO - Evaluating sample 46/60
+2025-09-14 21:47:14,429 - root - INFO - Evaluating sample 47/60
+2025-09-14 21:47:16,988 - root - INFO - Evaluating sample 48/60
+2025-09-14 21:47:19,563 - root - INFO - Evaluating sample 49/60
+2025-09-14 21:47:22,129 - root - INFO - Evaluating sample 50/60
+2025-09-14 21:47:24,706 - root - INFO - Evaluating sample 51/60
+2025-09-14 21:47:27,286 - root - INFO - Evaluating sample 52/60
+2025-09-14 21:47:29,863 - root - INFO - Evaluating sample 53/60
+2025-09-14 21:47:32,430 - root - INFO - Evaluating sample 54/60
+2025-09-14 21:47:35,023 - root - INFO - Evaluating sample 55/60
+2025-09-14 21:47:37,603 - root - INFO - Evaluating sample 56/60
+2025-09-14 21:47:40,187 - root - INFO - Evaluating sample 57/60
+2025-09-14 21:47:42,780 - root - INFO - Evaluating sample 58/60
+2025-09-14 21:47:45,365 - root - INFO - Evaluating sample 59/60
+2025-09-14 21:47:47,958 - root - INFO - Evaluating sample 60/60
+2025-09-14 21:47:50,565 - root - INFO - Recomputing diagnostic values from samples
+2025-09-14 21:47:50,765 - root - INFO - 
+==================================================
+2025-09-14 21:47:50,765 - root - INFO - EVALUATION RESULTS
+2025-09-14 21:47:50,765 - root - INFO - ==================================================
+2025-09-14 21:47:50,765 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-14 21:47:50,766 - root - INFO - --------------------------------------------------
+2025-09-14 21:47:50,766 - root - INFO - MAP-LoRA        0.8750     0.4602     0.0982    
+2025-09-14 21:47:50,766 - root - INFO - SGLD-LoRA       0.8897     0.4147     0.0868    
+2025-09-14 21:47:50,766 - root - INFO - 
+MCMC Diagnostics:
+2025-09-14 21:47:50,766 - root - INFO - R-hat (log posterior): 1.0000
+2025-09-14 21:47:50,766 - root - INFO - R-hat (L2 norm): 1.0000
+2025-09-14 21:47:50,766 - root - INFO - ESS (log posterior): 55
+2025-09-14 21:47:50,766 - root - INFO - ESS (L2 norm): 3
+2025-09-14 21:47:50,766 - root - INFO - Min ESS: 3
+2025-09-14 21:47:50,766 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-14 21:47:50,766 - root - INFO - R-hat (log posterior): 1.000
+2025-09-14 21:47:50,766 - root - INFO - R-hat (L2 norm): 1.000
+2025-09-14 21:47:50,766 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ⚠️  CHECK
+2025-09-14 21:47:50,766 - root - INFO - 
+Within-mode mixing:
+2025-09-14 21:47:50,767 - root - INFO - Avg ESS (log posterior): 55.0 ± 0.0
+2025-09-14 21:47:50,767 - root - INFO - Avg ESS (L2 norm): 3.0 ± 0.0
+2025-09-14 21:47:50,767 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-14 21:47:50,767 - root - INFO - 
+ESS Statistics Summary:
+2025-09-14 21:47:50,767 - root - INFO -   Log Posterior ESS: 55 (min), 55.0 ± 0.0 (mean ± std)
+2025-09-14 21:47:50,767 - root - INFO -   L2 Norm ESS: 3 (min), 3.0 ± 0.0 (mean ± std)
+2025-09-14 21:47:50,767 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-14 21:47:50,767 - root - INFO -   • Log posterior ESS is consistent across modes (std=0.0) - uniform mixing quality
+2025-09-14 21:47:50,767 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-14 21:47:50,767 - root - INFO - 
+Per-chain ESS details:
+2025-09-14 21:47:50,767 - root - INFO -   Chain 1: ESS(log_posterior)=55, ESS(l2_norm)=3
+2025-09-14 21:47:50,767 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-14 21:47:50,767 - root - WARNING - R-hat values suggest chains may be in the same mode (not multimodal)
+2025-09-14 21:47:50,768 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-14 21:47:50,768 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-14 21:47:50,768 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ❌ FAIL
+2025-09-14 21:47:50,768 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-14 21:47:50,768 - root - INFO -   Accuracy within ±0.3% of MAP: ❌ FAIL (diff: 0.0147)
+2025-09-14 21:47:50,768 - root - INFO -   NLL lower than MAP: ✅ PASS (SGLD-LoRA: 0.4147, MAP: 0.4602)
+2025-09-14 21:47:50,768 - root - INFO -   ECE lower than MAP: ✅ PASS (SGLD-LoRA: 0.0868, MAP: 0.0982)
+2025-09-14 21:47:50,768 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-14 21:47:50,768 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-14 21:47:50,768 - root - WARNING -   - Chains are in same mode - increase step size or reduce prior strength
+2025-09-14 21:47:50,768 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-14 21:47:50,768 - root - WARNING -   - Check if SGLD-LoRA is learning properly
+2025-09-14 21:47:50,772 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_sgld/evaluation_results.yaml
+2025-09-15 03:36:59,930 - root - INFO - Using device: cuda
+2025-09-15 03:36:59,932 - root - INFO - Loading MAP model...
+2025-09-15 03:37:01,209 - root - INFO - Using device: cuda
+2025-09-15 03:37:01,209 - root - INFO - Loading MAP model...
+2025-09-15 03:37:01,476 - root - INFO - Loading samples...
+2025-09-15 03:37:01,476 - root - INFO - Loading samples from: runs/mrpc_roberta_lora_sgld/sgld_samples.pth
+2025-09-15 03:37:02,261 - root - INFO - Loading samples...
+2025-09-15 03:37:02,261 - root - INFO - Loading samples from: runs/mrpc_roberta_lora_sgld/sgld_samples.pth
+2025-09-15 03:37:02,569 - root - INFO - Loaded 60 samples from file
+2025-09-15 03:37:02,570 - root - WARNING - No diagnostic values found, will recompute from samples
+2025-09-15 03:37:03,344 - root - INFO - Loaded 60 samples from file
+2025-09-15 03:37:03,345 - root - WARNING - No diagnostic values found, will recompute from samples
+2025-09-15 03:37:04,225 - root - INFO - Evaluating MAP model...
+2025-09-15 03:37:05,009 - root - INFO - Evaluating MAP model...
+2025-09-15 03:37:06,950 - root - INFO - Config: chains=4, samples_to_retain=60
+2025-09-15 03:37:06,951 - root - INFO - Actual: 60 samples loaded
+2025-09-15 03:37:07,191 - root - INFO - Evaluating sample 1/60
+2025-09-15 03:37:07,599 - root - INFO - Config: chains=4, samples_to_retain=60
+2025-09-15 03:37:07,599 - root - INFO - Actual: 60 samples loaded
+2025-09-15 03:37:07,843 - root - INFO - Evaluating sample 1/60
+2025-09-15 03:37:09,451 - root - INFO - Evaluating sample 2/60
+2025-09-15 03:37:10,257 - root - INFO - Evaluating sample 2/60
+2025-09-15 03:37:11,717 - root - INFO - Evaluating sample 3/60
+2025-09-15 03:37:12,694 - root - INFO - Evaluating sample 3/60
+2025-09-15 03:37:13,992 - root - INFO - Evaluating sample 4/60
+2025-09-15 03:37:15,153 - root - INFO - Evaluating sample 4/60
+2025-09-15 03:37:16,269 - root - INFO - Evaluating sample 5/60
+2025-09-15 03:37:17,638 - root - INFO - Evaluating sample 5/60
+2025-09-15 03:37:18,549 - root - INFO - Evaluating sample 6/60
+2025-09-15 03:37:20,136 - root - INFO - Evaluating sample 6/60
+2025-09-15 03:37:20,834 - root - INFO - Evaluating sample 7/60
+2025-09-15 03:37:22,655 - root - INFO - Evaluating sample 7/60
+2025-09-15 03:37:23,127 - root - INFO - Evaluating sample 8/60
+2025-09-15 03:37:25,195 - root - INFO - Evaluating sample 8/60
+2025-09-15 03:37:25,425 - root - INFO - Evaluating sample 9/60
+2025-09-15 03:37:27,728 - root - INFO - Evaluating sample 10/60
+2025-09-15 03:37:27,736 - root - INFO - Evaluating sample 9/60
+2025-09-15 03:37:30,033 - root - INFO - Evaluating sample 11/60
+2025-09-15 03:37:30,299 - root - INFO - Evaluating sample 10/60
+2025-09-15 03:37:32,335 - root - INFO - Evaluating sample 12/60
+2025-09-15 03:37:32,858 - root - INFO - Evaluating sample 11/60
+2025-09-15 03:37:34,646 - root - INFO - Evaluating sample 13/60
+2025-09-15 03:37:35,418 - root - INFO - Evaluating sample 12/60
+2025-09-15 03:37:36,955 - root - INFO - Evaluating sample 14/60
+2025-09-15 03:37:37,974 - root - INFO - Evaluating sample 13/60
+2025-09-15 03:37:39,267 - root - INFO - Evaluating sample 15/60
+2025-09-15 03:37:40,532 - root - INFO - Evaluating sample 14/60
+2025-09-15 03:37:41,574 - root - INFO - Evaluating sample 16/60
+2025-09-15 03:37:43,093 - root - INFO - Evaluating sample 15/60
+2025-09-15 03:37:43,890 - root - INFO - Evaluating sample 17/60
+2025-09-15 03:37:45,651 - root - INFO - Evaluating sample 16/60
+2025-09-15 03:37:46,203 - root - INFO - Evaluating sample 18/60
+2025-09-15 03:37:48,211 - root - INFO - Evaluating sample 17/60
+2025-09-15 03:37:48,513 - root - INFO - Evaluating sample 19/60
+2025-09-15 03:37:50,771 - root - INFO - Evaluating sample 18/60
+2025-09-15 03:37:50,829 - root - INFO - Evaluating sample 20/60
+2025-09-15 03:37:53,150 - root - INFO - Evaluating sample 21/60
+2025-09-15 03:37:53,331 - root - INFO - Evaluating sample 19/60
+2025-09-15 03:37:55,469 - root - INFO - Evaluating sample 22/60
+2025-09-15 03:37:55,890 - root - INFO - Evaluating sample 20/60
+2025-09-15 03:37:57,789 - root - INFO - Evaluating sample 23/60
+2025-09-15 03:37:58,452 - root - INFO - Evaluating sample 21/60
+2025-09-15 03:38:00,112 - root - INFO - Evaluating sample 24/60
+2025-09-15 03:38:01,010 - root - INFO - Evaluating sample 22/60
+2025-09-15 03:38:02,432 - root - INFO - Evaluating sample 25/60
+2025-09-15 03:38:03,569 - root - INFO - Evaluating sample 23/60
+2025-09-15 03:38:04,754 - root - INFO - Evaluating sample 26/60
+2025-09-15 03:38:06,127 - root - INFO - Evaluating sample 24/60
+2025-09-15 03:38:07,078 - root - INFO - Evaluating sample 27/60
+2025-09-15 03:38:08,688 - root - INFO - Evaluating sample 25/60
+2025-09-15 03:38:09,402 - root - INFO - Evaluating sample 28/60
+2025-09-15 03:38:11,244 - root - INFO - Evaluating sample 26/60
+2025-09-15 03:38:11,724 - root - INFO - Evaluating sample 29/60
+2025-09-15 03:38:13,805 - root - INFO - Evaluating sample 27/60
+2025-09-15 03:38:14,050 - root - INFO - Evaluating sample 30/60
+2025-09-15 03:38:16,362 - root - INFO - Evaluating sample 28/60
+2025-09-15 03:38:16,375 - root - INFO - Evaluating sample 31/60
+2025-09-15 03:38:18,701 - root - INFO - Evaluating sample 32/60
+2025-09-15 03:38:18,923 - root - INFO - Evaluating sample 29/60
+2025-09-15 03:38:21,030 - root - INFO - Evaluating sample 33/60
+2025-09-15 03:38:21,482 - root - INFO - Evaluating sample 30/60
+2025-09-15 03:38:23,361 - root - INFO - Evaluating sample 34/60
+2025-09-15 03:38:24,041 - root - INFO - Evaluating sample 31/60
+2025-09-15 03:38:25,688 - root - INFO - Evaluating sample 35/60
+2025-09-15 03:38:26,601 - root - INFO - Evaluating sample 32/60
+2025-09-15 03:38:28,018 - root - INFO - Evaluating sample 36/60
+2025-09-15 03:38:29,164 - root - INFO - Evaluating sample 33/60
+2025-09-15 03:38:30,349 - root - INFO - Evaluating sample 37/60
+2025-09-15 03:38:31,739 - root - INFO - Evaluating sample 34/60
+2025-09-15 03:38:32,677 - root - INFO - Evaluating sample 38/60
+2025-09-15 03:38:34,300 - root - INFO - Evaluating sample 35/60
+2025-09-15 03:38:35,006 - root - INFO - Evaluating sample 39/60
+2025-09-15 03:38:36,862 - root - INFO - Evaluating sample 36/60
+2025-09-15 03:38:37,337 - root - INFO - Evaluating sample 40/60
+2025-09-15 03:38:39,438 - root - INFO - Evaluating sample 37/60
+2025-09-15 03:38:39,671 - root - INFO - Evaluating sample 41/60
+2025-09-15 03:38:41,999 - root - INFO - Evaluating sample 42/60
+2025-09-15 03:38:41,999 - root - INFO - Evaluating sample 38/60
+2025-09-15 03:38:44,334 - root - INFO - Evaluating sample 43/60
+2025-09-15 03:38:44,576 - root - INFO - Evaluating sample 39/60
+2025-09-15 03:38:46,667 - root - INFO - Evaluating sample 44/60
+2025-09-15 03:38:47,157 - root - INFO - Evaluating sample 40/60
+2025-09-15 03:38:48,998 - root - INFO - Evaluating sample 45/60
+2025-09-15 03:38:49,737 - root - INFO - Evaluating sample 41/60
+2025-09-15 03:38:51,334 - root - INFO - Evaluating sample 46/60
+2025-09-15 03:38:52,313 - root - INFO - Evaluating sample 42/60
+2025-09-15 03:38:53,671 - root - INFO - Evaluating sample 47/60
+2025-09-15 03:38:54,890 - root - INFO - Evaluating sample 43/60
+2025-09-15 03:38:56,007 - root - INFO - Evaluating sample 48/60
+2025-09-15 03:38:57,456 - root - INFO - Evaluating sample 44/60
+2025-09-15 03:38:58,344 - root - INFO - Evaluating sample 49/60
+2025-09-15 03:39:00,034 - root - INFO - Evaluating sample 45/60
+2025-09-15 03:39:00,678 - root - INFO - Evaluating sample 50/60
+2025-09-15 03:39:02,618 - root - INFO - Evaluating sample 46/60
+2025-09-15 03:39:03,013 - root - INFO - Evaluating sample 51/60
+2025-09-15 03:39:05,205 - root - INFO - Evaluating sample 47/60
+2025-09-15 03:39:05,349 - root - INFO - Evaluating sample 52/60
+2025-09-15 03:39:07,687 - root - INFO - Evaluating sample 53/60
+2025-09-15 03:39:07,782 - root - INFO - Evaluating sample 48/60
+2025-09-15 03:39:10,026 - root - INFO - Evaluating sample 54/60
+2025-09-15 03:39:10,355 - root - INFO - Evaluating sample 49/60
+2025-09-15 03:39:12,369 - root - INFO - Evaluating sample 55/60
+2025-09-15 03:39:12,941 - root - INFO - Evaluating sample 50/60
+2025-09-15 03:39:14,708 - root - INFO - Evaluating sample 56/60
+2025-09-15 03:39:15,526 - root - INFO - Evaluating sample 51/60
+2025-09-15 03:39:17,049 - root - INFO - Evaluating sample 57/60
+2025-09-15 03:39:18,106 - root - INFO - Evaluating sample 52/60
+2025-09-15 03:39:19,389 - root - INFO - Evaluating sample 58/60
+2025-09-15 03:39:20,687 - root - INFO - Evaluating sample 53/60
+2025-09-15 03:39:21,728 - root - INFO - Evaluating sample 59/60
+2025-09-15 03:39:23,272 - root - INFO - Evaluating sample 54/60
+2025-09-15 03:39:24,068 - root - INFO - Evaluating sample 60/60
+2025-09-15 03:39:25,864 - root - INFO - Evaluating sample 55/60
+2025-09-15 03:39:26,427 - root - INFO - Recomputing diagnostic values from samples
+2025-09-15 03:39:26,657 - root - INFO - 
+==================================================
+2025-09-15 03:39:26,657 - root - INFO - EVALUATION RESULTS
+2025-09-15 03:39:26,657 - root - INFO - ==================================================
+2025-09-15 03:39:26,657 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-15 03:39:26,657 - root - INFO - --------------------------------------------------
+2025-09-15 03:39:26,657 - root - INFO - MAP-LoRA        0.8848     0.4421     0.0896    
+2025-09-15 03:39:26,657 - root - INFO - SGLD-LoRA       0.8922     0.3277     0.0803    
+2025-09-15 03:39:26,657 - root - INFO - 
+MCMC Diagnostics:
+2025-09-15 03:39:26,657 - root - INFO - R-hat (log posterior): 1.8820
+2025-09-15 03:39:26,657 - root - INFO - R-hat (L2 norm): 1.7573
+2025-09-15 03:39:26,657 - root - INFO - ESS (log posterior): 1
+2025-09-15 03:39:26,658 - root - INFO - ESS (L2 norm): 4
+2025-09-15 03:39:26,658 - root - INFO - Min ESS: 1
+2025-09-15 03:39:26,658 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-15 03:39:26,658 - root - INFO - R-hat (log posterior): 1.882
+2025-09-15 03:39:26,658 - root - INFO - R-hat (L2 norm): 1.757
+2025-09-15 03:39:26,658 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ✅ GOOD
+2025-09-15 03:39:26,658 - root - INFO - 
+Within-mode mixing:
+2025-09-15 03:39:26,658 - root - INFO - Avg ESS (log posterior): 8.0 ± 7.0
+2025-09-15 03:39:26,658 - root - INFO - Avg ESS (L2 norm): 4.0 ± 0.0
+2025-09-15 03:39:26,658 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:26,658 - root - INFO - 
+ESS Statistics Summary:
+2025-09-15 03:39:26,658 - root - INFO -   Log Posterior ESS: 1 (min), 8.0 ± 7.0 (mean ± std)
+2025-09-15 03:39:26,658 - root - INFO -   L2 Norm ESS: 4 (min), 4.0 ± 0.0 (mean ± std)
+2025-09-15 03:39:26,658 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-15 03:39:26,659 - root - INFO -   • Log posterior ESS varies significantly (std=7.0) - different modes have different mixing quality
+2025-09-15 03:39:26,659 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-15 03:39:26,659 - root - INFO - 
+Per-chain ESS details:
+2025-09-15 03:39:26,659 - root - INFO -   Chain 1: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 2: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 3: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO -   Chain 4: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:26,659 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:26,659 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-15 03:39:26,659 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-15 03:39:26,659 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ✅ PASS
+2025-09-15 03:39:26,659 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-15 03:39:26,659 - root - INFO -   Accuracy within ±0.3% of MAP: ❌ FAIL (diff: 0.0074)
+2025-09-15 03:39:26,659 - root - INFO -   NLL lower than MAP: ✅ PASS (SGLD-LoRA: 0.3277, MAP: 0.4421)
+2025-09-15 03:39:26,660 - root - INFO -   ECE lower than MAP: ✅ PASS (SGLD-LoRA: 0.0803, MAP: 0.0896)
+2025-09-15 03:39:26,660 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-15 03:39:26,660 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-15 03:39:26,660 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-15 03:39:26,660 - root - WARNING -   - Check if SGLD-LoRA is learning properly
+2025-09-15 03:39:26,664 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_sgld/evaluation_results.yaml
+2025-09-15 03:39:28,450 - root - INFO - Evaluating sample 56/60
+2025-09-15 03:39:31,041 - root - INFO - Evaluating sample 57/60
+2025-09-15 03:39:33,621 - root - INFO - Evaluating sample 58/60
+2025-09-15 03:39:36,199 - root - INFO - Evaluating sample 59/60
+2025-09-15 03:39:38,779 - root - INFO - Evaluating sample 60/60
+2025-09-15 03:39:41,372 - root - INFO - Recomputing diagnostic values from samples
+2025-09-15 03:39:41,562 - root - INFO - 
+==================================================
+2025-09-15 03:39:41,562 - root - INFO - EVALUATION RESULTS
+2025-09-15 03:39:41,562 - root - INFO - ==================================================
+2025-09-15 03:39:41,563 - root - INFO - Method          Accuracy   NLL        ECE       
+2025-09-15 03:39:41,563 - root - INFO - --------------------------------------------------
+2025-09-15 03:39:41,563 - root - INFO - MAP-LoRA        0.8848     0.4421     0.0896    
+2025-09-15 03:39:41,563 - root - INFO - SGLD-LoRA       0.8922     0.3277     0.0803    
+2025-09-15 03:39:41,563 - root - INFO - 
+MCMC Diagnostics:
+2025-09-15 03:39:41,563 - root - INFO - R-hat (log posterior): 1.8820
+2025-09-15 03:39:41,563 - root - INFO - R-hat (L2 norm): 1.7573
+2025-09-15 03:39:41,563 - root - INFO - ESS (log posterior): 1
+2025-09-15 03:39:41,563 - root - INFO - ESS (L2 norm): 4
+2025-09-15 03:39:41,563 - root - INFO - Min ESS: 1
+2025-09-15 03:39:41,563 - root - INFO - 
+Multimodal MCMC Quality Assessment:
+2025-09-15 03:39:41,563 - root - INFO - R-hat (log posterior): 1.882
+2025-09-15 03:39:41,563 - root - INFO - R-hat (L2 norm): 1.757
+2025-09-15 03:39:41,564 - root - INFO - Multimodal R-hat (1.1 < R-hat < 3.0): ✅ GOOD
+2025-09-15 03:39:41,564 - root - INFO - 
+Within-mode mixing:
+2025-09-15 03:39:41,564 - root - INFO - Avg ESS (log posterior): 8.0 ± 7.0
+2025-09-15 03:39:41,564 - root - INFO - Avg ESS (L2 norm): 4.0 ± 0.0
+2025-09-15 03:39:41,564 - root - INFO - Within-mode mixing (ESS ≥ 12.5): ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:41,564 - root - INFO - 
+ESS Statistics Summary:
+2025-09-15 03:39:41,564 - root - INFO -   Log Posterior ESS: 1 (min), 8.0 ± 7.0 (mean ± std)
+2025-09-15 03:39:41,564 - root - INFO -   L2 Norm ESS: 4 (min), 4.0 ± 0.0 (mean ± std)
+2025-09-15 03:39:41,564 - root - INFO - 
+ESS Variability Interpretation:
+2025-09-15 03:39:41,564 - root - INFO -   • Log posterior ESS varies significantly (std=7.0) - different modes have different mixing quality
+2025-09-15 03:39:41,564 - root - INFO -   • L2 norm ESS is consistent across modes (std=0.0) - uniform parameter space mixing
+2025-09-15 03:39:41,564 - root - INFO - 
+Per-chain ESS details:
+2025-09-15 03:39:41,564 - root - INFO -   Chain 1: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:41,565 - root - INFO -   Chain 2: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:41,565 - root - INFO -   Chain 3: ESS(log_posterior)=1, ESS(l2_norm)=4
+2025-09-15 03:39:41,565 - root - INFO -   Chain 4: ESS(log_posterior)=15, ESS(l2_norm)=4
+2025-09-15 03:39:41,565 - root - INFO - 
+Overall Multimodal Quality: ⚠️  NEEDS IMPROVEMENT
+2025-09-15 03:39:41,565 - root - WARNING - Within-mode ESS is low - samples within each mode are too correlated
+2025-09-15 03:39:41,565 - root - INFO - 
+Multimodal Pass/Fail Criteria Assessment:
+2025-09-15 03:39:41,565 - root - INFO -   Multimodal R-hat (1.1 < R-hat < 3.0): ✅ PASS
+2025-09-15 03:39:41,565 - root - INFO -   Within-mode ESS ≥ 12.5: ❌ FAIL
+2025-09-15 03:39:41,565 - root - INFO -   Accuracy within ±0.3% of MAP: ❌ FAIL (diff: 0.0074)
+2025-09-15 03:39:41,565 - root - INFO -   NLL lower than MAP: ✅ PASS (SGLD-LoRA: 0.3277, MAP: 0.4421)
+2025-09-15 03:39:41,565 - root - INFO -   ECE lower than MAP: ✅ PASS (SGLD-LoRA: 0.0803, MAP: 0.0896)
+2025-09-15 03:39:41,565 - root - INFO - 
+Overall Multimodal Convergence Assessment: ⚠️  FAIL
+2025-09-15 03:39:41,565 - root - WARNING - Multimodal convergence criteria not met. Consider:
+2025-09-15 03:39:41,565 - root - WARNING -   - Within-mode mixing is poor - reduce step size or increase sampling steps
+2025-09-15 03:39:41,566 - root - WARNING -   - Check if SGLD-LoRA is learning properly
+2025-09-15 03:39:41,570 - root - INFO - 
+Results saved to runs/mrpc_roberta_lora_sgld/evaluation_results.yaml
