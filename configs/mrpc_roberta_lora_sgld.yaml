@@ -32,15 +32,15 @@ training:
     warmup_ratio: 0.0  # Disable warmup
   
   sgld_lora:
-    learning_rate: 3.2e-3  # Increased step size to match effective step per sample of working version
+    learning_rate: 5e-3  # Set to achieve theoretical ratio ~190 for actual ratio ~1.4
     temperature: 2.0  # Optimized for perfect noise-gradient balance
-    prior_std: 9.5  # Optimal prior for balanced SGLD sampling (experimentally determined)
+    prior_std: 100.0  # Increased to reduce prior strength and achieve prior/likelihood ratio ~0.5 (was 9.5, ratio was ~100)
     step_size_schedule:
-      initial: 3.2e-3  # Increased step size to match effective step per sample of working version
+      initial: 5e-3  # Set to achieve theoretical ratio ~190 for actual ratio ~1.4
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 4000  # Longer decay schedule
     gradient_clip_norm: 5.0  # Match MAP training for consistency
-    noise_scale: 0.001  # Increased noise scale for better parameter space exploration
+    noise_scale: 0.0005  # Reduced to achieve theoretical ratio ~190 for actual ratio ~1.4
     chains: 4  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
