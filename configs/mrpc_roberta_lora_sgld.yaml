@@ -32,20 +32,20 @@ training:
     warmup_ratio: 0.0  # Disable warmup
   
   sgld_lora:
-    learning_rate: 5e-3  # Set to achieve theoretical ratio ~190 for actual ratio ~1.4
+    learning_rate: 0.012  # Increased 2.4x from 5e-3 for better drift/noise balance
     temperature: 2.0  # Optimized for perfect noise-gradient balance
     prior_std: 100.0  # Increased to reduce prior strength and achieve prior/likelihood ratio ~0.5 (was 9.5, ratio was ~100)
     step_size_schedule:
-      initial: 5e-3  # Set to achieve theoretical ratio ~190 for actual ratio ~1.4
+      initial: 0.012  # Increased 2.4x from 5e-3 for better drift/noise balance
       decay_rate: 0.3  # Conservative decay for better convergence
       decay_steps: 4000  # Longer decay schedule
     gradient_clip_norm: 5.0  # Match MAP training for consistency
-    noise_scale: 0.0005  # Reduced to achieve theoretical ratio ~190 for actual ratio ~1.4
+    noise_scale: 0.00025  # Reduced 2x from 5e-4 for better drift/noise balance
     chains: 4  # Restored for R-hat computation
     burn_in_steps: 8000  # Sufficient burn-in for convergence
     sampling_steps: 3000  # 60 samples per chain * 50 thinning = 3000 steps
     thinning: 50  # Good thinning for sample independence
-    samples_to_retain: 60  # Match total samples (4 chains * 60 samples per chain)
+    samples_to_retain: 240  # Match total samples (4 chains * 60 samples per chain)
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

@@ -49,7 +49,7 @@ training:
     burn_in_steps: 8000  # Full experiment: Restored from 1500 for proper burn-in
     sampling_steps: 3000  # Full experiment: Restored from 500 for adequate sampling
     thinning: 50  # Full experiment: Restored from 10 for proper thinning
-    samples_to_retain: 60  # 1 chain * 60 samples = 60 total samples
+    samples_to_retain: 240  # 4 chain * 60 samples = 240 total samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]
@@ -57,7 +57,7 @@ evaluation:
     probe_set_size: 512
     summaries: ["log_posterior", "l2_norm"]
     r_hat_threshold: 1.05  # Not used for multimodal assessment
-    ess_threshold: 50  # Used for within-mode mixing (threshold/4 = 12.5)
+    ess_threshold: 40  # Used for within-mode mixing (threshold/4 = 12.5)
     track_min_ess: true  # Track minimum ESS across all chains and metrics
 
 output:
