@@ -1,0 +1,97 @@
+# Configuration for MRPC RoBERTa LoRA SAM-SGLD Online Experiment
+# Based on sam_sgld_experiment_specifications.md
+# Single-chain with 1.01M sampling steps, online ESS (OBM), and milestone logging
+
+experiment:
+  name: "mrpc_roberta_lora_samsgld_rank1_online"
+  description: "Single-chain SAM-SGLD Rank-1 with online ESS (OBM) and milestone logging"
+  
+model:
+  backbone: "roberta-base"
+  max_sequence_length: 256
+  lora:
+    inject_into: ["query", "key", "value", "attention.output.dense"]
+    rank: 8
+    alpha: 16
+    dropout: 0.1
+
+data:
+  dataset: "mrpc"
+  batch_size: 32
+  gradient_accumulation_steps: 1
+  max_epochs: 20
+  # Use full validation set for per-sample metrics
+  eval_subset_size: null  # null means use full validation set
+
+training:
+  map_lora:
+    optimizer: "adamw"
+    learning_rate: 2e-4
+    weight_decay: 0.01
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1e-8
+    scheduler: "none"
+    warmup_ratio: 0.0
+  
+  samsgld_rank1_lora:
+    learning_rate: 0.002  # Constant during sampling
+    temperature: 2.0
+    prior_std: 17.0
+    # Burn-in phase (with decay)
+    burn_in_steps: 8000
+    step_size_schedule:
+      initial: 0.002
+      decay_rate: 0.3
+      decay_steps: 4000
+    # Sampling phase (constant)
+    sampling_step_size: 0.002  # Constant step size during sampling
+    gradient_clip_norm: 5.0
+    noise_scale: 0.0001
+    # SAM parameters
+    rho: 0.05  # Constant SAM radius during sampling
+    lambd: 0.00000001  # SAM regularization (1e-8)
+    sigma_dir: 8.0  # Rank-1 noise direction
+    # Sampling configuration
+    sampling_steps: 1010000  # 1.01M sampling steps
+    thinning: 100  # Save one sample every 100 SGD steps
+    # Online ESS configuration
+    online_ess:
+      scalars: [
+        "log_posterior",
+        "param_l2_norm", 
+        "lora_block_0_frobenius",
+        "lora_block_1_frobenius", 
+        "lora_projection_0",
+        "lora_projection_1"
+      ]
+      block_size_growth: 0.5  # b = floor(m^0.5)
+    # Milestone configuration
+    milestones: [1000, 10000, 100000, 1000000]  # Sampling steps
+    # Checkpointing
+    save_checkpoints: true
+    checkpoint_interval: 10000  # Save checkpoint every 10k sampling steps
+
+evaluation:
+  metrics: ["accuracy", "nll", "ece"]
+  # Per-sample evaluation settings
+  per_sample_eval:
+    enabled: true
+    subset_size: null  # null means full validation set
+    compute_mcse: true
+  # Cumulative ensemble settings
+  cumulative_ensemble:
+    enabled: true
+    report_interval: 1000  # Report cumulative metrics every 1000 kept samples
+
+output:
+  save_dir: "runs/mrpc_roberta_lora_samsgld_rank1_online"
+  save_samples: true
+  save_traces: true
+  save_checkpoints: true
+  # Logging configuration
+  logging:
+    level: "INFO"
+    log_every_sample: false  # Too verbose for 1M+ samples
+    log_every_milestone: true
+    log_online_stats: true  # Log ESS and metric statistics

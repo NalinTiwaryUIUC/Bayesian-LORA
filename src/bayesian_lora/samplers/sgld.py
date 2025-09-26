@@ -457,3 +457,5 @@ class SAMSGLDRank1Sampler(BaseSampler):
         
         # Calculate loss change (approximate)
         self.last_loss_change = abs(loss2.item() - loss1.item())
+        
+        return loss2

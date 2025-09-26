@@ -1,0 +1,81 @@
+experiment:
+  name: "mrpc_roberta_lora_samsgld_rank1_ultra_quick_test"
+  description: "Ultra-quick test: Skip MAP training, minimal sampling"
+
+model:
+  backbone: "roberta-base"
+  max_sequence_length: 256
+  lora:
+    inject_into: ["query", "key", "value", "attention.output.dense"]
+    rank: 8
+    alpha: 16
+    dropout: 0.1
+
+data:
+  dataset: "mrpc"
+  batch_size: 32
+  gradient_accumulation_steps: 1
+  max_epochs: 0  # Skip MAP training
+
+training:
+  map_lora:
+    optimizer: "adamw"
+    learning_rate: 2e-4
+    weight_decay: 0.01
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1e-8
+    scheduler: "none"
+    warmup_ratio: 0.0
+  
+  samsgld_rank1_lora:
+    learning_rate: 0.002
+    temperature: 2.0
+    prior_std: 17.0
+    burn_in_steps: 5  # Minimal burn-in
+    step_size_schedule:
+      initial: 0.002
+      decay_rate: 0.3
+      decay_steps: 4000
+    sampling_step_size: 0.002
+    gradient_clip_norm: 5.0
+    noise_scale: 0.0001
+    rho: 0.05
+    lambd: 0.00000001
+    sigma_dir: 8.0
+    sampling_steps: 20  # Very minimal sampling
+    thinning: 2  # Keep every 2nd sample
+    online_ess:
+      enabled: true
+      scalars: ["log_posterior", "l2_norm", "lora_projection_0", "lora_projection_1"]
+      block_size_growth: 0.5
+      compute_mcse: true
+    milestones: [6, 10]  # Fewer milestones
+    samples_to_retain: 10
+
+evaluation:
+  metrics: ["accuracy", "nll", "ece"]
+  mcmc_diagnostics:
+    probe_set_size: 512
+    summaries: ["log_posterior", "l2_norm"]
+    r_hat_threshold: 1.05
+    ess_threshold: 40
+    track_min_ess: true
+  online_ess:
+    enabled: true
+    scalars: ["accuracy", "nll", "ece"]
+    compute_mcse: true
+  cumulative_ensemble:
+    enabled: true
+    report_interval: 1000
+
+output:
+  save_dir: "runs/mrpc_roberta_lora_samsgld_rank1_online"
+  save_samples: true
+  save_traces: true
+  save_checkpoints: true
+  logging:
+    level: "INFO"
+    log_interval: 100
+    eval_interval: 500
+    milestones: [1000, 10000, 100000, 1000000]
