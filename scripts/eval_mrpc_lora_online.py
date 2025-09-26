@@ -256,7 +256,7 @@ def generate_convergence_assessment(summary, output_dir, logger):
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate online SAM-SGLD results")
-    parser.add_argument("--summary", type=str, required=True, help="Path to online summary YAML file")
+    parser.add_argument("--summary_path", type=str, required=True, help="Path to online summary YAML file")
     parser.add_argument("--output_dir", type=str, help="Output directory for reports")
     args = parser.parse_args()
     
@@ -265,19 +265,19 @@ def main():
         output_dir = args.output_dir
     else:
         # Use same directory as summary file
-        output_dir = os.path.dirname(args.summary)
+        output_dir = os.path.dirname(args.summary_path)
     
     os.makedirs(output_dir, exist_ok=True)
     
     # Setup logging
     logger = setup_logging("INFO")
     
-    logger.info(f"Evaluating online summary: {args.summary}")
+    logger.info(f"Evaluating online summary: {args.summary_path}")
     logger.info(f"Output directory: {output_dir}")
     
     # Load summary
     try:
-        summary = load_online_summary(args.summary)
+        summary = load_online_summary(args.summary_path)
         logger.info("Online summary loaded successfully")
     except Exception as e:
         logger.error(f"Failed to load online summary: {e}")

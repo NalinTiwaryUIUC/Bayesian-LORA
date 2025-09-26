@@ -14,7 +14,7 @@ import torch.nn as nn
 import numpy as np
 import math
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from tqdm import tqdm
 
 # Add src to path
@@ -24,7 +24,6 @@ from bayesian_lora.data.glue_datasets import MRPCDataset
 from bayesian_lora.models.hf_lora import LoRAModel
 from bayesian_lora.samplers.sgld import SAMSGLDRank1Sampler
 from bayesian_lora.utils.online_estimators import OnlineMetricsTracker, CumulativeEnsemble
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
 def setup_model_and_tokenizer(config):
@@ -281,7 +280,7 @@ def run_samsgld_sampling(model, train_dataloader, val_dataloader, config, device
     diagnostic_scalars = config['online_ess']['scalars']
     # Include metrics in the tracked scalars
     all_scalars = diagnostic_scalars + ['accuracy', 'nll', 'ece']
-    metrics_tracker = OnlineMetricsTracker(all_scalars, block_size_growth=0.5)
+    metrics_tracker = OnlineMetricsTracker(all_scalars, block_size_growth=float(config['online_ess']['block_size_growth']))
     ensemble = CumulativeEnsemble()
     
     # Burn-in phase
@@ -418,8 +417,10 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info(f"Using device: {device}")
     
-    # Setup data
+    # Setup model and data
     model, tokenizer = setup_model_and_tokenizer(config)
+    model = model.to(device)  # Move model to device
+    
     train_dataset = MRPCDataset(split='train', tokenizer=tokenizer, max_length=config['model']['max_sequence_length'])
     val_dataset = MRPCDataset(split='validation', tokenizer=tokenizer, max_length=config['model']['max_sequence_length'])
     
