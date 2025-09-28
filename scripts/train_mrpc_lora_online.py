@@ -289,7 +289,9 @@ def run_samsgld_sampling(model, train_dataloader, val_dataloader, config, device
     decay_rate = float(config['step_size_schedule']['decay_rate'])
     decay_steps = int(config['step_size_schedule']['decay_steps'])
     
-    for step in tqdm(range(int(config['burn_in_steps'])), desc="Burn-in"):
+    # Disable progress bar if logging to file to avoid line breaks
+    disable_progress = any(isinstance(handler, logging.FileHandler) for handler in logger.handlers)
+    for step in tqdm(range(int(config['burn_in_steps'])), desc="Burn-in", disable=disable_progress):
         # Update step size according to schedule
         current_step_size = initial_step_size * (1 + step / decay_steps) ** (-decay_rate)
         sampler.step_size = current_step_size
@@ -320,7 +322,9 @@ def run_samsgld_sampling(model, train_dataloader, val_dataloader, config, device
     milestone_idx = 0
     milestones = config['milestones']
     
-    for step in tqdm(range(int(config['sampling_steps'])), desc="Sampling"):
+    # Disable progress bar if logging to file to avoid line breaks
+    disable_progress = any(isinstance(handler, logging.FileHandler) for handler in logger.handlers)
+    for step in tqdm(range(int(config['sampling_steps'])), desc="Sampling", disable=disable_progress):
         # Get batch and update
         batch = next(iter(train_dataloader))
         input_ids = batch['input_ids'].to(device)
@@ -357,7 +361,7 @@ def run_samsgld_sampling(model, train_dataloader, val_dataloader, config, device
                 logger.info(f"Kept samples: {kept_samples}")
                 
                 # Get summary statistics
-                summary = metrics_tracker.get_summary(config['thinning'])
+                summary = metrics_tracker.get_summary(step)
                 
                 logger.info("ESS Summary:")
                 for scalar, stats in summary.items():
@@ -384,7 +388,7 @@ def run_samsgld_sampling(model, train_dataloader, val_dataloader, config, device
     logger.info(f"Sampling completed! Total kept samples: {kept_samples}")
     
     # Final summary
-    final_summary = metrics_tracker.get_summary(config['thinning'])
+    final_summary = metrics_tracker.get_summary(int(config['sampling_steps']))
     logger.info("\n=== FINAL SUMMARY ===")
     for scalar, stats in final_summary.items():
         logger.info(f"{scalar}: ESS={stats['ess']:.2f}, ESS/step={stats['ess_per_step']:.6f}")

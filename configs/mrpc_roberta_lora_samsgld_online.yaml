@@ -53,8 +53,8 @@ training:
     lambd: 0.00000001  # SAM regularization (1e-8)
     sigma_dir: 8.0  # Rank-1 noise direction
     # Sampling configuration
-    sampling_steps: 1010000  # 1.01M sampling steps
-    thinning: 100  # Save one sample every 100 SGD steps
+    sampling_steps: 150000  # 150K sampling steps (reasonable for 48h limit)
+    thinning: 50  # Save one sample every 50 SGD steps
     # Online ESS configuration
     online_ess:
       scalars: [
@@ -67,10 +67,11 @@ training:
       ]
       block_size_growth: 0.5  # b = floor(m^0.5)
     # Milestone configuration
-    milestones: [1000, 10000, 100000, 1000000]  # Sampling steps
+    milestones: [1000, 10000, 50000, 100000, 150000]  # Sampling steps
     # Checkpointing
     save_checkpoints: true
     checkpoint_interval: 10000  # Save checkpoint every 10k sampling steps
+    samples_to_retain: 3000  # 150K steps / 50 thinning = 3000 samples
 
 evaluation:
   metrics: ["accuracy", "nll", "ece"]

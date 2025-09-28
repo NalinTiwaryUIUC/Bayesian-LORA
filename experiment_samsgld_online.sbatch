@@ -147,7 +147,7 @@ echo "Virtual environment: $VIRTUAL_ENV"
 echo "=== Starting SAM-SGLD Online Experiment ==="
 echo "Configuration: configs/mrpc_roberta_lora_samsgld_online.yaml"
 echo "Output directory: runs/mrpc_roberta_lora_samsgld_rank1_online"
-echo "Expected duration: ~48 hours (1.01M sampling steps)"
+echo "Expected duration: ~36 hours (150K sampling steps)"
 
 # Phase 1: SAM-SGLD Online Training
 echo "=== Phase 1: Training MAP LoRA and SAM-SGLD Online Sampling ==="

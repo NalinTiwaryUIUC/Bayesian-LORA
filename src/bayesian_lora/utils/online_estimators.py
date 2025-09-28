@@ -68,10 +68,15 @@ class OBMEstimator:
         m = len(self.values)
         if m < 2:
             return 1
-        # Use larger block sizes for better autocorrelation capture
-        block_size = max(10, int(m ** self.block_size_growth))
+        # Use smaller block sizes for better autocorrelation capture with few samples
+        if m < 50:
+            # For small sample sizes, use smaller blocks
+            block_size = max(2, int(m ** 0.3))
+        else:
+            # For larger sample sizes, use the configured growth
+            block_size = max(10, int(m ** self.block_size_growth))
         # Ensure we don't use too large blocks
-        return min(block_size, m // 4)
+        return min(block_size, max(1, m // 4))
     
     def get_iact(self) -> float:
         """
@@ -82,32 +87,83 @@ class OBMEstimator:
         if m < 2:
             return 1.0
         
-        b = self.get_block_size()
         s2 = self.marginal_var_estimator.get_sample_variance()
-        
         if s2 <= 0:
             return 1.0
         
-        # Calculate overlapping batch means
-        num_batches = m - b + 1
-        if num_batches < 2:
-            return 1.0
+        # For small sample sizes, use a simpler autocorrelation estimate
+        if m < 30:
+            # Use lag-1 autocorrelation for small samples
+            if m < 3:
+                return 1.0
             
-        batch_means = []
-        for i in range(num_batches):
-            batch_mean = np.mean(self.values[i:i + b])
-            batch_means.append(batch_mean)
+            # Calculate lag-1 autocorrelation
+            values_array = np.array(self.values)
+            mean_val = np.mean(values_array)
+            centered = values_array - mean_val
+            
+            if len(centered) < 2:
+                return 1.0
+            
+            # Lag-1 autocorrelation
+            numerator = np.sum(centered[:-1] * centered[1:])
+            denominator = np.sum(centered ** 2)
+            
+            if denominator <= 0:
+                return 1.0
+            
+            rho_1 = numerator / denominator
+            
+            # IACT estimate for AR(1) process
+            if rho_1 >= 0.99:  # Avoid division by zero
+                tau_hat = 100.0
+            else:
+                tau_hat = (1 + rho_1) / (1 - rho_1)
+            
+            return max(1.0, min(tau_hat, m / 2))  # Cap at reasonable values
         
-        # Calculate variance of batch means using numpy for accuracy
-        batch_var = np.var(batch_means, ddof=1) if len(batch_means) > 1 else 0.0
+        # For larger samples, use autocorrelation function approach
+        # This is more reliable than OBM for MCMC diagnostics
+        values_array = np.array(self.values)
+        mean_val = np.mean(values_array)
+        centered = values_array - mean_val
         
-        # OBM estimate of variance of sample mean
-        var_hat_mean = batch_var / num_batches
+        # Calculate autocorrelation function up to lag m//4
+        max_lag = min(m // 4, 50)  # Limit to reasonable number of lags
+        autocorrs = []
         
-        # IACT estimate
-        tau_hat = m * var_hat_mean / s2
+        for lag in range(1, max_lag + 1):
+            if lag >= len(centered):
+                break
+                
+            # Calculate autocorrelation at lag
+            numerator = np.sum(centered[:-lag] * centered[lag:])
+            denominator = np.sum(centered ** 2)
+            
+            if denominator <= 0:
+                break
+                
+            autocorr = numerator / denominator
+            autocorrs.append(autocorr)
+            
+            # Stop if autocorrelation becomes negative (indicates noise)
+            if autocorr <= 0:
+                break
         
-        return max(1.0, tau_hat)
+        if not autocorrs:
+            return 1.0
+        
+        # Find the first negative autocorrelation or use all positive ones
+        positive_autocorrs = [ac for ac in autocorrs if ac > 0]
+        
+        if not positive_autocorrs:
+            return 1.0
+        
+        # Estimate IACT using the sum of autocorrelations
+        # IACT ≈ 1 + 2 * sum of autocorrelations
+        iact_estimate = 1 + 2 * sum(positive_autocorrs)
+        
+        return max(1.0, iact_estimate)
     
     def get_ess(self) -> float:
         """Calculate Effective Sample Size (ESS)."""
@@ -118,13 +174,12 @@ class OBMEstimator:
         tau_hat = self.get_iact()
         return m / tau_hat
     
-    def get_ess_per_step(self, thinning_interval: int) -> float:
-        """Calculate ESS per SGD step."""
+    def get_ess_per_step(self, total_steps: int) -> float:
+        """Calculate ESS per total sampling step."""
         ess = self.get_ess()
-        m = len(self.values)
-        if m == 0 or thinning_interval == 0:
+        if total_steps == 0:
             return 0.0
-        return ess / (m * thinning_interval)
+        return ess / total_steps
 
 
 class OnlineMetricsTracker:
