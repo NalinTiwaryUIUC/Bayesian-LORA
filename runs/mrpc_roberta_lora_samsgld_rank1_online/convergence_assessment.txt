@@ -1,0 +1,22 @@
+=== CONVERGENCE ASSESSMENT ===
+
+ESS Analysis:
+--------------------
+Minimum ESS: 1.00
+Mean ESS: 24.84
+Maximum ESS: 34.40
+
+Convergence Criteria:
+-------------------------
+❌ Minimum ESS < 10: VERY POOR convergence
+
+ESS Coefficient of Variation: 0.516
+⚠️  Moderate ESS variability: Some diagnostics mix better than others
+
+Recommendations:
+---------------
+- Consider increasing sampling steps or reducing thinning interval
+- Check if step size is appropriate for the target distribution
+- Verify that burn-in was sufficient
+- High ESS variability suggests some diagnostics are more correlated than others
+- Consider using different diagnostic scalars or increasing sample size

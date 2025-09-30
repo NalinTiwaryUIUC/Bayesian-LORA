@@ -1,0 +1,33 @@
+=== METRICS REPORT WITH MCSE ===
+
+Per-Sample Metrics:
+--------------------------------------------------
+ACCURACY:
+  Mean: 0.858546
+  Standard Deviation: 0.013251
+  MCSE (Monte Carlo Standard Error): 0.002259
+  Sample count: 3000
+  MCSE/Std ratio: 0.1705
+  ⚠️  MCSE is moderate relative to standard deviation
+
+NLL:
+  Mean: 0.602732
+  Standard Deviation: 0.078359
+  MCSE (Monte Carlo Standard Error): 0.013879
+  Sample count: 3000
+  MCSE/Std ratio: 0.1771
+  ⚠️  MCSE is moderate relative to standard deviation
+
+ECE:
+  Mean: 0.125294
+  Standard Deviation: 0.016454
+  MCSE (Monte Carlo Standard Error): 0.002845
+  Sample count: 3000
+  MCSE/Std ratio: 0.1729
+  ⚠️  MCSE is moderate relative to standard deviation
+
+MCSE Summary:
+--------------------
+Min MCSE: 0.002259
+Max MCSE: 0.013879
+Mean MCSE: 0.006328

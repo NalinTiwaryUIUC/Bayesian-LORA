@@ -1,0 +1,69 @@
+=== EFFECTIVE SAMPLE SIZE (ESS) REPORT ===
+
+Scalar Diagnostics:
+------------------------------------------------------------
+accuracy:
+  ESS (kept samples): 34.40
+  ESS per SGD step: 0.000229
+  Integrated Autocorrelation Time: 87.21
+  Sample count: 3000
+
+ece:
+  ESS (kept samples): 33.46
+  ESS per SGD step: 0.000223
+  Integrated Autocorrelation Time: 89.67
+  Sample count: 3000
+
+log_posterior:
+  ESS (kept samples): 30.40
+  ESS per SGD step: 0.000203
+  Integrated Autocorrelation Time: 98.70
+  Sample count: 3000
+
+lora_block_0_frobenius:
+  ESS (kept samples): 1.00
+  ESS per SGD step: 0.000007
+  Integrated Autocorrelation Time: 1.00
+  Sample count: 0
+
+lora_block_1_frobenius:
+  ESS (kept samples): 1.00
+  ESS per SGD step: 0.000007
+  Integrated Autocorrelation Time: 1.00
+  Sample count: 0
+
+lora_projection_0:
+  ESS (kept samples): 30.60
+  ESS per SGD step: 0.000204
+  Integrated Autocorrelation Time: 98.04
+  Sample count: 3000
+
+lora_projection_1:
+  ESS (kept samples): 30.47
+  ESS per SGD step: 0.000203
+  Integrated Autocorrelation Time: 98.47
+  Sample count: 3000
+
+nll:
+  ESS (kept samples): 31.88
+  ESS per SGD step: 0.000213
+  Integrated Autocorrelation Time: 94.11
+  Sample count: 3000
+
+param_l2_norm:
+  ESS (kept samples): 30.33
+  ESS per SGD step: 0.000202
+  Integrated Autocorrelation Time: 98.92
+  Sample count: 3000
+
+Summary Statistics:
+------------------------------
+Min ESS: 1.00
+Max ESS: 34.40
+Mean ESS: 24.84
+Std ESS: 12.81
+
+Min ESS/step: 0.000007
+Max ESS/step: 0.000229
+Mean ESS/step: 0.000166
+Std ESS/step: 0.000085
